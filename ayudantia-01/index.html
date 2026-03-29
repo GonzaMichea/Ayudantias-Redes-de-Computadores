@@ -8,12 +8,115 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+        :root {
+            --usm-navy: #002b5c;
+            --usm-burgundy: #8c1d40;
+            --usm-gold: #c9a34a;
+            --usm-ink: #0f1f33;
+            --usm-paper: #f6f7fb;
         }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--usm-paper);
+            background-image:
+                radial-gradient(circle at 8% 12%, rgba(201, 163, 74, 0.22) 0%, transparent 28%),
+                radial-gradient(circle at 92% 84%, rgba(140, 29, 64, 0.15) 0%, transparent 32%),
+                linear-gradient(135deg, #f8fafc 0%, #edf2fb 55%, #f8fafc 100%);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Sora', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .topbar {
+            background: linear-gradient(90deg, rgba(0, 43, 92, 0.95), rgba(140, 29, 64, 0.92));
+            box-shadow: 0 10px 30px rgba(15, 31, 51, 0.25);
+            border-bottom: 2px solid rgba(201, 163, 74, 0.65);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-title {
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .nav-link {
+            color: #f1f5f9;
+            padding: 0.45rem 0.85rem;
+            border-radius: 9999px;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(201, 163, 74, 0.55);
+        }
+
+        .hero-title {
+            font-size: clamp(2.3rem, 6vw, 4.2rem);
+            background: linear-gradient(135deg, var(--usm-navy), var(--usm-burgundy));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .section-title {
+            border-bottom-width: 3px;
+            color: var(--usm-ink);
+        }
+
+        .bg-white.p-8.rounded-xl.shadow-lg {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 43, 92, 0.09);
+            box-shadow: 0 16px 30px rgba(15, 31, 51, 0.1);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .bg-white.p-8.rounded-xl.shadow-lg:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 36px rgba(15, 31, 51, 0.16);
+        }
+
+        .text-blue-700, .text-blue-800, .text-blue-600 {
+            color: var(--usm-navy) !important;
+        }
+
+        .text-orange-700, .text-orange-800, .text-orange-600, .text-red-500 {
+            color: var(--usm-burgundy) !important;
+        }
+
+        .border-blue-200 {
+            border-color: rgba(0, 43, 92, 0.28) !important;
+        }
+
+        .border-orange-200 {
+            border-color: rgba(140, 29, 64, 0.35) !important;
+        }
+
+        .bg-blue-600, .hover\:bg-blue-700:hover {
+            background-color: var(--usm-navy) !important;
+        }
+
+        .shadow-blue-200 {
+            box-shadow: 0 10px 20px rgba(0, 43, 92, 0.25) !important;
+        }
+
+        .accent-gold {
+            color: var(--usm-gold);
+        }
+
         .chart-container {
             position: relative;
             width: 100%;
@@ -28,16 +131,23 @@
                 height: 350px;
             }
         }
+
+        @media (max-width: 768px) {
+            .nav-link {
+                padding: 0.35rem 0.6rem;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body class="text-slate-800">
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
+    <header class="topbar sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-800">Guía Interactiva</h1>
+            <h1 class="text-xl brand-title">Guía Interactiva</h1>
             <div class="space-x-4">
-                <a href="#redes" class="text-slate-600 hover:text-blue-600 font-medium transition-colors">Redes</a>
-                <a href="#criptografia" class="text-slate-600 hover:text-blue-600 font-medium transition-colors">Criptografía</a>
+                <a href="#redes" class="nav-link font-medium transition-colors">Redes</a>
+                <a href="#criptografia" class="nav-link font-medium transition-colors">Criptografía</a>
             </div>
         </nav>
     </header>
@@ -45,12 +155,13 @@
     <main class="container mx-auto px-6 py-12">
 
         <section id="intro" class="text-center mb-16">
-            <h2 class="text-4xl font-bold mb-4 text-slate-900">Desde Redes a Criptografía</h2>
-            <p class="text-lg text-slate-600 max-w-3xl mx-auto">Conceptos fundamentales de comunicación y seguridad. Una aproximación interactiva para comprender cómo fluyen y se protegen los datos.</p>
+            <h2 class="hero-title font-bold mb-4">Desde Redes a Criptografía</h2>
+            <p class="text-lg hero-subtitle max-w-3xl mx-auto">Conceptos fundamentales de comunicación y seguridad. Una aproximación interactiva para comprender cómo fluyen y se protegen los datos.</p>
+            <p class="mt-4 text-sm font-bold tracking-wide accent-gold">Edición visual inspirada en identidad USM</p>
         </section>
 
         <section id="redes" class="mb-20">
-            <h3 class="text-3xl font-bold mb-8 text-center border-b-2 border-blue-200 pb-4">1. Fundamentos de Redes de Computadores</h3>
+            <h3 class="section-title text-3xl font-bold mb-8 text-center border-b-2 border-blue-200 pb-4">1. Fundamentos de Redes de Computadores</h3>
             
             <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
                 <h4 class="text-2xl font-bold mb-4 text-blue-700">Conectividad y Escala</h4>
@@ -138,7 +249,7 @@
         </section>
 
         <section id="criptografia">
-            <h3 class="text-3xl font-bold mb-8 text-center border-b-2 border-orange-200 pb-4">2. Principios de Criptografía</h3>
+            <h3 class="section-title text-3xl font-bold mb-8 text-center border-b-2 border-orange-200 pb-4">2. Principios de Criptografía</h3>
 
             <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
                 <h4 class="text-2xl font-bold mb-2 text-orange-700">Funciones Hash Criptográficas Fuertes</h4>
@@ -294,7 +405,7 @@
 
     </main>
 
-    <footer class="bg-slate-900 text-slate-300 mt-20">
+    <footer class="mt-20" style="background: linear-gradient(120deg, #0f1f33 0%, #002b5c 55%, #8c1d40 100%); color: #e2e8f0; border-top: 2px solid rgba(201,163,74,0.6);">
         <div class="container mx-auto px-6 py-8 text-center text-sm">
             <p>&copy; 2026 Ayudantía - Redes de Computadores.</p>
         </div>
@@ -342,14 +453,14 @@
                     datasets: [{
                         label: 'Cifrado Simétrico',
                         data: [9, 2, 6],
-                        backgroundColor: 'rgba(59, 130, 246, 0.8)', 
-                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(0, 43, 92, 0.82)',
+                        borderColor: 'rgba(0, 43, 92, 1)',
                         borderWidth: 1
                     }, {
                         label: 'Cifrado Asimétrico',
                         data: [3, 9, 9],
-                        backgroundColor: 'rgba(249, 115, 22, 0.8)', 
-                        borderColor: 'rgba(249, 115, 22, 1)',
+                        backgroundColor: 'rgba(140, 29, 64, 0.82)',
+                        borderColor: 'rgba(140, 29, 64, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -373,7 +484,8 @@
                         title: {
                             display: true,
                             text: 'Comparación Práctica de Tipos de Cifrado',
-                            font: { size: 16 }
+                            font: { size: 16, family: 'Sora' },
+                            color: '#0f1f33'
                         }
                     }
                 }

@@ -11,7 +11,7 @@ Repositorio centralizado con el material interactivo para las ayudantías de Red
 ## Acceso al Material Interactivo (Versión Web)
 
 Para una mejor experiencia, puedes interactuar con los diagramas de capas, generadores de hash y gráficos comparativos directamente desde tu navegador.
-
+**[Ver Sitio Web de Ayudantías 🌐](https://gonzamichea.github.io/Ayudantias-Redes-de-Computadores/)**
 
 ---
 
@@ -19,7 +19,7 @@ Para una mejor experiencia, puedes interactuar con los diagramas de capas, gener
 
 | Semana | Tema Principal | Contenido Clave | Material Web |
 | :---: | :--- | :--- | :---: |
-| **01** | **Fundamentos y Criptografía** | Tipos de redes (LAN/WAN), Modelo OSI vs TCP/IP, Hashes SHA-256 y Firmas Digitales. | [Ver Guía 1](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-01/) |
+| **01** | **Fundamentos y Criptografía** | Tipos de redes (LAN/WAN), Modelo OSI vs TCP/IP, Hashes SHA-256 y Firmas Digitales. | [Ver Guía 1](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-01) |
 | **02** | *(Próximamente)* | - | - |
 
 ---
