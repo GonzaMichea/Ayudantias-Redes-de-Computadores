@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva: Redes y Criptografía</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Slate, Amber, Blue, Orange) -->
+    <!-- Application Structure Plan: The SPA uses a thematic, two-section layout ('Redes' and 'Criptografía') with a sticky top navigation for smooth scrolling. This structure directly reflects the source material's logical division, making it intuitive for students. Interactivity is focused on demonstrating concepts: a real-time hash generator shows the avalanche effect, clickable model layers encourage exploration, and a step-by-step animated diagram demystifies the complex digital signature process. This design prioritizes active learning over passive reading. -->
+    <!-- Visualization & Content Choices: 1. OSI/TCP Model: Goal=Compare/Inform, Method=Clickable HTML diagram, Interaction=Show/hide details, Justification=Encourages deeper learning of each layer's function. 2. Hash Function: Goal=Demonstrate, Method=Live text input with hash output, Interaction=Real-time update via JS Web Crypto API, Justification=Provides instant, tangible feedback on hash properties. 3. Encryption Comparison: Goal=Compare, Method=Chart.js Bar Chart (Speed vs. Complexity), Interaction=Static visualization, Justification=Quickly conveys the primary trade-offs. 4. Digital Signature: Goal=Explain Process, Method=Multi-step HTML/JS animated diagram, Interaction=User-controlled steps (Next/Prev buttons), Justification=Breaks down a complex workflow into manageable, easy-to-understand steps. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-700">Guía Interactiva</h1>
+            <div class="space-x-4">
+                <a href="#redes" class="text-slate-600 hover:text-blue-600 transition-colors">Fundamentos de Redes</a>
+                <a href="#criptografia" class="text-slate-600 hover:text-blue-600 transition-colors">Principios de Criptografía</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="intro" class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4 text-slate-900">Desde Redes a Criptografía</h2>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto">Una exploración interactiva de los conceptos clave que sustentan la comunicación y la seguridad en el mundo digital.</p>
+        </section>
+
+        <!-- SECCIÓN 1: FUNDAMENTOS DE REDES -->
+        <section id="redes" class="mb-20">
+            <h3 class="text-3xl font-bold mb-8 text-center border-b-2 border-blue-200 pb-4">1. Fundamentos de Redes de Computadores</h3>
+            
+            <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
+                <h4 class="text-2xl font-bold mb-4 text-blue-700">¿Qué es una Red?</h4>
+                <p class="mb-4">
+                    Una <strong>red de computadores</strong> es un conjunto de equipos interconectados que comparten información y recursos. 
+                    Su propósito es facilitar la comunicación, compartir recursos como impresoras o acceso a Internet, y ofrecer servicios centralizados. 
+                    Una característica esencial es la <strong>escalabilidad</strong>: la capacidad de crecer sin perder rendimiento.
+                </p>
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h5 class="font-bold text-lg">LAN</h5>
+                        <p class="text-sm">Red de Área Local (casa, oficina). Alta velocidad.</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h5 class="font-bold text-lg">MAN</h5>
+                        <p class="text-sm">Red de Área Metropolitana (ciudad).</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h5 class="font-bold text-lg">WAN</h5>
+                        <p class="text-sm">Red de Área Amplia (país, continente). Internet es el mayor ejemplo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h4 class="text-2xl font-bold mb-4 text-blue-700">Modos de Comunicación</h4>
+                    <p class="mb-4">La forma en que los datos se transmiten entre dispositivos define el modo de comunicación.</p>
+                    <ul class="space-y-3">
+                        <li><strong class="text-blue-600">Unicast:</strong> Comunicación de un punto a otro (1 a 1).</li>
+                        <li><strong class="text-blue-600">Broadcast:</strong> Comunicación de un punto a todos en la red local (1 a todos).</li>
+                        <li><strong class="text-blue-600">Multicast:</strong> Comunicación de un punto a un grupo seleccionado (1 a muchos).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h4 class="text-2xl font-bold mb-4 text-blue-700">Modelos de Red: OSI vs. TCP/IP</h4>
+                    <p class="mb-4">Estos modelos en capas estandarizan las funciones de una red. Haz clic en una capa para ver su función.</p>
+                    <div class="grid grid-cols-2 gap-4 text-center text-sm">
+                        <div>
+                            <h5 class="font-semibold mb-2">Modelo OSI (Teórico)</h5>
+                            <button class="model-layer w-full p-2 bg-orange-200 rounded mb-1" data-info="Protocolos para aplicaciones de usuario (HTTP, FTP).">Aplicación</button>
+                            <button class="model-layer w-full p-2 bg-purple-200 rounded mb-1" data-info="Formateo y representación de datos (cifrado, compresión).">Presentación</button>
+                            <button class="model-layer w-full p-2 bg-cyan-200 rounded mb-1" data-info="Gestión de la comunicación entre aplicaciones.">Sesión</button>
+                            <button class="model-layer w-full p-2 bg-green-200 rounded mb-1" data-info="Comunicación entre procesos (TCP, UDP).">Transporte</button>
+                            <button class="model-layer w-full p-2 bg-blue-200 rounded mb-1" data-info="Direccionamiento lógico y enrutamiento (IP).">Red</button>
+                            <button class="model-layer w-full p-2 bg-yellow-200 rounded mb-1" data-info="Transmisión de tramas en un enlace físico.">Enlace de Datos</button>
+                            <button class="model-layer w-full p-2 bg-gray-200 rounded" data-info="Transmisión de bits por el medio físico (cables, WiFi).">Física</button>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold mb-2">Modelo TCP/IP (Práctico)</h5>
+                            <div class="w-full p-2 bg-orange-200 rounded mb-1 h-[100px] flex items-center justify-center">Aplicación</div>
+                            <div class="w-full p-2 bg-green-200 rounded mb-1 h-[36px] flex items-center justify-center">Transporte</div>
+                            <div class="w-full p-2 bg-blue-200 rounded mb-1 h-[36px] flex items-center justify-center">Internet</div>
+                            <div class="w-full p-2 bg-yellow-200 rounded mb-1 h-[36px] flex items-center justify-center">Enlace de Datos</div>
+                            <div class="w-full p-2 bg-gray-200 rounded h-[36px] flex items-center justify-center">Física</div>
+                        </div>
+                    </div>
+                    <div id="layer-info" class="mt-4 p-3 bg-slate-100 rounded-lg text-slate-700 text-sm h-24 flex items-center justify-center">
+                        <p>Haz clic en una capa del modelo OSI para ver su descripción.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: PRINCIPIOS DE CRIPTOGRAFÍA -->
+        <section id="criptografia">
+            <h3 class="text-3xl font-bold mb-8 text-center border-b-2 border-orange-200 pb-4">2. Principios de Criptografía</h3>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
+                <h4 class="text-2xl font-bold mb-4 text-orange-700">Funciones Hash Criptográficas</h4>
+                <p class="mb-4">Un hash es una "huella digital" de un dato. Es un algoritmo que convierte una entrada de cualquier tamaño en una salida de tamaño fijo. Es fundamental para verificar la <strong>integridad</strong> de los datos y almacenar contraseñas de forma segura.</p>
+                <p class="mb-4 font-semibold">Prueba en tiempo real el "Efecto Avalancha":</p>
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                    <div>
+                        <label for="hash-input" class="block mb-2 font-medium">Escribe algo aquí:</label>
+                        <textarea id="hash-input" rows="4" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:border-transparent transition">Hola Mundo</textarea>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">Hash SHA-256 resultante:</p>
+                        <pre id="hash-output" class="w-full p-2 bg-slate-100 rounded-md text-sm break-all">c0535e4be2b79ffd93291305436bf889314e4a3faec052298a9291d5e54aaae2</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10 mb-10">
+                 <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h4 class="text-2xl font-bold mb-4 text-orange-700">Cifrado Simétrico vs. Asimétrico</h4>
+                    <p class="mb-4">El cifrado protege la <strong>confidencialidad</strong> de la información. Los dos tipos principales tienen diferentes fortalezas y debilidades.</p>
+                     <div class="chart-container">
+                        <canvas id="cryptoChart"></canvas>
+                    </div>
+                 </div>
+                 <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col justify-center">
+                    <div>
+                        <h5 class="font-bold text-lg text-orange-600">Cifrado Simétrico</h5>
+                        <p class="mb-3">Usa <strong>una sola clave secreta</strong> para cifrar y descifrar. Es muy rápido, pero compartir la clave de forma segura es su principal desafío.</p>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-lg text-orange-600">Cifrado Asimétrico</h5>
+                        <p>Usa un <strong>par de claves (pública y privada)</strong>. Es más lento, pero soluciona el problema de la distribución de claves, siendo extremadamente seguro.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h4 class="text-2xl font-bold mb-4 text-orange-700">Demostración: Firma y Cifrado Digital</h4>
+                <p class="mb-6">Una comunicación segura combina la <strong>firma</strong> (autenticidad) con el <strong>cifrado</strong> (confidencialidad). Sigue los pasos para ver el proceso completo.</p>
+                
+                <div id="signature-demo" class="relative min-h-[250px]">
+                    <!-- Step 1 -->
+                    <div class="signature-step" data-step="1">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 1: Ana calcula el HASH del mensaje.</p>
+                        <div class="flex justify-center items-center space-x-4">
+                            <div class="text-center"><div class="w-24 h-24 bg-blue-100 rounded-lg flex items-center justify-center p-2 text-sm">Mensaje Original</div><p class="mt-2 font-semibold">Ana</p></div>
+                            <div class="text-5xl text-slate-400">&rarr;</div>
+                            <div class="w-24 h-24 bg-orange-100 rounded-lg flex items-center justify-center p-2 text-sm font-mono">Hash(Mensaje)</div>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="signature-step hidden" data-step="2">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 2: Ana cifra el HASH con su CLAVE PRIVADA (Firma).</p>
+                        <div class="flex justify-center items-center space-x-4">
+                            <div class="text-center"><div class="w-24 h-24 bg-orange-100 rounded-lg flex items-center justify-center p-2 text-sm font-mono">Hash</div><p class="mt-2 font-semibold">Ana</p></div>
+                            <div class="text-5xl text-slate-400">+</div>
+                            <div class="w-24 h-24 bg-red-200 rounded-full flex items-center justify-center p-2 text-sm">Clave Privada de Ana</div>
+                            <div class="text-5xl text-slate-400">&rarr;</div>
+                            <div class="w-24 h-24 bg-green-200 rounded-lg flex items-center justify-center p-2 text-sm">Firma Digital</div>
+                        </div>
+                    </div>
+                     <!-- Step 3 -->
+                    <div class="signature-step hidden" data-step="3">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 3: Ana cifra el [Mensaje + Firma] con la CLAVE PÚBLICA de Beto.</p>
+                        <div class="flex justify-center items-center space-x-2">
+                            <div class="text-center border-2 border-dashed border-gray-400 p-2 rounded-lg">
+                                <div class="w-24 h-16 bg-blue-100 rounded-lg flex items-center justify-center p-2 text-sm">Mensaje</div>
+                                <div class="w-24 h-16 bg-green-200 rounded-lg flex items-center justify-center p-2 text-sm mt-2">Firma</div>
+                            </div>
+                            <div class="text-5xl text-slate-400">+</div>
+                            <div class="w-24 h-24 bg-blue-200 rounded-full flex items-center justify-center p-2 text-sm">Clave Pública de Beto</div>
+                            <div class="text-5xl text-slate-400">&rarr;</div>
+                            <div class="w-24 h-24 bg-purple-200 rounded-lg flex items-center justify-center p-2 text-sm">Paquete Cifrado</div>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="signature-step hidden" data-step="4">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 4: Ana envía el paquete cifrado a Beto.</p>
+                        <div class="flex justify-around items-center">
+                            <div class="text-center"><div class="w-24 h-24 bg-purple-200 rounded-lg flex items-center justify-center p-2 text-sm">Paquete Cifrado</div><p class="mt-2 font-semibold">Ana</p></div>
+                            <div class="text-5xl text-slate-400 animate-pulse">&rarr;</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center p-2 text-sm">...</div><p class="mt-2 font-semibold">Beto</p></div>
+                        </div>
+                    </div>
+                    <!-- Step 5 -->
+                    <div class="signature-step hidden" data-step="5">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 5: Beto descifra el paquete con su CLAVE PRIVADA.</p>
+                         <div class="flex justify-center items-center space-x-4">
+                            <div class="text-center"><div class="w-24 h-24 bg-purple-200 rounded-lg flex items-center justify-center p-2 text-sm">Paquete Cifrado</div><p class="mt-2 font-semibold">Beto</p></div>
+                            <div class="text-5xl text-slate-400">+</div>
+                            <div class="w-24 h-24 bg-red-200 rounded-full flex items-center justify-center p-2 text-sm">Clave Privada de Beto</div>
+                            <div class="text-5xl text-slate-400">&rarr;</div>
+                            <div class="text-center border-2 border-dashed border-gray-400 p-2 rounded-lg">
+                                <div class="w-24 h-16 bg-blue-100 rounded-lg flex items-center justify-center p-2 text-sm">Mensaje</div>
+                                <div class="w-24 h-16 bg-green-200 rounded-lg flex items-center justify-center p-2 text-sm mt-2">Firma</div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Step 6 -->
+                    <div class="signature-step hidden" data-step="6">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 6: Beto calcula el HASH del mensaje que recibió.</p>
+                        <div class="flex justify-center items-center space-x-4">
+                            <div class="text-center"><div class="w-24 h-24 bg-blue-100 rounded-lg flex items-center justify-center p-2 text-sm">Mensaje Recibido</div><p class="mt-2 font-semibold">Beto</p></div>
+                            <div class="text-5xl text-slate-400">&rarr;</div>
+                            <div class="w-24 h-24 bg-orange-100 rounded-lg flex items-center justify-center p-2 text-sm font-mono">Hash Calculado</div>
+                        </div>
+                    </div>
+                     <!-- Step 7 -->
+                    <div class="signature-step hidden" data-step="7">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 7: Beto descifra la firma con la CLAVE PÚBLICA de Ana.</p>
+                        <div class="flex justify-center items-center space-x-4">
+                            <div class="text-center"><div class="w-24 h-24 bg-green-200 rounded-lg flex items-center justify-center p-2 text-sm">Firma Recibida</div><p class="mt-2 font-semibold">Beto</p></div>
+                            <div class="text-5xl text-slate-400">+</div>
+                            <div class="w-24 h-24 bg-blue-200 rounded-full flex items-center justify-center p-2 text-sm">Clave Pública de Ana</div>
+                            <div class="text-5xl text-slate-400">&rarr;</div>
+                            <div class="w-24 h-24 bg-orange-100 rounded-lg flex items-center justify-center p-2 text-sm font-mono">Hash Original</div>
+                        </div>
+                    </div>
+                    <!-- Step 8 -->
+                    <div class="signature-step hidden" data-step="8">
+                        <p class="text-center font-semibold text-lg mb-4">Paso 8: Beto compara los dos HASHES.</p>
+                         <div class="flex justify-center items-center space-x-4">
+                            <div class="w-24 h-24 bg-orange-100 rounded-lg flex items-center justify-center p-2 text-sm font-mono">Hash Calculado</div>
+                            <div id="comparison-result" class="text-5xl text-green-500 font-bold">=</div>
+                            <div class="w-24 h-24 bg-orange-100 rounded-lg flex items-center justify-center p-2 text-sm font-mono">Hash Original</div>
+                        </div>
+                        <p id="verification-status" class="text-center mt-4 text-green-600 font-bold text-xl">¡VERIFICADO! El mensaje es auténtico, íntegro y confidencial.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-center space-x-4">
+                    <button id="prev-step" class="px-6 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition disabled:opacity-50" disabled>Anterior</button>
+                    <button id="next-step" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Siguiente</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center text-sm">
+            <p>&copy; 2025 Guía Interactiva de Redes y Criptografía. Creada para fines educativos.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Interacción del Modelo OSI
+            const layerButtons = document.querySelectorAll('.model-layer');
+            const infoDisplay = document.getElementById('layer-info');
+            const defaultInfo = infoDisplay.innerHTML;
+
+            layerButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    infoDisplay.innerHTML = `<p>${button.dataset.info}</p>`;
+                });
+            });
+
+            // Demo de Hash en tiempo real
+            const hashInput = document.getElementById('hash-input');
+            const hashOutput = document.getElementById('hash-output');
+
+            async function updateHash() {
+                const text = hashInput.value;
+                if (!text) {
+                    hashOutput.textContent = '';
+                    return;
+                }
+                const encoder = new TextEncoder();
+                const data = encoder.encode(text);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                hashOutput.textContent = hashHex;
+            }
+
+            hashInput.addEventListener('input', updateHash);
+            updateHash(); // Initial hash calculation
+
+            // Gráfico de Criptografía
+            const ctx = document.getElementById('cryptoChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Velocidad', 'Gestión de Claves', 'Seguridad'],
+                    datasets: [{
+                        label: 'Cifrado Simétrico',
+                        data: [9, 3, 7],
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)', // blue-500
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Cifrado Asimétrico',
+                        data: [3, 9, 9],
+                        backgroundColor: 'rgba(249, 115, 22, 0.7)', // orange-500
+                        borderColor: 'rgba(249, 115, 22, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            title: {
+                                display: true,
+                                text: 'Puntuación Relativa'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Comparación de Tipos de Cifrado'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + ' / 10';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Demo de Firma Digital
+            const prevBtn = document.getElementById('prev-step');
+            const nextBtn = document.getElementById('next-step');
+            const steps = document.querySelectorAll('.signature-step');
+            const totalSteps = steps.length;
+            let currentStep = 1;
+
+            function showStep(stepNumber) {
+                steps.forEach(step => {
+                    if (parseInt(step.dataset.step) === stepNumber) {
+                        step.classList.remove('hidden');
+                    } else {
+                        step.classList.add('hidden');
+                    }
+                });
+                
+                prevBtn.disabled = stepNumber === 1;
+                nextBtn.disabled = stepNumber === totalSteps;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
