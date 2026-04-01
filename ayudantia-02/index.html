@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva: Direccionamiento IP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --usm-navy: #002b5c;
+            --usm-burgundy: #8c1d40;
+            --usm-gold: #c9a34a;
+            --usm-ink: #0f1f33;
+            --usm-paper: #f6f7fb;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--usm-paper);
+            background-image:
+                radial-gradient(circle at 8% 12%, rgba(201, 163, 74, 0.22) 0%, transparent 28%),
+                radial-gradient(circle at 92% 84%, rgba(140, 29, 64, 0.15) 0%, transparent 32%),
+                linear-gradient(135deg, #f8fafc 0%, #edf2fb 55%, #f8fafc 100%);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Sora', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .topbar {
+            background: linear-gradient(90deg, rgba(0, 43, 92, 0.95), rgba(140, 29, 64, 0.92));
+            box-shadow: 0 10px 30px rgba(15, 31, 51, 0.25);
+            border-bottom: 2px solid rgba(201, 163, 74, 0.65);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-title {
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .nav-link {
+            color: #f1f5f9;
+            padding: 0.45rem 0.85rem;
+            border-radius: 9999px;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(201, 163, 74, 0.55);
+        }
+
+        .hero-title {
+            font-size: clamp(2.3rem, 6vw, 4.2rem);
+            background: linear-gradient(135deg, var(--usm-navy), var(--usm-burgundy));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .section-title {
+            border-bottom-width: 3px;
+            color: var(--usm-ink);
+            border-color: rgba(0, 43, 92, 0.28);
+        }
+
+        .bg-white.p-8.rounded-xl.shadow-lg, .card-hover {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 43, 92, 0.09);
+            box-shadow: 0 16px 30px rgba(15, 31, 51, 0.1);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .bg-white.p-8.rounded-xl.shadow-lg:hover, .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 36px rgba(15, 31, 51, 0.16);
+        }
+
+        .text-usm-navy { color: var(--usm-navy) !important; }
+        .text-usm-burgundy { color: var(--usm-burgundy) !important; }
+        .bg-usm-navy { background-color: var(--usm-navy) !important; }
+        .bg-usm-navy:hover { background-color: #001a3b !important; }
+        .accent-gold { color: var(--usm-gold); }
+
+        .tab-active {
+            background-color: var(--usm-navy);
+            color: white;
+            border-radius: 0.5rem;
+        }
+        
+        sup.cite {
+            color: var(--usm-gold);
+            font-weight: bold;
+            font-size: 0.7em;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="topbar sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl brand-title">Guía de Direccionamiento IP</h1>
+            <div class="space-x-2 sm:space-x-4">
+                <a href="#fundamentos" class="nav-link font-medium transition-colors text-xs sm:text-base">Fundamentos</a>
+                <a href="#clases" class="nav-link font-medium transition-colors text-xs sm:text-base">Clases y NAT</a>
+                <a href="#calculadora" class="nav-link font-medium transition-colors text-xs sm:text-base">Calculadora</a>
+                <a href="#dns" class="nav-link font-medium transition-colors text-xs sm:text-base">DNS</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="intro" class="text-center mb-16">
+            <h2 class="hero-title font-bold mb-4">Direccionamiento en Redes</h2>
+            <p class="text-lg hero-subtitle max-w-3xl mx-auto">Explora los fundamentos del direccionamiento, desde las direcciones físicas locales hasta el sistema global de nombres de dominio.</p>
+            <p class="mt-4 text-sm font-bold tracking-wide accent-gold">Edición visual inspirada en identidad USM</p>
+        </section>
+
+        <section id="fundamentos" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">1. Fundamentos del Direccionamiento</h3>
+            
+             <div class="grid md:grid-cols-2 gap-10 mb-10">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">Dirección MAC vs. Dirección IP</h4>
+                    <p class="mb-4">Todo dispositivo en una red necesita una identificación única. Existen varios tipos <sup class="cite"></sup>:</p>
+                    <ul class="space-y-3">
+                        <li><strong>Dirección MAC:</strong> Es un identificador físico de 6 bytes (48 bits) asignado a la tarjeta de red. Sirve solamente para identificar un aparato en la red local <sup class="cite"></sup>.</li>
+                        <li><strong>Dirección IP:</strong> Sirve para identificar de forma única el computador en Internet <sup class="cite"></sup>. Tiene un tamaño de 32 bits (4 bytes) en IPv4, usualmente escrita en decimal separados por puntos <sup class="cite"></sup>.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">Anatomía y Netmask</h4>
+                    <p class="mb-4">El <strong>Netmask</strong> (Máscara de red) determina cuál es la parte que identifica la red en la dirección IP de la parte que identifica el host <sup class="cite"></sup>. Para obtener la red, se hace un AND lógico entre la IP y la Netmask <sup class="cite"></sup>.</p>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div class="flex justify-between font-mono text-center">
+                            <span>192.168.1.10</span>
+                            <span class="font-bold text-usm-burgundy">/24 (CIDR) <sup class="cite"></sup></span>
+                        </div>
+                        <div class="flex mt-2">
+                            <div class="w-3/4 bg-usm-navy text-white text-center p-2 rounded-l-md text-sm">Porción de RED</div>
+                            <div class="w-1/4 bg-slate-400 text-white text-center p-2 rounded-r-md text-sm">HOST</div>
+                        </div>
+                        <p class="text-xs mt-3">Además, existe la <strong>Dirección de Broadcast</strong>, que sirve para mandar un mensaje a todos los computadores conectados a una red <sup class="cite"></sup>. Se calcula poniendo con el valor 1 todos los bits de host <sup class="cite"></sup>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="clases" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">2. Clases de IP y Redes Privadas</h3>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-10">
+                <h4 class="text-2xl font-bold mb-6 text-center text-usm-navy">Clasificación Histórica de IP</h4>
+                <div id="tabs-container" class="flex border-b border-gray-200 mb-6 flex-wrap gap-2">
+                    <button class="tab-btn flex-grow py-2 px-4 text-center font-semibold text-slate-600 tab-active transition-colors" data-target="clase-a">Clase A</button>
+                    <button class="tab-btn flex-grow py-2 px-4 text-center font-semibold text-slate-600 transition-colors" data-target="clase-b">Clase B</button>
+                    <button class="tab-btn flex-grow py-2 px-4 text-center font-semibold text-slate-600 transition-colors" data-target="clase-c">Clase C</button>
+                    <button class="tab-btn flex-grow py-2 px-4 text-center font-semibold text-slate-600 transition-colors" data-target="clase-d">Clase D y E</button>
+                </div>
+
+                <div id="tabs-content" class="min-h-[150px]">
+                    <div class="tab-content" id="clase-a">
+                        <h5 class="text-xl font-bold text-usm-burgundy mb-3">Clase A</h5>
+                        <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li><strong>Rango:</strong> 0.0.0.0 hasta 127.255.255.255 <sup class="cite"></sup>.</li>
+                            <li><strong>Netmask:</strong> 255.0.0.0 = /8 <sup class="cite"></sup>.</li>
+                            <li><strong>Capacidad:</strong> 16 Millones de computadores por red <sup class="cite"></sup>.</li>
+                        </ul>
+                    </div>
+                    <div class="tab-content hidden" id="clase-b">
+                        <h5 class="text-xl font-bold text-usm-burgundy mb-3">Clase B</h5>
+                         <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li><strong>Rango:</strong> 128.0.0.0 hasta 191.255.255.255 <sup class="cite"></sup>.</li>
+                            <li><strong>Netmask:</strong> 255.255.0.0 = /16 <sup class="cite"></sup>.</li>
+                             <li><strong>Capacidad:</strong> 65.534 computadores por red (16 Bits) <sup class="cite"></sup>.</li>
+                        </ul>
+                    </div>
+                    <div class="tab-content hidden" id="clase-c">
+                        <h5 class="text-xl font-bold text-usm-burgundy mb-3">Clase C</h5>
+                         <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li><strong>Rango:</strong> 192.0.0.0 hasta 223.255.255.255 <sup class="cite"></sup>.</li>
+                            <li><strong>Netmask:</strong> 255.255.255.0 = /24 <sup class="cite"></sup>.</li>
+                             <li><strong>Capacidad:</strong> 254 computadores por red (8 Bits) <sup class="cite"></sup>.</li>
+                        </ul>
+                    </div>
+                    <div class="tab-content hidden" id="clase-d">
+                        <h5 class="text-xl font-bold text-usm-burgundy mb-3">Clases Especiales (D y E)</h5>
+                         <ul class="list-disc list-inside space-y-4 text-slate-700">
+                            <li><strong>Clase D:</strong> Direcciones usadas para el multicast <sup class="cite"></sup>. En este contexto no hay noción de redes <sup class="cite"></sup>.</li>
+                            <li><strong>Clase E:</strong> Direcciones reservadas para uso experimental, desarrollos futuros e investigación <sup class="cite"></sup>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
+                <h4 class="text-2xl font-bold mb-4 text-usm-navy">Direcciones Privadas y NAT</h4>
+                <p class="mb-4 text-slate-700">Las direcciones privadas son usadas para tener un gran número de hosts, pero con una pequeña cantidad de direcciones públicas <sup class="cite"></sup>. <strong>No son ruteables en Internet <sup class="cite"></sup>.</strong></p>
+                
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-sm text-left text-slate-600 border border-slate-200">
+                        <thead class="text-xs text-white uppercase bg-usm-navy">
+                            <tr>
+                                <th class="px-4 py-3">Tipo / Bloque</th>
+                                <th class="px-4 py-3">Inicio <sup class="cite"></sup></th>
+                                <th class="px-4 py-3">Fin <sup class="cite"></sup></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="px-4 py-3 font-medium text-slate-900">1 Clase A (/8 prefix)</td>
+                                <td class="px-4 py-3 font-mono">10.0.0.0</td>
+                                <td class="px-4 py-3 font-mono">10.255.255.255</td>
+                            </tr>
+                            <tr class="border-b bg-slate-50">
+                                <td class="px-4 py-3 font-medium text-slate-900">16 Clases B (/12 prefix)</td>
+                                <td class="px-4 py-3 font-mono">172.16.0.0</td>
+                                <td class="px-4 py-3 font-mono">172.31.255.255</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-900">256 Clases C (/16 prefix)</td>
+                                <td class="px-4 py-3 font-mono">192.168.0.0</td>
+                                <td class="px-4 py-3 font-mono">192.168.255.255</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-slate-50 border-l-4 border-usm-burgundy p-4">
+                    <h5 class="font-bold text-usm-burgundy mb-2">Traducción de Red (NAT)</h5>
+                    <p class="text-sm text-slate-700">Para salir a Internet, el router emplea NAT. Se usa una dirección pública con un número de puerto dinámico <sup class="cite"></sup>. Esto permite hacer un puente (Proxy) entre la red privada (empresa, universidad) y la red externa <sup class="cite"></sup>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculadora" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">3. Calculadora de Subneteo (Sub-Neting)</h3>
+            <p class="text-center text-slate-600 mb-8 max-w-2xl mx-auto">Se puede subdividir más una clase IP para hacer diferentes sub-redes <sup class="cite"></sup>. Ingresa una IP y su prefijo CIDR para calcular la red y el broadcast.</p>
+            
+            <div class="bg-white p-8 rounded-xl shadow-lg max-w-3xl mx-auto border-t-4 border-usm-navy">
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <div class="flex-grow">
+                        <label for="ip-input" class="block mb-2 font-medium text-slate-700">Dirección IP:</label>
+                        <input type="text" id="ip-input" value="200.1.19.77" class="w-full p-3 border border-slate-300 rounded-md font-mono focus:ring-2 focus:ring-usm-navy outline-none transition">
+                    </div>
+                    <div>
+                        <label for="cidr-input" class="block mb-2 font-medium text-slate-700">Prefijo CIDR:</label>
+                        <input type="number" id="cidr-input" value="26" min="1" max="32" class="w-full sm:w-24 p-3 border border-slate-300 rounded-md font-mono focus:ring-2 focus:ring-usm-navy outline-none transition">
+                    </div>
+                </div>
+                <button id="calculate-btn" class="w-full bg-usm-navy text-white font-bold py-3 rounded-lg shadow-md transition-colors">Calcular Subred</button>
+
+                <div id="results-container" class="mt-8 border-t border-slate-200 pt-6 hidden">
+                     <h4 class="text-xl font-bold mb-4 text-usm-burgundy">Resultados del Cálculo:</h4>
+                     <div class="grid md:grid-cols-2 gap-x-8 gap-y-4 font-mono text-sm">
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Dirección IP:</strong> <span id="res-ip" class="text-usm-navy font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Prefijo CIDR:</strong> <span id="res-cidr" class="text-usm-navy font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Máscara de Red:</strong> <span id="res-netmask"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Dirección de Red:</strong> <span id="res-network" class="text-green-600 font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Dir. de Broadcast:</strong> <span id="res-broadcast" class="text-red-600 font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Rango de Hosts:</strong> <span id="res-host-range"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Total de Hosts:</strong> <span id="res-total-hosts"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Subredes Posibles:</strong> <span id="res-subnets"></span></div>
+                     </div>
+                </div>
+                <div id="error-container" class="mt-6 text-center text-red-600 font-semibold hidden"></div>
+            </div>
+        </section>
+
+        <section id="dns">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">4. DNS: El Sistema de Nombres de Dominio</h3>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">Resolución de Nombres</h4>
+                    <p class="mb-4 text-sm text-slate-700">Usar direcciones IP es necesario para identificar máquinas, pero es difícil de usar para los usuarios <sup class="cite"></sup>. El <strong>Domain Name Server (DNS)</strong> asocia un nombre único y fácil de recordar a cada computador mediante una solución jerárquica <sup class="cite"></sup>.</p>
+                    
+                    <h5 class="font-bold text-usm-burgundy mt-6 mb-2">Herramientas Diagnósticas</h5>
+                    <ul class="space-y-3 text-sm text-slate-700">
+                        <li class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <strong>nslookup</strong> (Name Server Lookup) <sup class="cite"></sup>: Utilidad básica para consultar IPs de dominios.
+                        </li>
+                        <li class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <strong>dig</strong> <sup class="cite"></sup>: Herramienta más avanzada para interrogar servidores DNS y ver registros específicos (A, NS, CNAME).
+                        </li>
+                        <li class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <strong>Resolución Inversa (Reverse Resolution)</strong>: Permite encontrar el nombre desde una IP utilizando el dominio especial <code class="bg-slate-200 px-1 rounded text-usm-burgundy">in-addr.arpa</code> <sup class="cite"></sup>.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col justify-center">
+                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">Administración y Jerarquía</h4>
+                    <p class="text-sm text-slate-700 mb-4">Los dominios en Internet forman un árbol. La raíz (Root Domain) y los dominios de Top Level son manejados directamente por el <strong>ICANN</strong> (Internet Corporation for Assigned Names and Numbers) <sup class="cite"></sup>.</p>
+                    
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-4 text-sm text-slate-700">
+                        <p><strong>RIRs (Regional Internet Registries):</strong> Manejan el primer sub-dominio. Por ejemplo, <strong>LACNIC</strong> cubre América Latina y el Caribe <sup class="cite"></sup>.</p>
+                        <p class="mt-2">Dentro de un país, existen entidades locales (como NIC Chile para el dominio <code class="text-usm-navy font-bold">.cl</code>) <sup class="cite"></sup>.</p>
+                    </div>
+
+                    <div class="border-2 border-slate-200 rounded-lg p-4 text-center text-sm font-semibold bg-white">
+                        <p class="font-bold text-lg text-slate-800">. (Root Domain)</p>
+                        <div class="w-px h-4 bg-slate-300 mx-auto"></div>
+                        <div class="border border-slate-300 rounded p-2 bg-slate-50">
+                            <p class="text-xs text-slate-500">TLD (Ej: Paises)</p>
+                            <code class="text-usm-navy text-base">.cl</code>
+                            <div class="w-px h-4 bg-slate-300 mx-auto"></div>
+                            <div class="border border-slate-300 rounded p-2 bg-white shadow-sm">
+                                <p class="text-xs text-slate-500">Dominio</p>
+                                <code class="text-usm-navy text-base">utfsm.cl</code> <sup class="cite"></sup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-20" style="background: linear-gradient(120deg, #0f1f33 0%, #002b5c 55%, #8c1d40 100%); color: #e2e8f0; border-top: 2px solid rgba(201,163,74,0.6);">
+        <div class="container mx-auto px-6 py-8 text-center text-sm font-medium">
+            <p>&copy; 2026 Ayudantía - Redes de Computadores: Direccionamiento IP.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lógica de Tabs (Clases IP)
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('tab-active'));
+                    button.classList.add('tab-active');
+
+                    tabContents.forEach(content => {
+                        content.classList.toggle('hidden', content.id !== button.dataset.target);
+                    });
+                });
+            });
+
+            // Lógica Calculadora de Subredes
+            const ipInput = document.getElementById('ip-input');
+            const cidrInput = document.getElementById('cidr-input');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultsContainer = document.getElementById('results-container');
+            const errorContainer = document.getElementById('error-container');
+
+            function ipToLong(ip) {
+                return ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0) >>> 0;
+            }
+
+            function longToIp(long) {
+                return [(long >>> 24) & 255, (long >>> 16) & 255, (long >>> 8) & 255, long & 255].join('.');
+            }
+
+            calculateBtn.addEventListener('click', () => {
+                const ipStr = ipInput.value.trim();
+                const cidr = parseInt(cidrInput.value, 10);
+
+                const ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+                if (!ipRegex.test(ipStr) || ipStr.split('.').some(o => parseInt(o) > 255) || isNaN(cidr) || cidr < 1 || cidr > 32) {
+                    errorContainer.textContent = 'Por favor, ingrese una dirección IP y un prefijo CIDR válidos.';
+                    errorContainer.classList.remove('hidden');
+                    resultsContainer.classList.add('hidden');
+                    return;
+                }
+                
+                errorContainer.classList.add('hidden');
+                
+                const ipLong = ipToLong(ipStr);
+                const netmaskLong = (-1 << (32 - cidr)) >>> 0;
+                
+                const networkLong = (ipLong & netmaskLong) >>> 0;
+                const broadcastLong = (networkLong | (~netmaskLong >>> 0)) >>> 0;
+
+                const hostBits = 32 - cidr;
+                const totalHosts = hostBits > 1 ? Math.pow(2, hostBits) - 2 : 0;
+                
+                const firstHostLong = totalHosts > 0 ? networkLong + 1 : 0;
+                const lastHostLong = totalHosts > 0 ? broadcastLong - 1 : 0;
+                
+                let originalCidr = 8;
+                const firstOctet = parseInt(ipStr.split('.')[0]);
+
+                if (firstOctet >= 128 && firstOctet <= 191) {
+                    originalCidr = 16;
+                } else if (firstOctet >= 192 && firstOctet <= 223) {
+                    originalCidr = 24;
+                }
+                const subnetBits = cidr - originalCidr;
+                const possibleSubnets = subnetBits >= 0 ? Math.pow(2, subnetBits) : 'N/A';
+
+                document.getElementById('res-ip').textContent = ipStr;
+                document.getElementById('res-cidr').textContent = `/${cidr}`;
+                document.getElementById('res-netmask').textContent = longToIp(netmaskLong);
+                document.getElementById('res-network').textContent = longToIp(networkLong);
+                document.getElementById('res-broadcast').textContent = longToIp(broadcastLong);
+                document.getElementById('res-host-range').textContent = totalHosts > 0 ? `${longToIp(firstHostLong)} - ${longToIp(lastHostLong)}` : 'N/A';
+                document.getElementById('res-total-hosts').textContent = totalHosts;
+                document.getElementById('res-subnets').textContent = `${possibleSubnets} (basado en clase original)`;
+
+                resultsContainer.classList.remove('hidden');
+            });
+            
+            // Trigger calculation on load
+            calculateBtn.click();
+        });
+    </script>
+</body>
+</html>

@@ -20,7 +20,7 @@ Para una mejor experiencia, puedes interactuar con los diagramas de capas, gener
 | N°| Tema Principal | Contenido Clave | Material Web |
 | :---: | :--- | :--- | :---: |
 | **01** | **Fundamentos y Criptografía** | Tipos de redes (LAN/WAN), Modelo OSI vs TCP/IP, Hashes SHA-256 y Firmas Digitales. | [Ver Guía 1](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-01) |
-| **02** | *(Próximamente)* | - | - |
+| **02** | **Direcionamiento** | Direcciones MAC vs IP, Netmask y Broadcast, Clases de IP y Redes Privadas, Cálculo de Subredes, y DNS. | [Ver Guía 2](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-02) |
 
 ---
 
