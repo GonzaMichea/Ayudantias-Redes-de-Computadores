@@ -24,16 +24,6 @@ Para una mejor experiencia, puedes interactuar con los diagramas de capas, gener
 
 ---
 
-## Tecnologías de la Guía Interactiva
-
-El material de este repositorio está diseñado como una aplicación web de una sola página (SPA) y utiliza las siguientes tecnologías nativas para funcionar sin instalaciones adicionales:
-
-* **Estructura y Estilos:** HTML5 y **Tailwind CSS** para un diseño responsivo.
-* **Criptografía en Vivo:** Implementación de la **Web Crypto API** (`crypto.subtle`) para demostrar el "Efecto Avalancha" en hashes.
-* **Visualización de Datos:** **Chart.js** para comparar el rendimiento y seguridad de algoritmos simétricos y asimétricos.
-
----
-
 ## Contacto y Dudas
 
 Si tienes consultas sobre la materia o detectas algún detalle en las guías:
