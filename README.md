@@ -24,6 +24,8 @@ Para una mejor experiencia, puedes interactuar con los diagramas de capas, gener
 | **03** | **Capa de Aplicación** | Protocolos y Encapsulación, Sockets y Puertos (TCP/UDP), HTTP/HTTPS y Certificados X509, Balanceo de Cargas y Redes P2P. | [Ver Guía 3](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-03) |
 | **04** | **Capa de Transporte** | UDP vs TCP, Multiplexación, 3-Way Handshake, Control de Flujo (Window Size), Retransmisión, Piggybacking y casos de certamen. | [Ver Guía 4](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-04) |
 | **05** | **Capa de Internet** | IPv4, Header IP, TTL, MTU, Fragmentación, Ruteo, OSPF, BGP, ICMP, DHCP. | [Ver Guía 5](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-05) | 
+
+
 ---
 
 ## Contacto y Dudas

@@ -13,7 +13,7 @@
       --navy: #062b52;
       --burg: #7f1d3c;
       --gold: #c89b3c;
-      --ink: #102033;
+      --ink:  #102033;
       --paper: #f5f7fb;
       --card-bg: rgba(255,255,255,0.92);
       --border: rgba(6,43,82,0.10);
@@ -27,13 +27,15 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--paper);
       background-image:
-        radial-gradient(ellipse 60% 40% at 8% 8%, rgba(200,155,60,0.18) 0, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 8% 8%,  rgba(200,155,60,0.18) 0, transparent 60%),
         radial-gradient(ellipse 48% 45% at 94% 82%, rgba(127,29,60,0.12) 0, transparent 55%),
-        radial-gradient(ellipse 72% 58% at 50% 50%, rgba(6,43,82,0.04) 0, transparent 70%);
+        radial-gradient(ellipse 72% 58% at 50% 50%, rgba(6,43,82,0.04)   0, transparent 70%);
       min-height: 100vh;
       color: #1e293b;
     }
     h1,h2,h3,h4,h5 { font-family: 'Fraunces', serif; }
+
+    /* ── Topbar ── */
     .topbar {
       background: linear-gradient(100deg, rgba(6,43,82,0.97) 0%, rgba(127,29,60,0.95) 100%);
       border-bottom: 2px solid rgba(200,155,60,0.55);
@@ -48,12 +50,33 @@
       font-weight: 600;
       transition: all .22s;
       border: 1px solid transparent;
+      text-decoration: none;
+      display: inline-block;
     }
-    .nav-link:hover {
+    .nav-link:hover, .nav-link.active {
       color: white;
       background: rgba(255,255,255,0.13);
       border-color: rgba(200,155,60,0.5);
     }
+
+    /* ── Mobile menu ── */
+    #mobile-menu {
+      background: linear-gradient(100deg, rgba(6,43,82,0.99) 0%, rgba(127,29,60,0.97) 100%);
+      border-top: 1px solid rgba(200,155,60,0.3);
+    }
+    #mobile-menu a {
+      display: block;
+      color: rgba(255,255,255,0.84);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      text-decoration: none;
+      transition: background .18s;
+    }
+    #mobile-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    /* ── Hero ── */
     .hero-title {
       font-size: clamp(2.5rem, 6vw, 4.6rem);
       font-weight: 700;
@@ -77,11 +100,15 @@
       color: var(--navy);
       text-transform: uppercase;
     }
+
+    /* ── Section title ── */
     .section-title {
       color: var(--ink);
       border-bottom: 3px solid rgba(6,43,82,0.2);
       padding-bottom: 1rem;
     }
+
+    /* ── Cards ── */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -93,12 +120,13 @@
       transform: translateY(-2px);
       box-shadow: 0 16px 40px rgba(15,31,51,0.12), 0 2px 6px rgba(15,31,51,0.08);
     }
+
+    /* ── Step badge ── */
     .step-num {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 38px;
-      height: 38px;
+      width: 38px; height: 38px;
       border-radius: 10px;
       flex-shrink: 0;
       background: linear-gradient(135deg, var(--gold), #e8c870);
@@ -106,6 +134,8 @@
       font-size: 1rem;
       font-weight: 800;
     }
+
+    /* ── Hoverable seg-field tooltips ── */
     .seg-field {
       cursor: help;
       transition: filter .18s;
@@ -137,28 +167,19 @@
     .seg-tooltip::after {
       content: "";
       position: absolute;
-      top: 100%;
-      left: 50%;
+      top: 100%; left: 50%;
       transform: translateX(-50%);
       border: 7px solid transparent;
       border-top-color: #0f1f33;
     }
     .seg-field:hover .seg-tooltip { display: block; }
-    .seg-field.tip-left .seg-tooltip {
-      left: auto;
-      right: 0;
-      transform: none;
-    }
-    .seg-field.tip-left .seg-tooltip::after {
-      left: auto;
-      right: 20px;
-      transform: none;
-    }
+    .seg-field.tip-left .seg-tooltip { left: auto; right: 0; transform: none; }
+    .seg-field.tip-left .seg-tooltip::after { left: auto; right: 20px; transform: none; }
     .seg-table-wrap {
       overflow-x: auto;
       overflow-y: visible;
-      padding-top: 280px;
-      margin-top: -280px;
+      padding-top: 300px;
+      margin-top: -300px;
       width: 100%;
     }
     .seg-table-inner {
@@ -166,6 +187,8 @@
       width: fit-content;
       overflow: visible;
     }
+
+    /* ── Diagram containers ── */
     .diagram-wrap {
       width: 100%;
       overflow-x: auto;
@@ -175,6 +198,8 @@
       padding: 1.5rem 1rem;
     }
     .diagram-wrap svg { display: block; margin: 0 auto; }
+
+    /* ── Misc ── */
     .flag-text {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
@@ -195,85 +220,182 @@
       line-height: 1.7;
       overflow-x: auto;
     }
-    .animate-in { animation: fadeUp .4s ease-out both; }
+    .animate-in { animation: fadeUp .35s ease-out both; }
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* ── Color utilities ── */
     .text-navy { color: var(--navy); }
-    .text-burg { color: var(--burg); }
-    .text-gold { color: var(--gold); }
-    .bg-navy { background-color: var(--navy); }
-    .bg-burg { background-color: var(--burg); }
-    .bg-gold { background-color: var(--gold); }
+    .text-burg  { color: var(--burg); }
+    .text-gold  { color: var(--gold); }
+    .bg-navy    { background-color: var(--navy); }
+    .bg-burg    { background-color: var(--burg); }
+    .bg-gold    { background-color: var(--gold); }
     .hover\:bg-navy-dk:hover { background-color: #041d39; }
-    .ttl-box { border: 2px dashed rgba(6,43,82,0.2); border-radius: 14px; }
+    .ttl-box  { border: 2px dashed rgba(6,43,82,0.2); border-radius: 14px; }
     .bit-mini { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
     .route-chip { border-radius: 999px; padding: 0.28rem 0.7rem; font-size: 0.72rem; font-weight: 700; }
     .small-note { font-size: 0.72rem; color: #64748b; }
+
+    /* ── Interactive calculator ── */
+    .calc-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      background: #f8fafc;
+      color: var(--ink);
+      transition: border-color .18s;
+    }
+    .calc-input:focus { outline: none; border-color: var(--navy); }
+    .calc-btn {
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.55rem 1.4rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s;
+    }
+    .calc-btn:hover { background: #041d39; }
+    .calc-btn.secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .calc-btn.secondary:hover { background: #cbd5e1; }
+
+    /* ── Fragment row result ── */
+    .frag-row { animation: fadeUp .3s ease-out both; }
+
+    /* ── Back to top ── */
+    #back-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 44px; height: 44px;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s, transform .3s;
+      box-shadow: 0 4px 16px rgba(6,43,82,0.35);
+      z-index: 200;
+    }
+    #back-top.visible { opacity: 1; pointer-events: auto; }
+    #back-top:hover { transform: translateY(-3px); }
   </style>
 </head>
 <body>
+
+  <!-- ── TOP NAV ── -->
   <header class="topbar sticky top-0 z-50">
-    <nav class="container mx-auto px-6 py-3 flex justify-between items-center max-w-6xl">
-      <span class="text-white font-bold text-lg" style="font-family: 'Fraunces', serif;">Ayudantía Capa de Internet</span>
-      <div class="hidden md:flex gap-1 sm:gap-2">
-        <a href="#teoria" class="nav-link">Teoría</a>
-        <a href="#ipv4" class="nav-link">IPv4</a>
-        <a href="#ruteo" class="nav-link">Ruteo</a>
+    <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center max-w-6xl">
+      <span class="text-white font-bold text-base sm:text-lg" style="font-family:'Fraunces',serif;">Ayudantía Capa de Internet</span>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex gap-1">
+        <a href="#teoria"    class="nav-link">Teoria</a>
+        <a href="#ipv4"      class="nav-link">IPv4</a>
+        <a href="#ruteo"     class="nav-link">Ruteo</a>
         <a href="#protocolos" class="nav-link">Soporte</a>
-        <a href="#practica" class="nav-link">Práctica</a>
+        <a href="#certamen"  class="nav-link">Certamen</a>
+        <a href="#practica"  class="nav-link">Practica</a>
       </div>
+
+      <!-- Hamburger (mobile) -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-white/10 transition" aria-label="Menu">
+        <span class="block w-5 h-0.5 bg-white rounded"></span>
+        <span class="block w-5 h-0.5 bg-white rounded"></span>
+        <span class="block w-5 h-0.5 bg-white rounded"></span>
+      </button>
     </nav>
+
+    <!-- Mobile dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden">
+      <a href="#teoria"     onclick="closeMobileMenu()">Teoria</a>
+      <a href="#ipv4"       onclick="closeMobileMenu()">IPv4</a>
+      <a href="#ruteo"      onclick="closeMobileMenu()">Ruteo</a>
+      <a href="#protocolos" onclick="closeMobileMenu()">Soporte</a>
+      <a href="#certamen"   onclick="closeMobileMenu()">Certamen</a>
+      <a href="#practica"   onclick="closeMobileMenu()">Practica</a>
+    </div>
   </header>
 
+  <!-- ── BACK TO TOP ── -->
+  <button id="back-top" aria-label="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
   <main class="container mx-auto px-4 sm:px-6 py-14 max-w-6xl">
+
+    <!-- Hero -->
     <section class="text-center mb-20">
       <div class="badge mb-5">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg>
-        Redes de Computadores · Ayudantía de 1 hora
+        Redes de Computadores · Ayudantia de 1 hora
       </div>
       <h1 class="hero-title mb-5">La Capa de Internet</h1>
-      <p class="text-slate-500 text-base font-medium max-w-3xl mx-auto">IPv4, encabezado IP, TTL, MTU, fragmentación, tablas de ruteo, algoritmos intra-AS e inter-AS, ICMP y DHCP.</p>
-      <p class="text-slate-400 text-xs mt-3 italic">Diseñada para repasar teoría, visualizar el flujo de paquetes y practicar preguntas típicas de certamen.</p>
+      <p class="text-slate-500 text-base font-medium max-w-3xl mx-auto">IPv4, encabezado IP, TTL, MTU, fragmentacion, tablas de ruteo, algoritmos intra-AS e inter-AS, ICMP y DHCP.</p>
+      <p class="text-slate-400 text-xs mt-3 italic">Disenada para repasar teoria, visualizar el flujo de paquetes y practicar preguntas tipicas de certamen.</p>
     </section>
 
+    <!-- ══════════════════════════════════
+         PARTE 1 · VISION GENERAL
+    ══════════════════════════════════ -->
     <section id="teoria" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 1 · Visión general</h2>
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 1 · Vision general</h2>
       <div class="space-y-10">
+
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">1</span> Qué hace la capa de Internet</h3>
-          <p class="text-slate-600 leading-relaxed text-sm mb-6">La capa de Internet transmite paquetes desde un host origen hacia un host destino usando routers como intermediarios. Su servicio es <strong class="text-navy">no orientado a conexión</strong>, no mantiene estado por flujo y delega confiabilidad, retransmisión y recuperación de pérdidas a la capa superior, típicamente transporte.</p>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">1</span> Que hace la capa de Internet
+          </h3>
+          <p class="text-slate-600 leading-relaxed text-sm mb-6">La capa de Internet transmite paquetes desde un host origen hacia un host destino usando routers como intermediarios. Su servicio es <strong class="text-navy">no orientado a conexion</strong>, no mantiene estado por flujo y delega confiabilidad, retransmision y recuperacion de perdidas a la capa superior, tipicamente transporte.</p>
           <div class="grid md:grid-cols-4 gap-4">
             <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
               <h4 class="font-bold text-navy mb-2 text-sm">Direcciones IP</h4>
-              <p class="text-xs text-slate-600">Identifican de forma lógica al emisor y al destino dentro de la red.</p>
+              <p class="text-xs text-slate-600">Identifican de forma logica al emisor y al destino dentro de la red.</p>
             </div>
             <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
               <h4 class="font-bold text-burg mb-2 text-sm">Routers</h4>
               <p class="text-xs text-slate-600">Toman decisiones salto a salto consultando tablas de ruteo.</p>
             </div>
             <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5">
-              <h4 class="font-bold text-gold mb-2 text-sm">Abstracción</h4>
-              <p class="text-xs text-slate-600">Oculta la tecnología subyacente: Ethernet, Wi‑Fi, fibra u otros medios.</p>
+              <h4 class="font-bold text-gold mb-2 text-sm">Abstraccion</h4>
+              <p class="text-xs text-slate-600">Oculta la tecnologia subyacente: Ethernet, Wi-Fi, fibra u otros medios.</p>
             </div>
             <div class="rounded-xl border border-green-200 bg-green-50 p-5">
               <h4 class="font-bold text-green-700 mb-2 text-sm">Best effort</h4>
-              <p class="text-xs text-slate-600">Puede haber pérdidas, reordenamiento o rutas diferentes para paquetes consecutivos.</p>
+              <p class="text-xs text-slate-600">Puede haber perdidas, reordenamiento o rutas diferentes para paquetes consecutivos.</p>
             </div>
           </div>
         </div>
 
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">2</span> Idea clave para no confundir capas</h3>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">2</span> Idea clave para no confundir capas
+          </h3>
           <div class="grid md:grid-cols-2 gap-6">
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-              <h4 class="font-bold text-navy mb-3 text-sm">La capa de Internet sí hace</h4>
+              <h4 class="font-bold text-navy mb-3 text-sm">La capa de Internet si hace</h4>
               <ul class="space-y-2 text-sm text-slate-600">
-                <li>• Direccionamiento lógico con IP.</li>
+                <li>• Direccionamiento logico con IP.</li>
                 <li>• Encapsular datos de transporte dentro de datagramas IP.</li>
-                <li>• Elegir próximo salto mediante ruteo.</li>
-                <li>• Control básico con TTL e ICMP.</li>
+                <li>• Elegir proximo salto mediante ruteo.</li>
+                <li>• Control basico con TTL e ICMP.</li>
                 <li>• Fragmentar en IPv4 si el MTU lo obliga.</li>
               </ul>
             </div>
@@ -282,9 +404,9 @@
               <ul class="space-y-2 text-sm text-slate-600">
                 <li>• Garantizar entrega extremo a extremo.</li>
                 <li>• Reordenar segmentos perdidos o duplicados.</li>
-                <li>• Mantener una conexión abierta como TCP.</li>
-                <li>• Saber qué aplicación final usa los datos; eso lo ve transporte.</li>
-                <li>• Corregir errores de aplicación.</li>
+                <li>• Mantener una conexion abierta como TCP.</li>
+                <li>• Saber que aplicacion final usa los datos; eso lo ve transporte.</li>
+                <li>• Corregir errores de aplicacion.</li>
               </ul>
             </div>
           </div>
@@ -292,92 +414,136 @@
       </div>
     </section>
 
+    <!-- ══════════════════════════════════
+         PARTE 2 · IPv4
+    ══════════════════════════════════ -->
     <section id="ipv4" class="mb-24">
       <h2 class="section-title text-3xl font-bold mb-10">Parte 2 · IPv4 en detalle</h2>
       <div class="space-y-10">
+
+        <!-- Header IPv4 -->
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">3</span> Formato del datagrama IPv4</h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">El datagrama IPv4 tiene un <strong class="text-navy">header mínimo de 20 bytes</strong> y luego los datos transportados, por ejemplo un segmento TCP, un datagrama UDP o un mensaje ICMP. Pasa el cursor sobre cada campo para revisar su función práctica.</p>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">3</span> Formato del datagrama IPv4
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">El datagrama IPv4 tiene un <strong class="text-navy">header minimo de 20 bytes</strong> y luego los datos transportados. Pasa el cursor sobre cada campo para revisar su funcion practica.</p>
           <div class="seg-table-wrap">
             <div class="seg-table-inner font-mono border-2 border-slate-300 rounded-xl shadow-inner bg-white">
               <div class="flex justify-between text-xs text-slate-500 bg-white border-b border-slate-200 px-4 py-1.5 font-bold rounded-t-xl">
                 <span>Bit 0</span><span>Bit 15 · Bit 16</span><span>Bit 31</span>
               </div>
               <div class="flex border-b border-slate-300 text-xs font-bold text-center">
-                <div class="seg-field w-1/6 p-3 border-r border-slate-300 bg-blue-100">Version 4<div class="seg-tooltip"><strong>Version</strong><br>Indica la versión del protocolo IP. En este caso vale 4 para IPv4.</div></div>
-                <div class="seg-field w-1/6 p-3 border-r border-slate-300 bg-blue-100">IHL 4<div class="seg-tooltip"><strong>IHL</strong><br>Internet Header Length. Mide el tamaño del header en palabras de 32 bits. Mínimo 5, que equivale a 20 bytes.</div></div>
-                <div class="seg-field w-1/3 p-3 border-r border-slate-300 bg-blue-200">DSCP / ECN 8<div class="seg-tooltip"><strong>DSCP / ECN</strong><br>DSCP permite trato diferenciado de tráfico; ECN puede señalizar congestión sin descartar el paquete.</div></div>
-                <div class="seg-field w-1/3 p-3 bg-blue-200">Total Length 16<div class="seg-tooltip"><strong>Total Length</strong><br>Tamaño completo del paquete IP, incluyendo encabezado y datos. El máximo teórico es 65.535 bytes.</div></div>
+                <div class="seg-field w-1/6 p-3 border-r border-slate-300 bg-blue-100">Version 4
+                  <div class="seg-tooltip"><strong>Version</strong><br>Indica la version del protocolo IP. Vale 4 para IPv4 y 6 para IPv6.</div>
+                </div>
+                <div class="seg-field w-1/6 p-3 border-r border-slate-300 bg-blue-100">IHL 4
+                  <div class="seg-tooltip"><strong>IHL — Internet Header Length</strong><br>Tamano del header en palabras de 32 bits. Minimo 5 (= 20 bytes). Si hay opciones puede llegar a 15 (= 60 bytes).</div>
+                </div>
+                <div class="seg-field w-1/3 p-3 border-r border-slate-300 bg-blue-200">DSCP / ECN 8
+                  <div class="seg-tooltip"><strong>DSCP / ECN</strong><br>DSCP permite trato diferenciado de trafico (QoS). ECN senaliza congestion sin descartar el paquete.</div>
+                </div>
+                <div class="seg-field w-1/3 p-3 bg-blue-200">Total Length 16
+                  <div class="seg-tooltip"><strong>Total Length</strong><br>Tamano completo del datagrama: header + datos. Maximo teorico 65 535 bytes. El receptor usa este campo para saber cuantos bytes leer.</div>
+                </div>
               </div>
               <div class="flex border-b border-slate-300 text-xs font-bold text-center">
-                <div class="seg-field w-1/2 p-3 border-r border-slate-300 bg-blue-300">Identification 16<div class="seg-tooltip"><strong>Identification</strong><br>Identifica todos los fragmentos que pertenecen al mismo datagrama original.</div></div>
-                <div class="seg-field w-1/6 p-3 border-r border-slate-300 bg-slate-100">Flags 3<div class="seg-tooltip"><strong>Flags</strong><br>Incluye DF (Don't Fragment) y MF (More Fragments). DF=1 prohíbe fragmentar; MF=1 indica que vendrán más fragmentos.</div></div>
-                <div class="seg-field w-1/3 p-3 bg-slate-100">Fragment Offset 13<div class="seg-tooltip"><strong>Fragment Offset</strong><br>Posición del fragmento respecto al datagrama original, medida en bloques de 8 bytes.</div></div>
+                <div class="seg-field w-1/2 p-3 border-r border-slate-300 bg-blue-300">Identification 16
+                  <div class="seg-tooltip"><strong>Identification</strong><br>Numero unico asignado por el emisor. Todos los fragmentos del mismo datagrama original comparten este valor para poder reagruparse en el destino.</div>
+                </div>
+                <div class="seg-field w-1/6 p-3 border-r border-slate-300 bg-slate-100">Flags 3
+                  <div class="seg-tooltip"><strong>Flags</strong><br>Bit 0: reservado (0). Bit 1: DF (Don't Fragment) — si vale 1 el router descarta el paquete si no cabe y envia ICMP. Bit 2: MF (More Fragments) — 1 indica que vienen mas fragmentos.</div>
+                </div>
+                <div class="seg-field w-1/3 p-3 bg-slate-100">Fragment Offset 13
+                  <div class="seg-tooltip"><strong>Fragment Offset</strong><br>Posicion de los datos de este fragmento dentro del datagrama original, medida en bloques de 8 bytes. Primer fragmento = 0.</div>
+                </div>
               </div>
               <div class="flex border-b border-slate-300 text-xs font-bold text-center">
-                <div class="seg-field w-1/4 p-3 border-r border-slate-300 bg-yellow-100">TTL 8<div class="seg-tooltip"><strong>TTL</strong><br>Time To Live. Cada router lo decrementa en 1. Si llega a 0, el paquete se descarta y normalmente se envía ICMP Time Exceeded.</div></div>
-                <div class="seg-field w-1/4 p-3 border-r border-slate-300 bg-yellow-100">Protocol 8<div class="seg-tooltip"><strong>Protocol</strong><br>Indica qué viene en la carga útil: 6 TCP, 17 UDP, 1 ICMP, entre otros.</div></div>
-                <div class="seg-field w-1/2 p-3 bg-yellow-200">Header Checksum 16<div class="seg-tooltip"><strong>Header Checksum</strong><br>Verifica solo el encabezado IP. Cada router debe recalcularlo al cambiar el TTL.</div></div>
+                <div class="seg-field w-1/4 p-3 border-r border-slate-300 bg-yellow-100">TTL 8
+                  <div class="seg-tooltip"><strong>TTL — Time To Live</strong><br>Cada router decrementa este valor en 1. Si llega a 0 el paquete se descarta y el router envia ICMP Time Exceeded al origen. Evita loops infinitos.</div>
+                </div>
+                <div class="seg-field w-1/4 p-3 border-r border-slate-300 bg-yellow-100">Protocol 8
+                  <div class="seg-tooltip"><strong>Protocol</strong><br>Identifica el protocolo en el payload: 1 = ICMP, 6 = TCP, 17 = UDP, 89 = OSPF. El receptor usa este valor para demultiplexar.</div>
+                </div>
+                <div class="seg-field w-1/2 p-3 bg-yellow-200">Header Checksum 16
+                  <div class="seg-tooltip"><strong>Header Checksum</strong><br>Suma en complemento a 1 del header IP. Solo cubre el header, no los datos. Cada router debe recalcularlo al decrementar el TTL.</div>
+                </div>
               </div>
               <div class="flex border-b border-slate-300 text-xs font-bold text-center">
-                <div class="seg-field w-1/2 p-3 border-r border-slate-300 bg-green-100">Source Address 32<div class="seg-tooltip"><strong>Source Address</strong><br>Dirección IPv4 de origen del emisor del datagrama.</div></div>
-                <div class="seg-field w-1/2 p-3 bg-green-100">Destination Address 32<div class="seg-tooltip"><strong>Destination Address</strong><br>Dirección IPv4 del destino final usada para decidir el ruteo.</div></div>
+                <div class="seg-field w-1/2 p-3 border-r border-slate-300 bg-green-100">Source Address 32
+                  <div class="seg-tooltip"><strong>Source Address</strong><br>Direccion IPv4 del host que origina el datagrama. No cambia durante el transito (salvo con NAT).</div>
+                </div>
+                <div class="seg-field w-1/2 p-3 bg-green-100 tip-left">Destination Address 32
+                  <div class="seg-tooltip tip-left"><strong>Destination Address</strong><br>Direccion IPv4 del host destino final. Los routers la consultan para decidir el siguiente salto. No cambia durante el transito.</div>
+                </div>
               </div>
-              <div class="seg-field border-b border-slate-300 bg-slate-200 p-2 text-xs text-slate-600 text-center">Options + Padding (opcional)<div class="seg-tooltip"><strong>Options</strong><br>Campo opcional y poco usado en práctica. Si aparece, hace crecer el header más allá de 20 bytes.</div></div>
+              <div class="seg-field border-b border-slate-300 bg-slate-200 p-2 text-xs text-slate-600 text-center">Options + Padding (opcional, raramente usado)
+                <div class="seg-tooltip"><strong>Options</strong><br>Campo opcional que agranda el header. Incluye opciones como registro de ruta, timestamp o seguridad. Hace crecer IHL mas alla de 5.</div>
+              </div>
               <div class="bg-orange-500 p-5 text-sm text-white font-bold tracking-wider text-center rounded-b-xl">PAYLOAD · TCP / UDP / ICMP / OTROS</div>
             </div>
           </div>
-
           <div class="grid md:grid-cols-3 gap-4 mt-6">
             <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
-              <h4 class="font-bold text-navy mb-2 text-sm">Dato de prueba clásico</h4>
-              <p class="text-xs text-slate-600">Si el campo Protocol vale 6, el payload es TCP. Si vale 17, es UDP. Si vale 1, es ICMP.</p>
+              <h4 class="font-bold text-navy mb-2 text-sm">Dato de prueba clasico</h4>
+              <p class="text-xs text-slate-600">Si el campo Protocol vale 6, el payload es TCP. Si vale 17, es UDP. Si vale 1, es ICMP. Este campo permite a la capa IP demultiplexar hacia el protocolo correcto.</p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
               <h4 class="font-bold text-burg mb-2 text-sm">Punto de certamen</h4>
-              <p class="text-xs text-slate-600">El checksum IP no protege los datos de aplicación, solo el header IP. TCP y UDP calculan su propio checksum.</p>
+              <p class="text-xs text-slate-600">El checksum IP protege <em>solo el header</em>, no los datos de aplicacion. TCP y UDP calculan su propio checksum sobre los datos. Esto es deliberado: mantiene IP simple.</p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
               <h4 class="font-bold text-gold mb-2 text-sm">Error frecuente</h4>
-              <p class="text-xs text-slate-600">Confundir TTL con tiempo real en segundos. En práctica funciona como contador máximo de saltos.</p>
+              <p class="text-xs text-slate-600">Confundir TTL con tiempo real en segundos. Originalmente era en segundos, pero en la practica funciona como contador de saltos: cada router resta 1, independiente del tiempo.</p>
             </div>
           </div>
         </div>
 
+        <!-- TTL -->
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">4</span> TTL y prevención de loops</h3>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">4</span> TTL y prevencion de loops
+          </h3>
           <div class="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <p class="text-slate-600 text-sm leading-relaxed mb-4">TTL evita que un paquete quede circulando indefinidamente si hay un loop de ruteo. Cada router reduce el valor en 1 y, cuando llega a cero, descarta el paquete y avisa con ICMP.</p>
-              <div class="ttl-box p-4 bg-slate-50">
-                <div class="flex items-center justify-between text-sm font-bold text-slate-700 mb-3"><span>Host A</span><span>R1</span><span>R2</span><span>R3</span><span>Destino</span></div>
-                <div class="grid grid-cols-5 gap-2 text-center text-xs">
-                  <div class="rounded-xl bg-blue-100 p-3 border border-blue-200">TTL=4</div>
-                  <div class="rounded-xl bg-blue-100 p-3 border border-blue-200">TTL=3</div>
-                  <div class="rounded-xl bg-yellow-100 p-3 border border-yellow-200">TTL=2</div>
-                  <div class="rounded-xl bg-orange-100 p-3 border border-orange-200">TTL=1</div>
-                  <div class="rounded-xl bg-red-100 p-3 border border-red-200">TTL=0 → Drop</div>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4">TTL evita que un paquete quede circulando indefinidamente si hay un loop de ruteo. Cada router reduce el valor en 1 y, cuando llega a cero, descarta el paquete y avisa al origen con ICMP Time Exceeded.</p>
+              <div class="ttl-box p-4 bg-slate-50 mb-4">
+                <div class="flex items-center justify-between text-xs font-bold text-slate-600 mb-3">
+                  <span>Host A</span><span>R1</span><span>R2</span><span>R3</span><span>Destino</span>
                 </div>
+                <div class="grid grid-cols-5 gap-2 text-center text-xs">
+                  <div class="rounded-xl bg-blue-100 p-3 border border-blue-200 font-bold">TTL=4</div>
+                  <div class="rounded-xl bg-blue-100 p-3 border border-blue-200 font-bold">TTL=3</div>
+                  <div class="rounded-xl bg-yellow-100 p-3 border border-yellow-200 font-bold">TTL=2</div>
+                  <div class="rounded-xl bg-orange-100 p-3 border border-orange-200 font-bold">TTL=1</div>
+                  <div class="rounded-xl bg-red-100 p-3 border border-red-200 font-bold text-red-700">TTL=0 Drop</div>
+                </div>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+                <strong class="text-navy">Valor tipico:</strong> sistemas operativos modernos envian paquetes con TTL=64 (Linux/macOS) o TTL=128 (Windows). Un traceroute permite estimar el TTL inicial del host remoto por la formula: TTL_inicial - TTL_recibido = saltos.
               </div>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-              <h4 class="font-bold text-burg mb-3 text-sm">Relación con traceroute</h4>
-              <p class="text-sm text-slate-600 mb-3">Traceroute envía paquetes con TTL 1, luego TTL 2, luego TTL 3, y así sucesivamente. Cada router donde el TTL expira responde con un mensaje ICMP Time Exceeded, revelando la ruta salto a salto.</p>
-              <div class="code-block">TTL=1 → responde Router 1
-TTL=2 → responde Router 2
-TTL=3 → responde Router 3
+              <h4 class="font-bold text-burg mb-3 text-sm">Relacion con traceroute</h4>
+              <p class="text-sm text-slate-600 mb-3">Traceroute envia paquetes con TTL=1, luego TTL=2, y asi sucesivamente. Cada router donde el TTL expira responde con ICMP Time Exceeded, revelando la ruta salto a salto.</p>
+              <div class="code-block">TTL=1  responde Router 1
+TTL=2  responde Router 2
+TTL=3  responde Router 3
 ...
-TTL=n → responde el destino</div>
+TTL=n  responde el destino</div>
+              <p class="text-xs text-slate-500 mt-3">Cada linea del output incluye la IP del router y el RTT medido. Los asteriscos (*) indican que ese router no respondio ICMP en el tiempo de espera.</p>
             </div>
           </div>
         </div>
 
+        <!-- MTU y fragmentacion -->
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">5</span> MTU y fragmentación</h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">El <strong class="text-navy">MTU</strong> es el tamaño máximo de paquete que un enlace puede transportar. Si un router debe enviar un datagrama más grande que el MTU del próximo salto, en IPv4 puede fragmentarlo, salvo que el bit DF esté activado.</p>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">5</span> MTU y fragmentacion
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">El <strong class="text-navy">MTU</strong> es el tamano maximo de paquete que un enlace puede transportar. Si un router debe enviar un datagrama mas grande que el MTU del proximo salto, en IPv4 puede fragmentarlo, salvo que el bit DF este activado.</p>
           <div class="grid md:grid-cols-2 gap-6">
             <div class="diagram-wrap">
-              <h4 class="font-bold text-navy text-center mb-4 text-sm">Sin fragmentación</h4>
+              <h4 class="font-bold text-navy text-center mb-4 text-sm">Sin fragmentacion</h4>
               <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:420px;font-family:'Plus Jakarta Sans',sans-serif">
                 <rect x="20" y="30" width="90" height="35" rx="10" fill="#062b52"/>
                 <text x="65" y="52" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Host A</text>
@@ -385,151 +551,214 @@ TTL=n → responde el destino</div>
                 <text x="205" y="52" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Router</text>
                 <rect x="300" y="30" width="100" height="35" rx="10" fill="#7f1d3c"/>
                 <text x="350" y="52" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Host B</text>
-                <line x1="110" y1="47" x2="160" y2="47" stroke="#64748b" stroke-width="2.5"/>
-                <line x1="250" y1="47" x2="300" y2="47" stroke="#64748b" stroke-width="2.5"/>
+                <line x1="110" y1="47" x2="160" y2="47" stroke="#64748b" stroke-width="2.5" marker-end="url(#arr1)"/>
+                <line x1="250" y1="47" x2="300" y2="47" stroke="#64748b" stroke-width="2.5" marker-end="url(#arr1)"/>
+                <defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64748b"/></marker></defs>
                 <rect x="70" y="95" width="280" height="38" rx="12" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
-                <text x="210" y="118" text-anchor="middle" fill="#78350f" font-size="12" font-weight="700">Datagrama IP de 1200 bytes · MTU siguiente salto = 1500</text>
-                <text x="210" y="157" text-anchor="middle" fill="#64748b" font-size="11">Cabe completo, por lo tanto no hay fragmentación.</text>
+                <text x="210" y="113" text-anchor="middle" fill="#78350f" font-size="11" font-weight="700">Datagrama 1200 B</text>
+                <text x="210" y="127" text-anchor="middle" fill="#78350f" font-size="10">MTU siguiente salto = 1500 B — cabe completo</text>
+                <text x="210" y="162" text-anchor="middle" fill="#64748b" font-size="10">No se fragmenta. Se entrega intacto al destino.</text>
               </svg>
             </div>
             <div class="diagram-wrap">
-              <h4 class="font-bold text-burg text-center mb-4 text-sm">Con fragmentación</h4>
-              <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:420px;font-family:'Plus Jakarta Sans',sans-serif">
+              <h4 class="font-bold text-burg text-center mb-4 text-sm">Con fragmentacion</h4>
+              <svg viewBox="0 0 420 215" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:420px;font-family:'Plus Jakarta Sans',sans-serif">
                 <rect x="20" y="25" width="90" height="35" rx="10" fill="#062b52"/>
                 <text x="65" y="47" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Host A</text>
                 <rect x="160" y="25" width="90" height="35" rx="10" fill="#0f766e"/>
                 <text x="205" y="47" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Router</text>
                 <rect x="300" y="25" width="100" height="35" rx="10" fill="#7f1d3c"/>
                 <text x="350" y="47" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Host B</text>
-                <line x1="110" y1="42" x2="160" y2="42" stroke="#64748b" stroke-width="2.5"/>
-                <line x1="250" y1="42" x2="300" y2="42" stroke="#64748b" stroke-width="2.5"/>
-                <rect x="60" y="85" width="290" height="30" rx="10" fill="#fecaca" stroke="#ef4444" stroke-width="2"/>
-                <text x="205" y="104" text-anchor="middle" fill="#7f1d1d" font-size="11" font-weight="700">Datagrama original = 4000 bytes</text>
-                <rect x="40" y="145" width="110" height="28" rx="8" fill="#dbeafe" stroke="#60a5fa"/>
-                <text x="95" y="163" text-anchor="middle" fill="#1e3a8a" font-size="10" font-weight="700">Frag 1 · Offset 0</text>
-                <rect x="160" y="145" width="110" height="28" rx="8" fill="#fde68a" stroke="#f59e0b"/>
-                <text x="215" y="163" text-anchor="middle" fill="#78350f" font-size="10" font-weight="700">Frag 2 · Offset n</text>
-                <rect x="280" y="145" width="100" height="28" rx="8" fill="#fecdd3" stroke="#f43f5e"/>
-                <text x="330" y="163" text-anchor="middle" fill="#881337" font-size="10" font-weight="700">Frag final · MF=0</text>
-                <text x="210" y="202" text-anchor="middle" fill="#64748b" font-size="11">Todos comparten el mismo Identification. El reensamblaje ocurre solo en el host destino.</text>
+                <line x1="110" y1="42" x2="160" y2="42" stroke="#64748b" stroke-width="2.5" marker-end="url(#arr2)"/>
+                <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64748b"/></marker></defs>
+                <rect x="60" y="80" width="290" height="28" rx="8" fill="#fecaca" stroke="#ef4444" stroke-width="2"/>
+                <text x="205" y="98" text-anchor="middle" fill="#7f1d1d" font-size="11" font-weight="700">Datagrama original — demasiado grande para el MTU</text>
+                <text x="205" y="122" text-anchor="middle" fill="#7f1d3c" font-size="10" font-weight="700">El router fragmenta:</text>
+                <rect x="20"  y="134" width="115" height="28" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+                <text x="77"  y="151" text-anchor="middle" fill="#1e3a8a" font-size="10" font-weight="700">Frag 1 · Offset 0 · MF=1</text>
+                <rect x="150" y="134" width="115" height="28" rx="8" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
+                <text x="207" y="151" text-anchor="middle" fill="#78350f" font-size="10" font-weight="700">Frag 2 · Offset n · MF=1</text>
+                <rect x="285" y="134" width="115" height="28" rx="8" fill="#fecdd3" stroke="#f43f5e" stroke-width="1.5"/>
+                <text x="342" y="151" text-anchor="middle" fill="#881337" font-size="10" font-weight="700">Frag 3 · Offset m · MF=0</text>
+                <text x="210" y="182" text-anchor="middle" fill="#64748b" font-size="10">Mismo Identification en todos. Reensamblaje solo en Host B.</text>
               </svg>
             </div>
           </div>
+
           <div class="grid md:grid-cols-3 gap-4 mt-6">
             <div class="rounded-xl border border-red-200 bg-red-50 p-5">
               <h4 class="font-bold text-red-700 mb-2 text-sm">DF = 1</h4>
-              <p class="text-xs text-slate-700">No se puede fragmentar. Si el paquete no cabe, el router lo descarta y envía un ICMP indicando que se requiere fragmentación.</p>
+              <p class="text-xs text-slate-700">No se puede fragmentar. Si el paquete no cabe en el MTU, el router lo descarta y envia ICMP Fragmentation Needed al origen. Usado en Path MTU Discovery.</p>
             </div>
             <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
               <h4 class="font-bold text-amber-700 mb-2 text-sm">MF = 1</h4>
-              <p class="text-xs text-slate-700">Significa que aún faltan fragmentos por llegar. Solo el último fragmento lleva MF = 0.</p>
+              <p class="text-xs text-slate-700">Significa que aun faltan fragmentos por llegar. Solo el ultimo fragmento del datagrama lleva MF = 0. Sin el ultimo fragmento, el destino no puede reensamblar.</p>
             </div>
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
               <h4 class="font-bold text-emerald-700 mb-2 text-sm">Offset</h4>
-              <p class="text-xs text-slate-700">Se expresa en bloques de 8 bytes, por eso el tamaño útil de cada fragmento suele elegirse múltiplo de 8.</p>
+              <p class="text-xs text-slate-700">Se expresa en bloques de 8 bytes, por eso el tamano util de cada fragmento (excepto el ultimo) debe ser multiplo de 8. Permite al destino calcular la posicion exacta de cada fragmento.</p>
             </div>
           </div>
-          <div class="mt-6 rounded-2xl p-6 text-white" style="background: linear-gradient(135deg,#0f1f33,#1e293b);">
-            <h4 class="font-bold mb-3" style="color:#facc15;font-size:1rem;">Mini procedimiento para ejercicios de fragmentación</h4>
-            <div class="code-block">1. Restar el header IP al MTU para hallar datos por fragmento.
-2. Ajustar ese tamaño a múltiplo de 8 bytes.
-3. Calcular cuántos fragmentos se requieren.
-4. Asignar mismo Identification a todos.
-5. Poner Fragment Offset según la posición relativa.
-6. Marcar MF=1 en todos menos el último.</div>
+
+          <div class="mt-6 rounded-2xl p-6 text-white" style="background:linear-gradient(135deg,#0f1f33,#1e293b);">
+            <h4 class="font-bold mb-3" style="color:#facc15;font-size:1rem;">Procedimiento sistematico para ejercicios de fragmentacion</h4>
+            <div class="code-block">1. Datos del fragmento = MTU - 20 (header IP minimo)
+2. Redondear ese tamano hacia abajo al multiplo de 8 mas cercano
+3. Calcular cuantos fragmentos se necesitan: ceil(datos_totales / datos_por_frag)
+4. Asignar el mismo Identification a todos los fragmentos
+5. Fragment Offset[i] = suma de datos de los fragmentos anteriores / 8
+6. MF = 1 en todos los fragmentos excepto el ultimo (MF = 0)</div>
+          </div>
+
+          <!-- Calculadora interactiva de fragmentacion -->
+          <div class="mt-8 rounded-2xl border-2 border-navy/20 bg-white p-6">
+            <h4 class="font-bold text-navy mb-1 text-base">Calculadora de fragmentacion IPv4</h4>
+            <p class="text-xs text-slate-500 mb-5">Ingresa los parametros y la calculadora genera la tabla de fragmentos automaticamente.</p>
+            <div class="grid sm:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Tamano total del datagrama (bytes)</label>
+                <input type="number" id="fc-total" class="calc-input" value="4020" min="21" max="65535">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Tamano del header IP (bytes)</label>
+                <input type="number" id="fc-header" class="calc-input" value="20" min="20" max="60" step="4">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">MTU del enlace (bytes)</label>
+                <input type="number" id="fc-mtu" class="calc-input" value="1500" min="68" max="9000">
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <button class="calc-btn" onclick="calcFragments()">Calcular</button>
+              <button class="calc-btn secondary" onclick="resetFragCalc()">Limpiar</button>
+            </div>
+            <div id="fc-error" class="hidden mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700"></div>
+            <div id="fc-result" class="hidden mt-5">
+              <div id="fc-summary" class="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-slate-700 mb-4"></div>
+              <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <table class="min-w-full text-sm">
+                  <thead class="bg-slate-50">
+                    <tr>
+                      <th class="px-4 py-2.5 text-left text-xs font-bold text-slate-600">Fragmento</th>
+                      <th class="px-4 py-2.5 text-left text-xs font-bold text-slate-600">Datos (bytes)</th>
+                      <th class="px-4 py-2.5 text-left text-xs font-bold text-slate-600">Tamano total</th>
+                      <th class="px-4 py-2.5 text-left text-xs font-bold text-slate-600">Fragment Offset</th>
+                      <th class="px-4 py-2.5 text-left text-xs font-bold text-slate-600">MF</th>
+                      <th class="px-4 py-2.5 text-left text-xs font-bold text-slate-600">DF</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fc-tbody" class="divide-y divide-slate-100 font-mono text-xs text-slate-700"></tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- ══════════════════════════════════
+         PARTE 3 · RUTEO
+    ══════════════════════════════════ -->
     <section id="ruteo" class="mb-24">
       <h2 class="section-title text-3xl font-bold mb-10">Parte 3 · Ruteo y escalabilidad</h2>
       <div class="space-y-10">
+
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">6</span> Tabla de ruteo y regla del prefijo más largo</h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Un router decide el siguiente salto consultando su tabla de ruteo. Si varias entradas coinciden con la dirección destino, se elige la de <strong class="text-navy">prefijo más largo</strong>, es decir, la más específica.</p>
-          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">6</span> Tabla de ruteo y regla del prefijo mas largo
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Un router decide el siguiente salto consultando su tabla de ruteo. Si varias entradas coinciden con la direccion destino, se elige la de <strong class="text-navy">prefijo mas largo</strong>, es decir, la mas especifica.</p>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white mb-6">
             <table class="min-w-full text-sm">
               <thead class="bg-slate-50 text-slate-700">
                 <tr>
                   <th class="px-4 py-3 text-left">Destino</th>
                   <th class="px-4 py-3 text-left">Gateway</th>
-                  <th class="px-4 py-3 text-left">Máscara</th>
+                  <th class="px-4 py-3 text-left">Mascara</th>
                   <th class="px-4 py-3 text-left">Flags</th>
                   <th class="px-4 py-3 text-left">Interfaz</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-600">
-                <tr><td class="px-4 py-3">30.0.0.0</td><td class="px-4 py-3">0.0.0.0</td><td class="px-4 py-3">255.0.0.0</td><td class="px-4 py-3">U</td><td class="px-4 py-3">eth1</td></tr>
-                <tr><td class="px-4 py-3">30.3.0.0</td><td class="px-4 py-3">20.1.2.3</td><td class="px-4 py-3">255.255.0.0</td><td class="px-4 py-3">UG</td><td class="px-4 py-3">eth0</td></tr>
-                <tr><td class="px-4 py-3">30.1.2.3</td><td class="px-4 py-3">20.1.0.1</td><td class="px-4 py-3">255.255.255.255</td><td class="px-4 py-3">UGH</td><td class="px-4 py-3">eth0</td></tr>
-                <tr><td class="px-4 py-3">default</td><td class="px-4 py-3">30.0.0.1</td><td class="px-4 py-3">0.0.0.0</td><td class="px-4 py-3">UG</td><td class="px-4 py-3">eth1</td></tr>
+              <tbody class="divide-y divide-slate-100 text-slate-600 font-mono text-xs">
+                <tr><td class="px-4 py-3">30.0.0.0</td><td class="px-4 py-3">0.0.0.0</td><td class="px-4 py-3">255.0.0.0</td><td class="px-4 py-3 font-sans">U</td><td class="px-4 py-3">eth1</td></tr>
+                <tr><td class="px-4 py-3">30.3.0.0</td><td class="px-4 py-3">20.1.2.3</td><td class="px-4 py-3">255.255.0.0</td><td class="px-4 py-3 font-sans">UG</td><td class="px-4 py-3">eth0</td></tr>
+                <tr class="bg-amber-50"><td class="px-4 py-3 font-bold text-amber-700">30.1.2.3</td><td class="px-4 py-3">20.1.0.1</td><td class="px-4 py-3 font-bold text-amber-700">255.255.255.255</td><td class="px-4 py-3 font-sans">UGH</td><td class="px-4 py-3">eth0</td></tr>
+                <tr><td class="px-4 py-3">default</td><td class="px-4 py-3">30.0.0.1</td><td class="px-4 py-3">0.0.0.0</td><td class="px-4 py-3 font-sans">UG</td><td class="px-4 py-3">eth1</td></tr>
               </tbody>
             </table>
           </div>
-          <div class="grid md:grid-cols-3 gap-4 mt-6 text-xs">
-            <div class="rounded-xl border border-blue-200 bg-blue-50 p-4"><strong class="text-navy">U</strong> = la ruta está activa.</div>
-            <div class="rounded-xl border border-rose-200 bg-rose-50 p-4"><strong class="text-burg">G</strong> = debe pasar por gateway.</div>
-            <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-4"><strong class="text-gold">H</strong> = la ruta apunta a un host específico.</div>
+          <p class="text-xs text-slate-500 mb-4">La fila resaltada tiene mascara /32 (host especifico). Si el destino es 30.1.2.3, aunque la primera entrada tambien coincide, se elige esta por ser el prefijo mas largo.</p>
+          <div class="grid md:grid-cols-3 gap-4 text-xs">
+            <div class="rounded-xl border border-blue-200 bg-blue-50 p-4"><strong class="text-navy">U</strong> = la ruta esta activa y el enlace esta up.</div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-4"><strong class="text-burg">G</strong> = debe pasar por un gateway (no esta directamente conectado).</div>
+            <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-4"><strong class="text-gold">H</strong> = la ruta apunta a un host especifico, no a una red.</div>
           </div>
         </div>
 
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">7</span> Ruteo estático vs dinámico</h3>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">7</span> Ruteo estatico vs dinamico
+          </h3>
           <div class="grid md:grid-cols-2 gap-6">
             <div class="rounded-2xl border border-blue-200 bg-blue-50 p-6">
-              <h4 class="font-bold text-navy mb-3 text-sm">Ruteo estático</h4>
+              <h4 class="font-bold text-navy mb-3 text-sm">Ruteo estatico</h4>
               <ul class="space-y-2 text-sm text-slate-700">
-                <li>• Se configura manualmente.</li>
-                <li>• Es predecible y simple.</li>
+                <li>• Se configura manualmente por el administrador.</li>
+                <li>• Es predecible y simple de depurar.</li>
                 <li>• No consume intercambios de control entre routers.</li>
-                <li>• Se vuelve rígido ante fallas o topologías grandes.</li>
+                <li>• Se vuelve rigido ante fallas o topologias grandes.</li>
+                <li>• Indicado para redes pequenas o enlaces de respaldo simples.</li>
               </ul>
             </div>
             <div class="rounded-2xl border border-rose-200 bg-rose-50 p-6">
-              <h4 class="font-bold text-burg mb-3 text-sm">Ruteo dinámico</h4>
+              <h4 class="font-bold text-burg mb-3 text-sm">Ruteo dinamico</h4>
               <ul class="space-y-2 text-sm text-slate-700">
-                <li>• Los routers aprenden rutas automáticamente.</li>
-                <li>• Reacciona frente a caídas de enlaces.</li>
+                <li>• Los routers aprenden rutas automaticamente via protocolos.</li>
+                <li>• Reacciona frente a caidas de enlaces y cambios de topologia.</li>
                 <li>• Escala mejor en redes medianas y grandes.</li>
                 <li>• Requiere protocolos, CPU y ancho de banda de control.</li>
+                <li>• Ejemplos: OSPF (intra-AS), BGP (inter-AS).</li>
               </ul>
             </div>
           </div>
         </div>
 
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">8</span> Vector-Distancia vs Link-State</h3>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">8</span> Vector-Distancia vs Link-State
+          </h3>
           <div class="grid md:grid-cols-2 gap-6">
             <div class="diagram-wrap">
               <h4 class="font-bold text-navy text-center mb-4 text-sm">Vector-Distancia · ejemplo RIP</h4>
-              <p class="text-sm text-slate-600 mb-4">Cada router comparte con sus vecinos un vector con los costos hacia distintos destinos. Trabaja con información de segunda mano y puede sufrir <strong>count to infinity</strong>.</p>
+              <p class="text-sm text-slate-600 mb-4">Cada router comparte con sus vecinos un vector con los costos hacia distintos destinos. Trabaja con informacion de segunda mano y puede sufrir <strong>count to infinity</strong>.</p>
               <div class="space-y-3 text-sm">
                 <div class="flex items-center gap-3"><span class="route-chip bg-blue-100 text-blue-800">Paso 1</span><span class="text-slate-600">Conozco solo a mis vecinos directos.</span></div>
                 <div class="flex items-center gap-3"><span class="route-chip bg-blue-100 text-blue-800">Paso 2</span><span class="text-slate-600">Intercambio mi vector con los vecinos.</span></div>
-                <div class="flex items-center gap-3"><span class="route-chip bg-blue-100 text-blue-800">Paso 3</span><span class="text-slate-600">Actualizo si aparece un camino más corto.</span></div>
-                <div class="flex items-center gap-3"><span class="route-chip bg-red-100 text-red-800">Problema</span><span class="text-slate-600">Convergencia lenta y riesgo de loops.</span></div>
+                <div class="flex items-center gap-3"><span class="route-chip bg-blue-100 text-blue-800">Paso 3</span><span class="text-slate-600">Actualizo si aparece un camino mas corto.</span></div>
+                <div class="flex items-center gap-3"><span class="route-chip bg-red-100 text-red-800">Problema</span><span class="text-slate-600">Convergencia lenta y riesgo de loops (count to infinity).</span></div>
               </div>
             </div>
             <div class="diagram-wrap">
               <h4 class="font-bold text-burg text-center mb-4 text-sm">Link-State · ejemplo OSPF</h4>
-              <p class="text-sm text-slate-600 mb-4">Cada router difunde el estado de sus enlaces, construye un mapa completo de la topología y calcula el camino mínimo con Dijkstra.</p>
+              <p class="text-sm text-slate-600 mb-4">Cada router difunde el estado de sus enlaces, construye un mapa completo de la topologia y calcula el camino minimo con el algoritmo de Dijkstra.</p>
               <div class="space-y-3 text-sm">
-                <div class="flex items-center gap-3"><span class="route-chip bg-rose-100 text-rose-800">Paso 1</span><span class="text-slate-600">Flooding de anuncios de estado de enlace.</span></div>
-                <div class="flex items-center gap-3"><span class="route-chip bg-rose-100 text-rose-800">Paso 2</span><span class="text-slate-600">Cada router arma el grafo completo.</span></div>
+                <div class="flex items-center gap-3"><span class="route-chip bg-rose-100 text-rose-800">Paso 1</span><span class="text-slate-600">Flooding de anuncios de estado de enlace (LSA).</span></div>
+                <div class="flex items-center gap-3"><span class="route-chip bg-rose-100 text-rose-800">Paso 2</span><span class="text-slate-600">Cada router arma el grafo completo de la red.</span></div>
                 <div class="flex items-center gap-3"><span class="route-chip bg-rose-100 text-rose-800">Paso 3</span><span class="text-slate-600">Dijkstra calcula la mejor ruta a todos los destinos.</span></div>
-                <div class="flex items-center gap-3"><span class="route-chip bg-green-100 text-green-800">Ventaja</span><span class="text-slate-600">Mejor escalabilidad y convergencia más robusta.</span></div>
+                <div class="flex items-center gap-3"><span class="route-chip bg-green-100 text-green-800">Ventaja</span><span class="text-slate-600">Mejor escalabilidad y convergencia mas robusta.</span></div>
               </div>
             </div>
           </div>
           <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-700">
-            <strong class="text-navy">Regla mental:</strong> Vector-Distancia = “confío en mis vecinos”. Link-State = “todos construyen el mismo mapa”.
+            <strong class="text-navy">Regla mental:</strong> Vector-Distancia = "confio en mis vecinos y me fio de su informacion". Link-State = "todos los routers construyen el mismo mapa y calculan por su cuenta".
           </div>
         </div>
 
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">9</span> Sistemas Autónomos, IGP y BGP</h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Internet es demasiado grande para que todos los routers conozcan toda la topología global. Por eso se organiza en <strong class="text-navy">Sistemas Autónomos (AS)</strong>, dentro de los cuales se usan IGP, y entre los cuales se usa BGP.</p>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">9</span> Sistemas Autonomos, IGP y BGP
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Internet es demasiado grande para que todos los routers conozcan toda la topologia global. Por eso se organiza en <strong class="text-navy">Sistemas Autonomos (AS)</strong>, dentro de los cuales se usan IGP, y entre los cuales se usa BGP.</p>
           <div class="grid md:grid-cols-3 gap-4">
             <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
               <h4 class="font-bold text-navy mb-2 text-sm">IGP</h4>
@@ -537,7 +766,7 @@ TTL=n → responde el destino</div>
               <ul class="space-y-1 text-xs text-slate-600">
                 <li>• Opera dentro de un mismo AS.</li>
                 <li>• Busca rutas por costo o distancia.</li>
-                <li>• Ejemplos: RIP, OSPF.</li>
+                <li>• Ejemplos: RIP (vector-distancia), OSPF (link-state).</li>
               </ul>
             </div>
             <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
@@ -545,32 +774,32 @@ TTL=n → responde el destino</div>
               <p class="text-xs text-slate-700 mb-2">Exterior Gateway Protocol.</p>
               <ul class="space-y-1 text-xs text-slate-600">
                 <li>• Opera entre AS distintos.</li>
-                <li>• Se basa en políticas y acuerdos.</li>
-                <li>• Usa anuncios de prefijos y atributos.</li>
+                <li>• Se basa en politicas y acuerdos comerciales.</li>
+                <li>• Usa anuncios de prefijos IP con atributos.</li>
               </ul>
             </div>
             <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5">
               <h4 class="font-bold text-gold mb-2 text-sm">Idea clave</h4>
-              <p class="text-xs text-slate-700">BGP no necesariamente elige la ruta más corta; elige la mejor según políticas, LOCALPREF, ASPATH, MED y otros criterios.</p>
+              <p class="text-xs text-slate-700">BGP no necesariamente elige la ruta mas corta; elige la mejor segun politicas, LOCALPREF, ASPATH, MED y otros criterios. La politica comercial puede pesar mas que la distancia.</p>
             </div>
           </div>
           <div class="mt-6 grid md:grid-cols-2 gap-6">
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-              <h4 class="font-bold text-navy mb-3 text-sm">Qué intercambia BGP</h4>
+              <h4 class="font-bold text-navy mb-3 text-sm">Que intercambia BGP</h4>
               <ul class="space-y-2 text-sm text-slate-600">
-                <li>• Prefijos IP.</li>
-                <li>• ASPATH: lista de AS recorridos.</li>
+                <li>• Prefijos IP (redes alcanzables).</li>
+                <li>• ASPATH: lista de AS recorridos para llegar.</li>
                 <li>• NEXTHOP: siguiente router hacia ese prefijo.</li>
                 <li>• LOCALPREF: preferencia interna dentro del AS.</li>
-                <li>• MED: sugerencia de por dónde entrar.</li>
+                <li>• MED: sugerencia de por donde entrar al AS.</li>
               </ul>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-              <h4 class="font-bold text-burg mb-3 text-sm">Orden simplificado de decisión BGP</h4>
+              <h4 class="font-bold text-burg mb-3 text-sm">Orden simplificado de decision BGP</h4>
               <ol class="space-y-2 text-sm text-slate-600 list-decimal list-inside">
-                <li>Mayor LOCALPREF.</li>
-                <li>Menor ASPATH.</li>
-                <li>Menor MED.</li>
+                <li>Mayor LOCALPREF (preferencia local del AS).</li>
+                <li>Menor longitud de ASPATH.</li>
+                <li>Menor MED entre rutas del mismo AS vecino.</li>
                 <li>Luego otros criterios internos del protocolo.</li>
               </ol>
             </div>
@@ -579,208 +808,528 @@ TTL=n → responde el destino</div>
       </div>
     </section>
 
+    <!-- ══════════════════════════════════
+         PARTE 4 · PROTOCOLOS DE SOPORTE
+    ══════════════════════════════════ -->
     <section id="protocolos" class="mb-24">
       <h2 class="section-title text-3xl font-bold mb-10">Parte 4 · Protocolos de soporte</h2>
       <div class="space-y-10">
+
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">10</span> ICMP: control y diagnóstico</h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">ICMP no transporta datos de usuario; transporta <strong class="text-navy">mensajes de control y error</strong>. Va encapsulado dentro de IP y se usa para herramientas clásicas como ping y traceroute.</p>
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">10</span> ICMP: control y diagnostico
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">ICMP no transporta datos de usuario; transporta <strong class="text-navy">mensajes de control y error</strong>. Va encapsulado dentro de un datagrama IP (Protocol = 1) y se usa para herramientas clasicas como ping y traceroute.</p>
           <div class="grid md:grid-cols-2 gap-6">
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-              <h4 class="font-bold text-navy mb-3 text-sm">Mensajes típicos</h4>
+              <h4 class="font-bold text-navy mb-3 text-sm">Mensajes tipicos</h4>
               <ul class="space-y-2 text-sm text-slate-600">
-                <li>• Echo Request / Echo Reply → base de <code>ping</code>.</li>
-                <li>• Destination Unreachable → destino, host, protocolo o puerto inalcanzable.</li>
-                <li>• Time Exceeded → TTL llegó a 0.</li>
-                <li>• Redirect → sugiere una mejor ruta en ciertos escenarios.</li>
+                <li>• <strong>Echo Request / Echo Reply</strong> → base de <code class="bg-slate-200 px-1 rounded">ping</code>. Tipo 8 / Tipo 0.</li>
+                <li>• <strong>Destination Unreachable</strong> → destino, host, protocolo o puerto inalcanzable. Tipo 3.</li>
+                <li>• <strong>Time Exceeded</strong> → TTL llego a 0. Tipo 11. Base de traceroute.</li>
+                <li>• <strong>Fragmentation Needed</strong> → paquete no cabe y DF=1. Tipo 3 codigo 4. Usado en Path MTU Discovery.</li>
+                <li>• <strong>Redirect</strong> → sugiere una mejor ruta en ciertos escenarios. Tipo 5.</li>
               </ul>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
               <h4 class="font-bold text-burg mb-3 text-sm">Cuidado al interpretar ping</h4>
-              <p class="text-sm text-slate-600 mb-3">Que un host responda ping solo demuestra que la capa IP y ICMP están funcionando hasta cierto punto.</p>
-              <p class="text-sm text-slate-600">No significa necesariamente que la aplicación de destino, el puerto o el servicio superior estén operativos.</p>
+              <p class="text-sm text-slate-600 mb-3">Que un host responda ping solo demuestra que la capa IP y ICMP estan funcionando hasta cierto punto en la ruta.</p>
+              <p class="text-sm text-slate-600 mb-3">No significa necesariamente que la aplicacion de destino, el puerto o el servicio superior esten operativos.</p>
+              <p class="text-sm text-slate-600">Muchos firewalls bloquean ICMP deliberadamente, por lo que un host que no responde ping puede igualmente estar activo y procesando trafico TCP.</p>
             </div>
           </div>
         </div>
 
         <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4"><span class="step-num">11</span> DHCP: configuración automática</h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">DHCP permite que un host obtenga automáticamente su dirección IP, máscara, gateway por defecto y servidores DNS. El flujo clásico es <strong class="text-navy">DORA</strong>.</p>
-          <div class="grid md:grid-cols-4 gap-4">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">11</span> DHCP: configuracion automatica
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">DHCP permite que un host obtenga automaticamente su direccion IP, mascara, gateway por defecto y servidores DNS sin intervencion manual. El flujo de cuatro mensajes se conoce como <strong class="text-navy">DORA</strong>.</p>
+
+          <!-- DORA grid -->
+          <div class="grid md:grid-cols-4 gap-4 mb-8">
             <div class="rounded-xl border border-blue-200 bg-blue-50 p-5 text-center">
               <div class="text-xs bit-mini text-blue-700 mb-2">Paso 1</div>
               <h4 class="font-bold text-navy text-sm mb-2">Discover</h4>
-              <p class="text-xs text-slate-600">El cliente busca servidores DHCP en la red.</p>
+              <p class="text-xs text-slate-600">El cliente envia un broadcast buscando servidores DHCP disponibles en la red.</p>
             </div>
             <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5 text-center">
               <div class="text-xs bit-mini text-yellow-700 mb-2">Paso 2</div>
               <h4 class="font-bold text-amber-700 text-sm mb-2">Offer</h4>
-              <p class="text-xs text-slate-600">El servidor ofrece una configuración posible.</p>
+              <p class="text-xs text-slate-600">El servidor responde ofreciendo una IP libre, mascara, gateway y DNS, con un tiempo de arrendamiento (lease).</p>
             </div>
             <div class="rounded-xl border border-rose-200 bg-rose-50 p-5 text-center">
               <div class="text-xs bit-mini text-rose-700 mb-2">Paso 3</div>
               <h4 class="font-bold text-burg text-sm mb-2">Request</h4>
-              <p class="text-xs text-slate-600">El cliente solicita formalmente esa oferta.</p>
+              <p class="text-xs text-slate-600">El cliente solicita formalmente esa oferta (broadcast, para que otros servidores sepan que rechazo sus ofertas).</p>
             </div>
             <div class="rounded-xl border border-green-200 bg-green-50 p-5 text-center">
               <div class="text-xs bit-mini text-green-700 mb-2">Paso 4</div>
               <h4 class="font-bold text-green-700 text-sm mb-2">Ack</h4>
-              <p class="text-xs text-slate-600">El servidor confirma y entrega el lease.</p>
+              <p class="text-xs text-slate-600">El servidor confirma la asignacion y entrega la configuracion final. El cliente puede comenzar a usar la IP.</p>
             </div>
+          </div>
+
+          <!-- Diagrama de secuencia DORA -->
+          <div class="diagram-wrap">
+            <svg viewBox="0 0 540 200" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:540px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px">
+              <!-- Lifelines -->
+              <rect x="30" y="10" width="90" height="28" rx="8" fill="#062b52"/>
+              <text x="75" y="28" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Cliente</text>
+              <line x1="75" y1="38" x2="75" y2="190" stroke="#062b52" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+              <rect x="420" y="10" width="90" height="28" rx="8" fill="#7f1d3c"/>
+              <text x="465" y="28" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Servidor DHCP</text>
+              <line x1="465" y1="38" x2="465" y2="190" stroke="#7f1d3c" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+              <!-- DISCOVER -->
+              <line x1="75" y1="60" x2="455" y2="60" stroke="#2563eb" stroke-width="2" marker-end="url(#arrD)"/>
+              <defs>
+                <marker id="arrD" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2563eb"/></marker>
+                <marker id="arrO" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#d97706"/></marker>
+                <marker id="arrR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#7f1d3c"/></marker>
+                <marker id="arrA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#166534"/></marker>
+              </defs>
+              <rect x="190" y="46" width="160" height="18" rx="4" fill="#dbeafe"/>
+              <text x="270" y="59" text-anchor="middle" fill="#1e3a8a" font-weight="700">DISCOVER  (broadcast)</text>
+
+              <!-- OFFER -->
+              <line x1="465" y1="95" x2="85" y2="95" stroke="#d97706" stroke-width="2" marker-end="url(#arrO)"/>
+              <rect x="190" y="81" width="160" height="18" rx="4" fill="#fef3c7"/>
+              <text x="270" y="94" text-anchor="middle" fill="#92400e" font-weight="700">OFFER  IP: 192.168.1.50</text>
+
+              <!-- REQUEST -->
+              <line x1="75" y1="130" x2="455" y2="130" stroke="#7f1d3c" stroke-width="2" marker-end="url(#arrR)"/>
+              <rect x="190" y="116" width="160" height="18" rx="4" fill="#ffe4e6"/>
+              <text x="270" y="129" text-anchor="middle" fill="#7f1d3c" font-weight="700">REQUEST  (broadcast)</text>
+
+              <!-- ACK -->
+              <line x1="465" y1="165" x2="85" y2="165" stroke="#166534" stroke-width="2" marker-end="url(#arrA)"/>
+              <rect x="190" y="151" width="160" height="18" rx="4" fill="#dcfce7"/>
+              <text x="270" y="164" text-anchor="middle" fill="#166534" font-weight="700">ACK  lease confirmado</text>
+            </svg>
+          </div>
+          <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+            <strong class="text-navy">Nota:</strong> DHCP usa UDP (puerto 67 servidor, 68 cliente). El DISCOVER y el REQUEST se envian como broadcast porque el cliente aun no tiene IP asignada. El servidor reserva la IP durante el tiempo de lease; si el cliente no la renueva, vuelve al pool de direcciones disponibles.
           </div>
         </div>
       </div>
     </section>
 
-    <section class="mb-24">
+    <!-- ══════════════════════════════════
+         PARTE 5 · CERTAMEN
+    ══════════════════════════════════ -->
+    <section id="certamen" class="mb-24">
       <h2 class="section-title text-3xl font-bold mb-10">Parte 5 · Preguntas tipo certamen</h2>
       <div class="card p-8">
-        <p class="text-slate-500 mb-8 text-sm">Haz clic para revelar explicaciones completas. Las preguntas cubren definiciones, razonamiento conceptual y errores comunes.</p>
+        <p class="text-slate-500 mb-8 text-sm">Haz clic en cada pregunta para revelar la explicacion completa. Las preguntas cubren definiciones, razonamiento conceptual y errores comunes de evaluaciones anteriores.</p>
         <div class="space-y-3">
+
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>1. ¿Por qué se dice que la capa IP es stateless?</span>
+              <span>1. Por que se dice que la capa IP es stateless?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div id="q1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">Porque cada datagrama se trata de manera independiente. Los routers no conservan el estado de una “conexión” como sí lo hace TCP; solo miran el paquete actual, su dirección destino, TTL y tabla de ruteo.</div>
+            <div id="q1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              Porque cada datagrama se trata de manera completamente independiente. Los routers no conservan el estado de ninguna "conexion" como si lo hace TCP; solo miran el paquete actual, su direccion destino, el TTL y consultan su tabla de ruteo. Esto simplifica enormemente el hardware de los routers y permite que Internet escale a millones de flujos simultaneos sin que ningun router intermedio deba recordar nada entre paquetes.
+            </div>
           </div>
+
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>2. ¿Por qué dos paquetes seguidos entre los mismos hosts pueden tomar rutas distintas?</span>
+              <span>2. Por que dos paquetes seguidos entre los mismos hosts pueden tomar rutas distintas?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div id="q2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">Porque el ruteo se decide datagrama a datagrama. Si cambian las métricas, si existen rutas equivalentes o si la política del router lo permite, distintos paquetes pueden salir por caminos diferentes.</div>
+            <div id="q2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              Porque el ruteo se decide datagrama a datagrama en cada router, de forma independiente. Si entre un paquete y el siguiente cambian las metricas de los enlaces (congestion, falla, actualizacion de OSPF), si existen rutas de igual costo y el router hace balanceo de carga, o si la politica del router lo permite, distintos paquetes pueden salir por caminos diferentes. En la practica esto implica que paquetes consecutivos pueden llegar al destino en distinto orden, y es responsabilidad de TCP reordenarlos.
+            </div>
           </div>
+
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q3', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>3. ¿Qué campo evita loops infinitos y cómo actúa?</span>
+              <span>3. Que campo evita loops infinitos en IPv4 y como actua exactamente?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div id="q3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">El campo TTL. Cada router lo decrementa en 1. Si llega a 0, el paquete se descarta y normalmente se genera un ICMP Time Exceeded hacia el origen.</div>
+            <div id="q3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              El campo <strong class="text-navy">TTL (Time To Live)</strong>, de 8 bits. El emisor lo inicializa (tipicamente 64 o 128). Cada router que reenvie el paquete <em>debe</em> decrementarlo en exactamente 1 y recalcular el checksum del header. Si despues de decrementarlo el TTL llega a 0, el router descarta el paquete y envia un mensaje ICMP Type 11 (Time Exceeded) hacia el emisor original, indicando que el paquete fue eliminado por haber agotado sus saltos. Sin este mecanismo, un paquete atrapado en un loop de ruteo circularia indefinidamente consumiendo ancho de banda.
+            </div>
           </div>
+
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>4. ¿Dónde ocurre el reensamblaje de fragmentos IPv4?</span>
+              <span>4. Donde ocurre el reensamblaje de fragmentos IPv4? Por que no lo hacen los routers intermedios?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div id="q4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">Solo en el host destino final. Los routers pueden fragmentar, pero no reensamblan el datagrama en tránsito.</div>
+            <div id="q4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              El reensamblaje ocurre <strong class="text-navy">solo en el host destino final</strong>. Los routers intermedios pueden fragmentar datagramas si el MTU del siguiente salto es menor, pero nunca reensamblan. Las razones son: (1) los fragmentos pueden tomar rutas distintas y no llegar todos al mismo router; (2) hacer reensamblaje en routers los volveria stateful, aumentaria su complejidad y reduciria su rendimiento; (3) los routers estan disenados para reenviar paquetes lo mas rapido posible sin acumular estado por flujo. El host destino, que <em>si</em> recibe todos los fragmentos eventualmente, los combina usando el campo Identification y Fragment Offset.
+            </div>
           </div>
+
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q5', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>5. ¿Cuál es la gran diferencia conceptual entre OSPF y BGP?</span>
+              <span>5. Cual es la gran diferencia conceptual entre OSPF y BGP?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div id="q5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">OSPF es un IGP de tipo link-state orientado a encontrar caminos óptimos dentro de un AS. BGP es un protocolo inter-AS orientado a políticas, donde la mejor ruta no siempre es la más corta.</div>
+            <div id="q5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              OSPF es un IGP de tipo link-state que opera <em>dentro</em> de un AS. Su objetivo es encontrar caminos de costo minimo usando el algoritmo de Dijkstra sobre un mapa completo de la topologia interna. La metrica puede ser el ancho de banda, la latencia u otro criterio tecnico. BGP, en cambio, opera <em>entre</em> AS distintos y su objetivo principal no es la minima distancia sino respetar politicas comerciales, relaciones de peering, acuerdos de transito y preferencias administrativas expresadas mediante atributos como LOCALPREF, ASPATH y MED. Una red puede preferir una ruta mas larga sobre una mas corta si le conviene economicamente o por razones de soberania de trafico.
+            </div>
           </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q6', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>6. Un alumno afirma que el TTL de un paquete siempre es el numero de routers que traverso. Es correcto?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q6" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              No es correcto. El TTL <em>recibido</em> no indica cuantos routers se recorrieron; indica cuantos saltos <em>quedan</em> antes de que el paquete sea descartado. Para saber cuantos routers se atravesaron hay que conocer el TTL inicial: saltos = TTL_inicial - TTL_recibido. Pero el TTL inicial puede variar segun el sistema operativo del emisor (64, 128 o 255 son valores comunes). Por eso traceroute no usa el TTL del paquete de llegada, sino que manda paquetes con TTL=1, TTL=2, etc., y cuenta cuantos ICMP Time Exceeded recibe antes de llegar al destino.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q7', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>7. Por que DHCP usa broadcast si ya existe el servidor en la red?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q7" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              Porque cuando un cliente envia el DISCOVER aun no tiene asignada ninguna IP y por tanto no puede enviar un mensaje unicast a la IP del servidor. El cliente tampoco sabe de antemano cual es la IP del servidor DHCP. El broadcast (255.255.255.255 como destino) garantiza que todos los hosts del segmento reciban el mensaje, incluyendo el servidor. El REQUEST tambien se envia como broadcast aunque el cliente ya recibio una oferta, para que otros servidores DHCP que hayan respondido sepan que su oferta fue rechazada y puedan liberar la IP que tenian reservada temporalmente.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q8', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>8. Que pasa si un fragmento se pierde durante el transito? Quien lo detecta y como reacciona?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q8" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed">
+              Si un fragmento se pierde, el host destino no puede completar el reensamblaje del datagrama original. IPv4 tiene un temporizador de reensamblaje: si transcurre ese tiempo sin que lleguen todos los fragmentos, el host descarta los que si llegaron y, si ya recibi el primer fragmento, envia un ICMP Time Exceeded (codigo 1: fragment reassembly time exceeded) hacia el origen. La capa IP no retransmite automaticamente: esa responsabilidad recae sobre TCP, que al no recibir el ACK correspondiente retransmite el segmento completo. Esto es una de las razones por las que la fragmentacion IP es indeseable en redes modernas: una sola perdida obliga a retransmitir todo el datagrama original, no solo el fragmento perdido.
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
 
+    <!-- ══════════════════════════════════
+         PARTE 6 · EJERCITACION
+    ══════════════════════════════════ -->
     <section id="practica" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 6 · Ejercitación guiada</h2>
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 6 · Ejercitacion guiada</h2>
       <div class="space-y-8">
+
+        <!-- Caso 1 -->
         <div class="card p-8">
-          <span class="inline-flex items-center gap-1.5 bg-blue-50 text-navy border border-blue-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 1 · Fragmentación</span>
+          <span class="inline-flex items-center gap-1.5 bg-blue-50 text-navy border border-blue-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 1 · Fragmentacion</span>
           <h3 class="text-xl font-bold text-slate-800 mb-3">Ejercicio resuelto paso a paso</h3>
-          <p class="text-slate-600 text-sm mb-5 leading-relaxed">Se envía un datagrama IPv4 de 4020 bytes totales, con header de 20 bytes, a través de un enlace cuyo MTU es 1500 bytes. Calcula cuántos fragmentos se generan y qué offset lleva cada uno.</p>
+          <p class="text-slate-600 text-sm mb-5 leading-relaxed">Se envia un datagrama IPv4 de <strong>4020 bytes totales</strong>, con header de <strong>20 bytes</strong>, a traves de un enlace cuyo MTU es <strong>1500 bytes</strong>. Calcula cuantos fragmentos se generan y que campos llevan.</p>
           <div class="border-l-4 border-navy pl-5 py-2 mb-6 space-y-2.5">
-            <p class="text-slate-700 text-sm font-semibold">Pregunta A: ¿Cuántos bytes de datos tiene el datagrama original?</p>
-            <p class="text-slate-700 text-sm font-semibold">Pregunta B: ¿Cuántos bytes útiles puede llevar cada fragmento?</p>
-            <p class="text-slate-700 text-sm font-semibold">Pregunta C: ¿Qué offset y qué MF lleva cada fragmento?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta A: Cuantos bytes de datos tiene el datagrama original?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta B: Cuantos bytes utiles puede llevar cada fragmento?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta C: Que Identification, Offset y MF lleva cada fragmento?</p>
           </div>
           <div class="flex justify-end border-t border-slate-100 pt-5">
-            <button onclick="toggleAnswer('prac1', this)" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
+            <button data-answer="prac1" onclick="toggleAnswer(this)" class="answer-btn flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-              <span>Mostrar resolución</span>
+              <span>Mostrar resolucion</span>
             </button>
           </div>
-          <div id="prac1" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl animate-in">
-            <h4 class="font-bold text-navy mb-5 border-b border-slate-200 pb-3">Resolución del caso</h4>
+          <div id="prac1" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+            <h4 class="font-bold text-navy mb-5 border-b border-slate-200 pb-3">Resolucion del caso</h4>
             <div class="space-y-5 text-sm text-slate-700">
               <div>
-                <p class="font-bold text-burg mb-2">Paso 1 · Datos originales</p>
-                <p>El tamaño total es 4020 bytes y el header IP ocupa 20 bytes. Entonces, los datos son 4000 bytes.</p>
+                <p class="font-bold text-burg mb-2">Respuesta A · Datos originales</p>
+                <p>El tamano total es 4020 bytes y el header IP ocupa 20 bytes. Los datos utiles son 4020 - 20 = <strong>4000 bytes</strong>.</p>
               </div>
               <div>
-                <p class="font-bold text-gold mb-2">Paso 2 · Carga útil por fragmento</p>
-                <p>Si el MTU es 1500, cada fragmento puede medir como máximo 1500 bytes totales. Restando 20 bytes del header, quedan 1480 bytes de datos por fragmento. Como 1480 ya es múltiplo de 8, se puede usar directamente.</p>
+                <p class="font-bold text-gold mb-2">Respuesta B · Carga util por fragmento</p>
+                <p>MTU = 1500 bytes. Cada fragmento lleva su propio header de 20 bytes, quedando 1480 bytes de datos. Verificacion: 1480 es multiplo de 8 (1480 / 8 = 185), correcto.</p>
               </div>
               <div>
-                <p class="font-bold text-navy mb-2">Paso 3 · Cantidad de fragmentos</p>
-                <p>4000 = 1480 + 1480 + 1040. Por lo tanto, se generan 3 fragmentos.</p>
-              </div>
-              <div>
-                <p class="font-bold text-emerald-700 mb-2">Paso 4 · Offsets</p>
-                <ul class="space-y-2">
-                  <li>• Fragmento 1: offset = 0, datos = 1480, MF = 1.</li>
-                  <li>• Fragmento 2: offset = 1480 / 8 = 185, datos = 1480, MF = 1.</li>
-                  <li>• Fragmento 3: offset = (1480 + 1480) / 8 = 2960 / 8 = 370, datos = 1040, MF = 0.</li>
-                </ul>
+                <p class="font-bold text-navy mb-2">Respuesta C · Fragmentos generados</p>
+                <p class="mb-3">4000 bytes de datos repartidos: 1480 + 1480 + 1040 = 4000. Se generan <strong>3 fragmentos</strong>, todos con el mismo Identification.</p>
+                <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                  <table class="min-w-full text-xs font-mono">
+                    <thead class="bg-slate-50 text-slate-600 font-sans">
+                      <tr>
+                        <th class="px-3 py-2 text-left">Fragmento</th>
+                        <th class="px-3 py-2 text-left">Datos</th>
+                        <th class="px-3 py-2 text-left">Total con header</th>
+                        <th class="px-3 py-2 text-left">Offset (en bloques de 8)</th>
+                        <th class="px-3 py-2 text-left">MF</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                      <tr><td class="px-3 py-2">1</td><td class="px-3 py-2">1480 B</td><td class="px-3 py-2">1500 B</td><td class="px-3 py-2">0</td><td class="px-3 py-2 text-blue-700 font-bold">1</td></tr>
+                      <tr><td class="px-3 py-2">2</td><td class="px-3 py-2">1480 B</td><td class="px-3 py-2">1500 B</td><td class="px-3 py-2">1480/8 = 185</td><td class="px-3 py-2 text-blue-700 font-bold">1</td></tr>
+                      <tr><td class="px-3 py-2">3</td><td class="px-3 py-2">1040 B</td><td class="px-3 py-2">1060 B</td><td class="px-3 py-2">2960/8 = 370</td><td class="px-3 py-2 text-green-700 font-bold">0</td></tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Caso 2 -->
         <div class="card p-8">
           <span class="inline-flex items-center gap-1.5 bg-rose-50 text-burg border border-rose-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 2 · Ruteo</span>
           <h3 class="text-xl font-bold text-slate-800 mb-3">Pregunta conceptual de examen</h3>
-          <p class="text-slate-600 text-sm mb-5 leading-relaxed">Un alumno afirma: “BGP es mejor que OSPF porque BGP siempre encuentra el camino más corto en Internet”. Evalúa críticamente la frase.</p>
+          <p class="text-slate-600 text-sm mb-5 leading-relaxed">Un alumno afirma: "BGP es mejor que OSPF porque BGP siempre encuentra el camino mas corto en Internet". Evalua criticamente la frase e indica que errores conceptuales contiene.</p>
           <div class="flex justify-end border-t border-slate-100 pt-5">
-            <button onclick="toggleAnswer('prac2', this)" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
+            <button data-answer="prac2" onclick="toggleAnswer(this)" class="answer-btn flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-              <span>Mostrar resolución</span>
+              <span>Mostrar resolucion</span>
             </button>
           </div>
-          <div id="prac2" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl animate-in text-sm text-slate-700 leading-relaxed">
-            La afirmación es incorrecta. OSPF, dentro de un AS, sí busca caminos de costo mínimo usando una visión de topología basada en link-state. BGP, en cambio, opera entre AS y su objetivo principal no es la mínima distancia, sino respetar políticas, relaciones comerciales, preferencias internas y atributos como LOCALPREF, ASPATH y MED.
+          <div id="prac2" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-700 leading-relaxed">
+            <p class="font-bold text-burg mb-3">La afirmacion contiene dos errores fundamentales:</p>
+            <p class="mb-3"><strong class="text-navy">Error 1 — Ambito de aplicacion:</strong> OSPF y BGP no compiten entre si; tienen dominios completamente distintos. OSPF opera <em>dentro</em> de un AS (intra-AS) y BGP opera <em>entre</em> AS distintos (inter-AS). No tiene sentido decir que uno es "mejor" que el otro; son herramientas complementarias que se usan al mismo tiempo en la misma red.</p>
+            <p><strong class="text-navy">Error 2 — Objetivo de BGP:</strong> BGP no busca el camino mas corto. OSPF si busca el costo minimo (usando Dijkstra). BGP busca la ruta que mejor cumple con las politicas administrativas y comerciales del AS: preferencias de peering, acuerdos de transito, LOCALPREF, longitud de ASPATH, MED. Una red puede deliberadamente preferir una ruta de 10 saltos sobre una de 3 si economicamente o politicamente le conviene mas.</p>
           </div>
         </div>
 
+        <!-- Caso 3 -->
         <div class="card p-8">
-          <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 3 · Diagnóstico</span>
-          <h3 class="text-xl font-bold text-slate-800 mb-3">Cómo explicar ping y traceroute en una prueba oral</h3>
-          <div class="grid md:grid-cols-2 gap-6">
-            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
-              <h4 class="font-bold text-navy mb-2 text-sm">ping</h4>
-              <p class="text-sm text-slate-600">Envía ICMP Echo Request y espera Echo Reply. Sirve para verificar conectividad IP básica y estimar RTT, pero no valida necesariamente la salud de la aplicación final.</p>
-            </div>
-            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
-              <h4 class="font-bold text-burg mb-2 text-sm">traceroute</h4>
-              <p class="text-sm text-slate-600">Manipula el TTL para forzar respuestas ICMP Time Exceeded en cada salto, revelando la secuencia de routers por la que pasa el tráfico.</p>
+          <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 3 · Diagnostico de red</span>
+          <h3 class="text-xl font-bold text-slate-800 mb-3">Interpretacion de traceroute en prueba oral</h3>
+          <p class="text-slate-600 text-sm mb-5 leading-relaxed">Un alumno ejecuta <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">traceroute google.com</code> y obtiene la siguiente salida. Se le pide que explique cada linea y detecte anomalias.</p>
+          <div class="code-block mb-6">traceroute to google.com (142.250.80.46), 30 hops max
+
+ 1  192.168.1.1      1.2 ms   1.1 ms   1.0 ms
+ 2  10.200.0.1       8.3 ms   8.5 ms   8.1 ms
+ 3  *  *  *
+ 4  200.1.4.2       22.4 ms  22.8 ms  23.1 ms
+ 5  200.1.4.2       22.4 ms  22.8 ms  23.1 ms
+ 6  72.14.215.1     35.7 ms  36.0 ms  35.9 ms
+30  142.250.80.46   52.1 ms  51.8 ms  52.3 ms</div>
+          <div class="border-l-4 border-amber-400 pl-5 py-2 mb-6 space-y-2">
+            <p class="text-slate-700 text-sm font-semibold">Pregunta A: Que significa la linea 3 con asteriscos?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta B: Por que las lineas 4 y 5 muestran la misma IP?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta C: Como se explica el salto brusco de latencia entre la linea 5 y la 6?</p>
+          </div>
+          <div class="flex justify-end border-t border-slate-100 pt-5">
+            <button data-answer="prac3" onclick="toggleAnswer(this)" class="answer-btn flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Mostrar resolucion</span>
+            </button>
+          </div>
+          <div id="prac3" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+            <h4 class="font-bold text-navy mb-5 border-b border-slate-200 pb-3">Resolucion del caso</h4>
+            <div class="space-y-5 text-sm text-slate-700">
+              <div>
+                <p class="font-bold text-burg mb-2">Respuesta A · Linea 3 con asteriscos</p>
+                <p>Los tres asteriscos indican que el router en ese salto no respondio con ICMP Time Exceeded dentro del tiempo de espera de traceroute. Las razones posibles son: (1) el router tiene configurado un firewall que bloquea ICMP saliente; (2) el router desactivo la generacion de ICMP Time Exceeded para reducir carga de CPU; (3) los paquetes ICMP tienen baja prioridad y fueron descartados por congestion. Importante: el trafico de datos si pasa por ese router. Los asteriscos no significan que el enlace este caido.</p>
+              </div>
+              <div>
+                <p class="font-bold text-gold mb-2">Respuesta B · Misma IP en lineas 4 y 5</p>
+                <p>Puede deberse a dos situaciones distintas. La primera: el router tiene dos interfaces configuradas con la misma IP (improbable en produccion). La segunda y mas comun: el router tiene dos interfaces distintas pero ambas reportan la misma IP de gestion o loopback al responder ICMP. Tambien puede indicar que el paquete dio un loop de un salto antes de avanzar, aunque esto seria una anomalia de ruteo. En redes MPLS, a veces los routers intermedios no decrementan el TTL del header IP, haciendo que dos saltos MPLS aparezcan como el mismo router.</p>
+              </div>
+              <div>
+                <p class="font-bold text-navy mb-2">Respuesta C · Salto de latencia entre linea 5 y linea 6</p>
+                <p>La latencia pasa de ~22 ms a ~36 ms, un incremento de unos 14 ms. Esto es consistente con un cambio de tecnologia o geografia: por ejemplo, un enlace de fibra nacional (baja latencia) a un enlace internacional o de peering con mayor distancia fisica. La linea 6 muestra la IP 72.14.215.1, que pertenece a la infraestructura de Google (AS15169). El salto probablemente representa el punto de interconexion entre el ISP local y la red de Google, posiblemente a traves de un punto de intercambio de trafico (IXP) o un enlace de peering transnacional.</p>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
   </main>
 
   <footer style="background:linear-gradient(120deg,#0f1f33,#062b52 55%,#7f1d3c); border-top:2px solid rgba(200,155,60,0.55);">
     <div class="container mx-auto px-6 py-8 text-center">
-      <p class="text-slate-300 text-sm font-medium">2026 · Ayudantía USM · Redes de Computadores · Capa de Internet</p>
+      <p class="text-slate-300 text-sm font-medium">2026 · Ayudantia USM · Redes de Computadores · Capa de Internet</p>
     </div>
   </footer>
 
   <script>
-    function toggleAnswer(id, btn) {
-      const el = document.getElementById(id);
-      const hidden = el.classList.contains('hidden');
-      el.classList.toggle('hidden', !hidden);
-      if (hidden) {
-        btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 2l20 20"/><path d="M6.71 6.71A10.61 10.61 0 0 0 2 12a10.54 10.54 0 0 0 11.29 8.05"/></svg><span>Ocultar resolución</span>';
-        btn.className = btn.className.replace('bg-navy hover:bg-navy-dk text-white', 'bg-slate-200 hover:bg-slate-300 text-slate-700');
-      } else {
-        btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span>Mostrar resolución</span>';
-        btn.className = btn.className.replace('bg-slate-200 hover:bg-slate-300 text-slate-700', 'bg-navy hover:bg-navy-dk text-white');
+    /* ───────────────────────────────────────────────
+       Accordion: preguntas de certamen
+    ─────────────────────────────────────────────── */
+    function toggleAccordion(id, btn) {
+      const el  = document.getElementById(id);
+      const icon = btn.querySelector('.accordion-icon');
+      const isHidden = el.classList.contains('hidden');
+
+      el.classList.toggle('hidden', !isHidden);
+
+      if (icon) {
+        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+      }
+      btn.classList.toggle('bg-slate-100', isHidden);
+
+      /* Re-trigger animation on reveal */
+      if (isHidden) {
+        el.classList.remove('animate-in');
+        void el.offsetWidth; /* force reflow */
+        el.classList.add('animate-in');
       }
     }
-    function toggleAccordion(id, btn) {
-      const el = document.getElementById(id);
-      const icon = btn.querySelector('.accordion-icon');
-      const hidden = el.classList.contains('hidden');
-      el.classList.toggle('hidden', !hidden);
-      if (icon) icon.style.transform = hidden ? 'rotate(180deg)' : 'rotate(0deg)';
-      btn.classList.toggle('bg-slate-100', hidden);
+
+    /* ───────────────────────────────────────────────
+       Respuesta practica: mostrar / ocultar
+       Uses data-answer attribute — no fragile class replace
+    ─────────────────────────────────────────────── */
+    function toggleAnswer(btn) {
+      const id  = btn.dataset.answer;
+      const el  = document.getElementById(id);
+      const span = btn.querySelector('span');
+      const isHidden = el.classList.contains('hidden');
+
+      el.classList.toggle('hidden', !isHidden);
+
+      if (isHidden) {
+        /* Showing the answer */
+        btn.querySelector('svg').outerHTML; /* keep svg, just swap span */
+        span.textContent = 'Ocultar resolucion';
+        btn.classList.remove('bg-navy', 'text-white');
+        btn.classList.add('bg-slate-200', 'text-slate-700');
+        /* Re-trigger animation */
+        el.classList.remove('animate-in');
+        void el.offsetWidth;
+        el.classList.add('animate-in');
+      } else {
+        /* Hiding the answer */
+        span.textContent = 'Mostrar resolucion';
+        btn.classList.remove('bg-slate-200', 'text-slate-700');
+        btn.classList.add('bg-navy', 'text-white');
+      }
     }
+
+    /* ───────────────────────────────────────────────
+       Fragmentacion calculator
+    ─────────────────────────────────────────────── */
+    function calcFragments() {
+      const total  = parseInt(document.getElementById('fc-total').value,  10);
+      const header = parseInt(document.getElementById('fc-header').value, 10);
+      const mtu    = parseInt(document.getElementById('fc-mtu').value,    10);
+
+      const errEl    = document.getElementById('fc-error');
+      const resultEl = document.getElementById('fc-result');
+      errEl.classList.add('hidden');
+      resultEl.classList.add('hidden');
+
+      /* Validations */
+      if (isNaN(total) || isNaN(header) || isNaN(mtu)) {
+        return showFcError('Ingresa valores numericos validos en los tres campos.');
+      }
+      if (header < 20 || header > 60 || header % 4 !== 0) {
+        return showFcError('El header IP debe estar entre 20 y 60 bytes y ser multiplo de 4.');
+      }
+      if (mtu < 68) {
+        return showFcError('El MTU minimo para IPv4 es 68 bytes.');
+      }
+      if (total <= header) {
+        return showFcError('El tamano total debe ser mayor que el header IP.');
+      }
+      if (total > 65535) {
+        return showFcError('El tamano total no puede superar 65 535 bytes.');
+      }
+
+      const dataTotal = total - header;
+      const maxData   = Math.floor((mtu - header) / 8) * 8; /* multiplo de 8 */
+
+      if (maxData <= 0) {
+        return showFcError('El MTU es demasiado pequeno para acomodar el header IP mas datos. MTU minimo recomendado: ' + (header + 8) + ' bytes.');
+      }
+
+      /* No fragmentation needed */
+      if (total <= mtu) {
+        document.getElementById('fc-summary').innerHTML =
+          'El datagrama de <strong>' + total + ' bytes</strong> cabe en el MTU de <strong>' + mtu + ' bytes</strong>. <strong>No se necesita fragmentacion.</strong>';
+        document.getElementById('fc-tbody').innerHTML = `
+          <tr class="frag-row">
+            <td class="px-4 py-2.5">1 (completo)</td>
+            <td class="px-4 py-2.5">${dataTotal}</td>
+            <td class="px-4 py-2.5">${total}</td>
+            <td class="px-4 py-2.5">0</td>
+            <td class="px-4 py-2.5 font-bold text-green-700">0</td>
+            <td class="px-4 py-2.5">0</td>
+          </tr>`;
+        resultEl.classList.remove('hidden');
+        return;
+      }
+
+      /* Calculate fragments */
+      const frags    = [];
+      let   remaining = dataTotal;
+      let   offset    = 0;
+
+      while (remaining > 0) {
+        const chunk = Math.min(remaining, maxData);
+        frags.push({ data: chunk, offset });
+        offset    += chunk;
+        remaining -= chunk;
+      }
+
+      const n = frags.length;
+      document.getElementById('fc-summary').innerHTML =
+        'Datos totales: <strong>' + dataTotal + ' B</strong> | Datos por fragmento: <strong>' + maxData + ' B</strong> | Fragmentos generados: <strong>' + n + '</strong>';
+
+      const tbody = document.getElementById('fc-tbody');
+      tbody.innerHTML = frags.map((f, i) => `
+        <tr class="frag-row" style="animation-delay:${i * 0.05}s">
+          <td class="px-4 py-2.5">${i + 1} de ${n}</td>
+          <td class="px-4 py-2.5">${f.data}</td>
+          <td class="px-4 py-2.5">${f.data + header}</td>
+          <td class="px-4 py-2.5">${f.offset / 8} (= ${f.offset} / 8)</td>
+          <td class="px-4 py-2.5 font-bold ${i < n-1 ? 'text-blue-700' : 'text-green-700'}">${i < n-1 ? 1 : 0}</td>
+          <td class="px-4 py-2.5">0</td>
+        </tr>`).join('');
+
+      resultEl.classList.remove('hidden');
+    }
+
+    function showFcError(msg) {
+      const el = document.getElementById('fc-error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function resetFragCalc() {
+      document.getElementById('fc-total').value  = '4020';
+      document.getElementById('fc-header').value = '20';
+      document.getElementById('fc-mtu').value    = '1500';
+      document.getElementById('fc-error').classList.add('hidden');
+      document.getElementById('fc-result').classList.add('hidden');
+    }
+
+    /* ───────────────────────────────────────────────
+       Mobile nav
+    ─────────────────────────────────────────────── */
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').classList.add('hidden');
+    }
+
+    /* ───────────────────────────────────────────────
+       Back to top
+    ─────────────────────────────────────────────── */
+    const backBtn = document.getElementById('back-top');
+    window.addEventListener('scroll', () => {
+      backBtn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+
+    /* ───────────────────────────────────────────────
+       Active nav highlight on scroll
+    ─────────────────────────────────────────────── */
+    const sections = ['teoria','ipv4','ruteo','protocolos','certamen','practica'];
+    const navLinks = document.querySelectorAll('header .nav-link');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
   </script>
 </body>
 </html>

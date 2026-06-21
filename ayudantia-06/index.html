@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ayudantía Capa de Datos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #062b52;
+      --burg: #7f1d3c;
+      --gold: #c89b3c;
+      --ink: #102033;
+      --paper: #f5f7fb;
+      --card-bg: rgba(255,255,255,0.92);
+      --border: rgba(6,43,82,0.10);
+      --teal: #0f766e;
+      --rose: #be185d;
+      --green: #166534;
+      --orange: #ea580c;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--paper);
+      background-image:
+        radial-gradient(ellipse 60% 40% at 8% 8%, rgba(200,155,60,0.18) 0, transparent 60%),
+        radial-gradient(ellipse 48% 45% at 94% 82%, rgba(127,29,60,0.12) 0, transparent 55%),
+        radial-gradient(ellipse 72% 58% at 50% 50%, rgba(6,43,82,0.04) 0, transparent 70%);
+      min-height: 100vh;
+      color: #1e293b;
+    }
+    h1,h2,h3,h4,h5 { font-family: 'Fraunces', serif; }
+    .topbar {
+      background: linear-gradient(100deg, rgba(6,43,82,0.97) 0%, rgba(127,29,60,0.95) 100%);
+      border-bottom: 2px solid rgba(200,155,60,0.55);
+      box-shadow: 0 4px 24px rgba(15,31,51,0.28);
+      backdrop-filter: blur(12px);
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.84);
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all .22s;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover {
+      color: white;
+      background: rgba(255,255,255,0.13);
+      border-color: rgba(200,155,60,0.5);
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4.6rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--navy) 10%, var(--burg) 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.08;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(6,43,82,0.08), rgba(127,29,60,0.06));
+      border: 1px solid rgba(6,43,82,0.18);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--navy);
+      text-transform: uppercase;
+    }
+    .section-title {
+      color: var(--ink);
+      border-bottom: 3px solid rgba(6,43,82,0.2);
+      padding-bottom: 1rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 32px rgba(15,31,51,0.08), 0 1px 3px rgba(15,31,51,0.06);
+      transition: transform .24s, box-shadow .24s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(15,31,51,0.12), 0 2px 6px rgba(15,31,51,0.08);
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold), #e8c870);
+      color: var(--ink);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    /* ── Hoverable field tooltips (same as IPv4 diagram) ── */
+    .seg-field {
+      cursor: help;
+      transition: filter .18s;
+      position: relative;
+    }
+    .seg-field:hover { filter: brightness(0.94) saturate(1.06); }
+    .seg-tooltip {
+      display: none;
+      position: absolute;
+      z-index: 9999;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f1f33;
+      color: #e2e8f0;
+      font-size: 0.71rem;
+      font-weight: 500;
+      line-height: 1.5;
+      padding: 10px 14px;
+      border-radius: 10px;
+      width: 235px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+      pointer-events: none;
+      white-space: normal;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .seg-tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 7px solid transparent;
+      border-top-color: #0f1f33;
+    }
+    .seg-tooltip strong { color: var(--gold); }
+    .seg-field:hover .seg-tooltip { display: block; }
+    .seg-field.tip-left .seg-tooltip {
+      left: auto; right: 0; transform: none;
+    }
+    .seg-field.tip-left .seg-tooltip::after {
+      left: auto; right: 20px; transform: none;
+    }
+    .seg-table-wrap {
+      overflow-x: auto;
+      overflow-y: visible;
+      padding-top: 280px;
+      margin-top: -280px;
+      width: 100%;
+    }
+    .seg-table-inner {
+      min-width: 620px;
+      width: fit-content;
+      overflow: visible;
+    }
+    /* ── MAC byte tooltips ── */
+    .mac-table-wrap {
+      overflow-x: auto;
+      overflow-y: visible;
+      padding-top: 160px;
+      margin-top: -160px;
+      width: 100%;
+    }
+    /* ── Diagram wrap ── */
+    .diagram-wrap {
+      width: 100%;
+      overflow-x: auto;
+      background: linear-gradient(135deg, #f8fafc, #eef4ff);
+      border: 1px solid rgba(6,43,82,0.1);
+      border-radius: 1rem;
+      padding: 1.5rem 1rem;
+    }
+    .diagram-wrap svg { display: block; margin: 0 auto; }
+    /* ── Misc util ── */
+    .accordion-icon { transition: transform .3s cubic-bezier(.4,0,.2,1); }
+    .code-block {
+      background: #0f1f33;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: #7ee8a2;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .animate-in { animation: fadeUp .4s ease-out both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .text-navy { color: var(--navy); }
+    .text-burg  { color: var(--burg); }
+    .text-gold  { color: var(--gold); }
+    .bg-navy    { background-color: var(--navy); }
+    .bg-burg    { background-color: var(--burg); }
+    .bg-gold    { background-color: var(--gold); }
+    .hover\:bg-navy-dk:hover { background-color: #041d39; }
+    .bit-mini { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .route-chip { border-radius: 999px; padding: 0.28rem 0.7rem; font-size: 0.72rem; font-weight: 700; }
+    .small-note { font-size: 0.72rem; color: #64748b; }
+    /* ── Parity grid widget ── */
+    .pbit {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-weight: 700; font-size: 0.88rem;
+      cursor: pointer;
+      transition: all .15s;
+      border: 2px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      user-select: none;
+    }
+    .pbit:hover { border-color: var(--navy); background: #e8f0ff; }
+    .pbit.one  { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .pbit.par  { background: #c89b3c22; color: var(--gold); border-color: var(--gold); border-style: dashed; cursor: default; }
+    .pbit.par.one  { background: #c89b3c44; color: #7a5a00; }
+    .pbit.err  { background: #fee2e2; border-color: #dc2626; color: #dc2626; animation: blink .7s infinite alternate; }
+    @keyframes blink { to { background: #fecaca; } }
+  </style>
+</head>
+<body>
+
+  <!-- ── TOP NAV ── -->
+  <header class="topbar sticky top-0 z-50">
+    <nav class="container mx-auto px-6 py-3 flex justify-between items-center max-w-6xl">
+      <span class="text-white font-bold text-lg" style="font-family:'Fraunces',serif;">Ayudantía · Capa de Datos</span>
+      <div class="hidden md:flex gap-1 sm:gap-2">
+        <a href="#teoria"    class="nav-link">Teoría</a>
+        <a href="#ethernet"  class="nav-link">Ethernet</a>
+        <a href="#acceso"    class="nav-link">CSMA/CD</a>
+        <a href="#hardware"  class="nav-link">Hardware</a>
+        <a href="#errores"   class="nav-link">CRC</a>
+        <a href="#practica"  class="nav-link">Práctica</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container mx-auto px-4 sm:px-6 py-14 max-w-6xl">
+
+    <!-- ── HERO ── -->
+    <section class="text-center mb-20">
+      <div class="badge mb-5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Redes de Computadores · Ayudantía de 1 hora
+      </div>
+      <h1 class="hero-title mb-5">La Capa de Datos</h1>
+      <p class="text-slate-500 text-base font-medium max-w-3xl mx-auto">Ethernet · Dirección MAC · Frame · CSMA/CD · ARP · HUB / Bridge / Switch · Paridad · CRC.</p>
+      <p class="text-slate-400 text-xs mt-3 italic">Diseñada para repasar teoría, visualizar el frame Ethernet y practicar preguntas típicas de certamen.</p>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 1 · VISIÓN GENERAL
+    ═══════════════════════════════════════════════ -->
+    <section id="teoria" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 1 · Visión general</h2>
+      <div class="space-y-10">
+
+        <!-- Card 1 -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">1</span> Qué hace la capa de datos
+          </h3>
+          <p class="text-slate-600 leading-relaxed text-sm mb-6">
+            La capa de datos (Data Link Layer) transmite <strong class="text-navy">bits a través de un medio físico</strong> usando técnicas específicas. Opera entre pares de nodos directamente conectados —no entre el origen y destino final— y es responsable de empaquetar bits en <em>frames</em>, gestionar el acceso al medio compartido y detectar errores de transmisión.
+          </p>
+          <div class="grid md:grid-cols-4 gap-4">
+            <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">Frames</h4>
+              <p class="text-xs text-slate-600">Empaqueta bits en unidades llamadas frames con cabeceras MAC, payload y checksum.</p>
+            </div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
+              <h4 class="font-bold text-burg mb-2 text-sm">Acceso al medio</h4>
+              <p class="text-xs text-slate-600">Coordina quién transmite cuando varios nodos comparten el mismo canal (CSMA/CD).</p>
+            </div>
+            <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5">
+              <h4 class="font-bold text-gold mb-2 text-sm">Direccionamiento MAC</h4>
+              <p class="text-xs text-slate-600">Identifica cada interfaz de red de forma única con una dirección física de 6 bytes.</p>
+            </div>
+            <div class="rounded-xl border border-green-200 bg-green-50 p-5">
+              <h4 class="font-bold text-green-700 mb-2 text-sm">Detección de errores</h4>
+              <p class="text-xs text-slate-600">Usa CRC-32 para detectar errores de transmisión. Los frames corruptos se descartan.</p>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-6 mt-6">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+              <h4 class="font-bold text-navy mb-3 text-sm">La capa de datos sí hace</h4>
+              <ul class="space-y-2 text-sm text-slate-600">
+                <li>• Encapsular paquetes IP en frames Ethernet.</li>
+                <li>• Identificar emisor y receptor con MACs.</li>
+                <li>• Detectar colisiones y gestionar retransmisión (CSMA/CD).</li>
+                <li>• Verificar integridad con CRC-32.</li>
+                <li>• Resolver MAC a partir de una IP con ARP.</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+              <h4 class="font-bold text-burg mb-3 text-sm">La capa de datos no hace</h4>
+              <ul class="space-y-2 text-sm text-slate-600">
+                <li>• Garantizar entrega extremo a extremo (eso es TCP).</li>
+                <li>• Reordenar frames perdidos o duplicados.</li>
+                <li>• Rutear entre redes distintas (eso es IP).</li>
+                <li>• Corregir errores: solo los detecta y descarta.</li>
+                <li>• Mantener conexión o estado entre hosts.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Definiciones clave -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">2</span> Definiciones clave: Baud, Bits/s, Propagación y RTT
+          </h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Baud vs. Bits/s — no son lo mismo</h4>
+              <p class="text-sm text-slate-600 mb-4">Un <strong class="text-navy">baud</strong> es un cambio de nivel de señal por segundo. Si la señal tiene N niveles distintos, cada símbolo codifica log₂(N) bits.</p>
+              <div class="code-block">Bits/s = log₂(N_niveles) × Bauds
+
+Ejemplo:
+  4 niveles → log₂(4) = 2 bits/símbolo
+  1000 Bauds × 2 = 2000 Bits/s</div>
+              <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
+                 <strong class="text-amber-700">Error frecuente en certamen:</strong> decir que 1000 Bauds con 4 niveles = 1000 Bits/s. El factor log₂(N) es clave.
+              </div>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Tiempo de propagación</h4>
+              <p class="text-sm text-slate-600 mb-3">Tiempo que tarda 1 bit en viajar de emisor a receptor. Depende del medio físico.</p>
+              <div class="code-block">t_prop = Distancia / V_propagación
+
+Medio         V_propagación
+─────────────────────────────
+Vacío         3.0 × 10⁸ m/s
+Cobre (UTP)   2.3 × 10⁸ m/s
+Fibra óptica  2.0 × 10⁸ m/s
+
+N_tránsito = t_prop × Velocidad (bits en vuelo)</div>
+              <h4 class="font-bold text-navy mt-5 mb-2 text-sm">Round Trip Time (RTT)</h4>
+              <div class="code-block">RTT = 2 × t_prop + t_procesamiento</div>
+              <p class="text-xs text-slate-500 mt-2">Es el tiempo total de ida y vuelta. Incluye doble propagación más el tiempo que tarda el receptor en procesar y emitir la respuesta.</p>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-3 gap-4 mt-6">
+            <div class="rounded-xl border border-blue-200 bg-blue-50 p-4 text-xs text-slate-700">
+              <strong class="text-navy block mb-1">Velocidades Ethernet típicas</strong>
+              10 Mbits/s · 100 Mbits/s · 1 Gbits/s · 10 Gbits/s · 40 Gbits/s · 100 Gbits/s
+            </div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs text-slate-700">
+              <strong class="text-burg block mb-1">Unidades de velocidad</strong>
+              1 KBits/s = 10³ Bits/s &nbsp; 1 MBits/s = 10⁶ Bits/s &nbsp; 1 GBits/s = 10⁹ Bits/s
+            </div>
+            <div class="rounded-xl border border-green-200 bg-green-50 p-4 text-xs text-slate-700">
+              <strong class="text-green-700 block mb-1">Dato de prueba</strong>
+              El RTT en una LAN de 100m en cobre es ≈ 0.87 µs, mucho menor que en Internet (decenas de ms).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 2 · ETHERNET EN DETALLE
+    ═══════════════════════════════════════════════ -->
+    <section id="ethernet" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 2 · Ethernet en detalle</h2>
+      <div class="space-y-10">
+
+        <!-- Card 3: Dirección MAC -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">3</span> Dirección MAC
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">
+            Cada interfaz de red tiene una <strong class="text-navy">dirección física única de 6 bytes (48 bits)</strong> en notación hexadecimal. También se llama dirección Ethernet o dirección física. Pasa el cursor sobre cada campo para ver su función.
+          </p>
+          <div class="mac-table-wrap">
+            <div style="min-width:540px;">
+              <!-- MAC header diagram -->
+              <div class="font-mono border-2 border-slate-300 rounded-xl shadow-inner bg-white overflow-visible">
+                <div class="flex justify-between text-xs text-slate-500 bg-slate-50 border-b border-slate-200 px-4 py-1.5 font-bold rounded-t-xl">
+                  <span>Byte 1 (MSB)</span><span>Byte 3</span><span>Byte 4</span><span>Byte 6 (LSB)</span>
+                </div>
+                <div class="flex border-b border-slate-300 text-xs font-bold text-center">
+                  <div class="seg-field w-1/2 p-4 border-r border-slate-300 bg-amber-100">
+                    OUI · 3 Bytes
+                    <div class="seg-tooltip"><strong>OUI — Organisationally Unique Identifier</strong><br>Primeros 3 bytes. Identifican al fabricante de la tarjeta de red. Asignado por IEEE. Ej: 00:10:A4 = Intel, 00:1A:2B = Cisco.</div>
+                  </div>
+                  <div class="seg-field w-1/2 p-4 bg-blue-100">
+                    NIC Specific · 3 Bytes
+                    <div class="seg-tooltip"><strong>NIC Specific</strong><br>Últimos 3 bytes. Número de serie único asignado por el fabricante a cada interfaz. Junto con el OUI forman la dirección globalmente única.</div>
+                  </div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-b-xl text-xs text-slate-600 text-center font-mono tracking-widest">
+                  Ejemplo: <span class="text-amber-700 font-bold">00:10:A4</span>:<span class="text-blue-700 font-bold">87:BF:1A</span>
+                </div>
+              </div>
+
+              <!-- Bit structure of byte 1 -->
+              <div class="mt-4 font-mono border border-slate-300 rounded-xl bg-white">
+                <div class="text-xs text-slate-500 bg-slate-50 border-b border-slate-200 px-4 py-1.5 font-bold rounded-t-xl">Primer byte — los 2 bits menos significativos (b1 y b2)</div>
+                <div class="flex text-xs font-bold text-center">
+                  <div class="seg-field w-1/8 p-3 border-r border-slate-200 bg-slate-100 text-slate-500" style="width:12.5%">b8</div>
+                  <div class="seg-field w-1/8 p-3 border-r border-slate-200 bg-slate-100 text-slate-500" style="width:12.5%">b7</div>
+                  <div class="seg-field w-1/8 p-3 border-r border-slate-200 bg-slate-100 text-slate-500" style="width:12.5%">b6</div>
+                  <div class="seg-field w-1/8 p-3 border-r border-slate-200 bg-slate-100 text-slate-500" style="width:12.5%">b5</div>
+                  <div class="seg-field w-1/8 p-3 border-r border-slate-200 bg-slate-100 text-slate-500" style="width:12.5%">b4</div>
+                  <div class="seg-field w-1/8 p-3 border-r border-slate-200 bg-slate-100 text-slate-500" style="width:12.5%">b3</div>
+                  <div class="seg-field w-1/8 p-3 border-r border-slate-200 bg-amber-100" style="width:12.5%">
+                    b2
+                    <div class="seg-tooltip"><strong>b2 — Scope bit</strong><br>0 = Dirección globalmente única (OUI administrado por IEEE).<br>1 = Dirección localmente administrada (puede ser asignada por software).</div>
+                  </div>
+                  <div class="seg-field p-3 bg-blue-100" style="width:12.5%">
+                    b1
+                    <div class="seg-tooltip tip-left"><strong>b1 — I/G bit (Individual / Group)</strong><br>0 = Unicast: destinado a una sola interfaz.<br>1 = Multicast / Broadcast: destinado a un grupo o a todos (FF:FF:FF:FF:FF:FF).</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-4 mt-6">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">Dato de prueba</h4>
+              <p class="text-xs text-slate-600">Si el bit b1 del primer byte es 1, el frame es multicast o broadcast. La dirección de broadcast Ethernet es <code class="text-navy font-bold">FF:FF:FF:FF:FF:FF</code> (todos los bits en 1).</p>
+            </div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
+              <h4 class="font-bold text-burg mb-2 text-sm">Punto de certamen</h4>
+              <p class="text-xs text-slate-600">La dirección MAC identifica la <em>interfaz</em>, no el host. Un computador con dos tarjetas de red tiene dos MACs distintas.</p>
+            </div>
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+              <h4 class="font-bold text-gold mb-2 text-sm">MAC vs IP</h4>
+              <p class="text-xs text-slate-600">La MAC identifica el <em>hardware</em> dentro de un segmento LAN. La IP identifica al <em>host lógico</em> en la red global. ARP traduce entre ambas.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Frame Ethernet -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">4</span> Estructura del frame Ethernet
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">El frame es la unidad básica de transmisión en la capa de datos. Pasa el cursor sobre cada campo para revisar su función. El tamaño total oscila entre <strong class="text-navy">64 y 1518 bytes</strong>.</p>
+          <div class="seg-table-wrap">
+            <div class="seg-table-inner font-mono border-2 border-slate-300 rounded-xl shadow-inner bg-white">
+              <div class="flex justify-between text-xs text-slate-500 bg-slate-50 border-b border-slate-200 px-4 py-1.5 font-bold rounded-t-xl">
+                <span>← Cabecera</span><span>Datos</span><span>Trailer →</span>
+              </div>
+              <div class="flex border-b border-slate-300 text-xs font-bold text-center">
+                <div class="seg-field border-r border-slate-300 bg-slate-100 p-3" style="width:14%">
+                  Preámbulo<br><span class="text-slate-400 font-normal">7 B</span>
+                  <div class="seg-tooltip"><strong>Preámbulo</strong><br>7 bytes con valor 0x55 (10101010). Permite al receptor sincronizar su reloj con el del emisor antes de leer datos reales. Generado por la NIC, no pasa a capa superior.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-slate-100 p-3" style="width:10%">
+                  SFD<br><span class="text-slate-400 font-normal">1 B</span>
+                  <div class="seg-tooltip"><strong>SFD — Start Frame Delimiter</strong><br>Valor fijo 0xD5 (10101011). Marca el fin del preámbulo e indica que el siguiente byte es el inicio de la dirección MAC destino.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-blue-200 p-3" style="width:18%">
+                  MAC Destino<br><span class="text-slate-500 font-normal">6 B</span>
+                  <div class="seg-tooltip"><strong>MAC Destino</strong><br>Dirección MAC de la interfaz receptora. La NIC compara con su propia dirección y con la de broadcast (FF:FF:FF:FF:FF:FF). Si no coincide, descarta el frame.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-blue-100 p-3" style="width:18%">
+                  MAC Fuente<br><span class="text-slate-500 font-normal">6 B</span>
+                  <div class="seg-tooltip"><strong>MAC Fuente</strong><br>Dirección MAC de la interfaz emisora. El switch lo usa para aprender automáticamente la tabla MAC → Puerto sin necesitar configuración manual.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-yellow-100 p-3" style="width:13%">
+                  Eth.Type<br><span class="text-slate-500 font-normal">2 B</span>
+                  <div class="seg-tooltip"><strong>EtherType / Length</strong><br>Si el valor es ≤ 1500: largo del payload en bytes. Si es > 1500: indica el protocolo encapsulado.<br>0x0800 = IPv4 &nbsp; 0x0806 = ARP &nbsp; 0x86DD = IPv6 &nbsp; 0x8100 = VLAN 802.1Q</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-green-100 p-3" style="width:20%">
+                  Payload (Datos)<br><span class="text-slate-500 font-normal">46–1500 B</span>
+                  <div class="seg-tooltip"><strong>Payload</strong><br>Los datos transportados: normalmente un paquete IP. MTU = 1500 bytes. Mínimo = 46 bytes; si hay menos, se añade padding de ceros. El mínimo es necesario para que CSMA/CD detecte colisiones correctamente.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-red-100 p-3" style="width:12%">
+                  CRC-32<br><span class="text-slate-500 font-normal">4 B</span>
+                  <div class="seg-tooltip"><strong>CRC-32 (FCS)</strong><br>Frame Check Sequence de 32 bits. El emisor calcula el CRC sobre MAC+EtherType+Payload y lo adjunta. El receptor recalcula y compara. Si difiere → frame descartado silenciosamente.</div>
+                </div>
+                <div class="seg-field bg-slate-200 p-3 tip-left" style="width:10%">
+                  IFS<br><span class="text-slate-500 font-normal">12 B</span>
+                  <div class="seg-tooltip tip-left"><strong>IFS — Inter Frame Spacing</strong><br>96 bits de silencio obligatorio entre frames consecutivos. Permite que los receptores liberen buffers y se preparen para el siguiente frame antes de que llegue.</div>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 text-xs text-slate-500 bg-slate-50 px-4 py-2 rounded-b-xl">
+                <span>Frame mínimo: <strong class="text-navy">64 B</strong></span>
+                <span class="text-center">Frame máximo: <strong class="text-navy">1518 B</strong></span>
+                <span class="text-right">MTU = <strong class="text-navy">1500 B</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-4 mt-6">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">¿Por qué mínimo 64 bytes?</h4>
+              <p class="text-xs text-slate-600">El frame debe tardar en transmitirse al menos 2×t_propagación para que el emisor detecte colisiones mientras sigue transmitiendo. Con cables de hasta 2500m eso equivale a 512 bits = 64 bytes.</p>
+            </div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
+              <h4 class="font-bold text-burg mb-2 text-sm">Punto de certamen</h4>
+              <p class="text-xs text-slate-600">El frame Ethernet es <em>sin conexión y no confiable</em>. Si el CRC falla, el frame se descarta sin aviso. No hay ACK ni retransmisión a nivel 2. TCP resuelve esto en capa 4.</p>
+            </div>
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+              <h4 class="font-bold text-gold mb-2 text-sm">VLAN 802.1Q</h4>
+              <p class="text-xs text-slate-600">Añade 4 bytes extra entre MAC Fuente y EtherType con un VID de 12 bits (hasta 4096 VLANs) y prioridad PCP de 3 bits. El frame puede crecer hasta 1522 bytes.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Servicios Ethernet -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">5</span> Servicios que ofrece Ethernet
+          </h3>
+          <p class="text-slate-600 mb-5 text-sm">Ethernet ofrece deliberadamente el servicio más simple posible. La complejidad se delega a las capas superiores.</p>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr>
+                  <th class="px-4 py-3 text-left">Característica</th>
+                  <th class="px-4 py-3 text-left">Ethernet</th>
+                  <th class="px-4 py-3 text-left">¿Por qué?</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600">
+                <tr><td class="px-4 py-3 font-medium">Tipo de servicio</td><td class="px-4 py-3"><span class="route-chip bg-blue-100 text-blue-800">Datagram (sin conexión)</span></td><td class="px-4 py-3 text-xs">No hay handshake previo. Cada frame es independiente.</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Confiabilidad</td><td class="px-4 py-3"><span class="route-chip bg-red-100 text-red-800">No confiable</span></td><td class="px-4 py-3 text-xs">Frames con error se descartan silenciosamente. TCP recupera pérdidas.</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Acknowledgement</td><td class="px-4 py-3"><span class="route-chip bg-red-100 text-red-800">No hay ACK</span></td><td class="px-4 py-3 text-xs">El emisor no sabe si el frame llegó. Mantiene la capa simple.</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Control de flujo</td><td class="px-4 py-3"><span class="route-chip bg-amber-100 text-amber-800">Solo en Switch</span></td><td class="px-4 py-3 text-xs">No existe ventana de recepción a nivel 2 en la norma básica.</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Detección de errores</td><td class="px-4 py-3"><span class="route-chip bg-green-100 text-green-800">CRC-32</span></td><td class="px-4 py-3 text-xs">Detecta errores pero no los corrige. Frame errado = frame descartado.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-700">
+            <strong class="text-navy">Regla mental:</strong> Ethernet es "best effort" a nivel 2. La simpleza es su virtud: permite velocidades muy altas con hardware muy sencillo. La fiabilidad se construye encima, en TCP.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 3 · TRANSMISIÓN Y CSMA/CD
+    ═══════════════════════════════════════════════ -->
+    <section id="acceso" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 3 · Transmisión y acceso al medio</h2>
+      <div class="space-y-10">
+
+        <!-- Card 6: Manchester y codificaciones -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">6</span> Codificación de bits en el medio
+          </h3>
+          <p class="text-slate-600 mb-4 text-sm leading-relaxed">Ethernet usa transmisión en <strong class="text-navy">banda base</strong>: los bits se transmiten directamente en digital. El problema con la codificación directa (NZR) es la sincronización de relojes cuando hay largas secuencias del mismo bit. Manchester resuelve esto.</p>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Codificación Manchester — Ethernet 10 Mbits/s</h4>
+              <p class="text-sm text-slate-600 mb-3">Introduce una transición obligatoria en el <em>centro de cada período de bit</em>, haciendo el XOR entre el flujo NZR y el reloj (CLOCK):</p>
+              <ul class="space-y-2 text-sm text-slate-600 mb-4">
+                <li>• Transición <strong>↑ (bajo→alto)</strong> en el centro = bit <strong class="text-navy">1</strong></li>
+                <li>• Transición <strong>↓ (alto→bajo)</strong> en el centro = bit <strong class="text-navy">0</strong></li>
+              </ul>
+              <div class="rounded-xl border border-green-200 bg-green-50 p-4 text-xs text-slate-700">
+                ✅ <strong class="text-green-700">Ventajas:</strong> muchas variaciones → sincronización de relojes fácil. Generación sencilla: solo un XOR con el reloj. Desventaja: requiere el doble de ancho de banda (200 MHz para 100 Mbits/s → inviable).
+              </div>
+            </div>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 400 110" width="400" xmlns="http://www.w3.org/2000/svg">
+                <!-- bit labels -->
+                <text x="8" y="12" font-size="8" fill="#64748b" font-family="monospace">Bits</text>
+                <text x="38" y="12" font-size="9" fill="#334155" font-family="monospace" text-anchor="middle">1</text>
+                <text x="88" y="12" font-size="9" fill="#334155" font-family="monospace" text-anchor="middle">0</text>
+                <text x="138" y="12" font-size="9" fill="#334155" font-family="monospace" text-anchor="middle">1</text>
+                <text x="188" y="12" font-size="9" fill="#334155" font-family="monospace" text-anchor="middle">1</text>
+                <text x="238" y="12" font-size="9" fill="#334155" font-family="monospace" text-anchor="middle">0</text>
+                <text x="288" y="12" font-size="9" fill="#334155" font-family="monospace" text-anchor="middle">0</text>
+                <text x="338" y="12" font-size="9" fill="#334155" font-family="monospace" text-anchor="middle">1</text>
+                <!-- dividers -->
+                <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2,2">
+                  <line x1="13" y1="15" x2="13" y2="105"/>
+                  <line x1="63" y1="15" x2="63" y2="105"/>
+                  <line x1="113" y1="15" x2="113" y2="105"/>
+                  <line x1="163" y1="15" x2="163" y2="105"/>
+                  <line x1="213" y1="15" x2="213" y2="105"/>
+                  <line x1="263" y1="15" x2="263" y2="105"/>
+                  <line x1="313" y1="15" x2="313" y2="105"/>
+                  <line x1="363" y1="15" x2="363" y2="105"/>
+                </g>
+                <!-- NZR label -->
+                <text x="2" y="40" font-size="7" fill="#94a3b8" font-family="monospace">NZR</text>
+                <!-- NZR signal: 1=low(25) 0=high(40) conceptually, standard: 1=high -->
+                <polyline points="13,25 63,25 63,42 113,42 113,25 163,25 213,25 213,42 263,42 263,25 313,25 363,25" fill="none" stroke="#2e86de" stroke-width="1.5"/>
+                <!-- Manchester label -->
+                <text x="2" y="80" font-size="7" fill="#94a3b8" font-family="monospace">MCH</text>
+                <!-- Manchester signal (transitions at center of each period) -->
+                <!-- bit 1: 13-63 center=38: starts hi, drops at center -->
+                <polyline points="13,62 38,62 38,80 63,80" fill="none" stroke="#0f766e" stroke-width="2"/>
+                <!-- bit 0: 63-113 center=88: starts lo, rises at center -->
+                <polyline points="63,80 88,80 88,62 113,62" fill="none" stroke="#0f766e" stroke-width="2"/>
+                <!-- bit 1: 113-163 -->
+                <polyline points="113,62 138,62 138,80 163,80" fill="none" stroke="#0f766e" stroke-width="2"/>
+                <!-- bit 1: 163-213 -->
+                <polyline points="163,62 188,62 188,80 213,80" fill="none" stroke="#0f766e" stroke-width="2"/>
+                <!-- bit 0: 213-263 -->
+                <polyline points="213,80 238,80 238,62 263,62" fill="none" stroke="#0f766e" stroke-width="2"/>
+                <!-- bit 0: 263-313 -->
+                <polyline points="263,80 288,80 288,62 313,62" fill="none" stroke="#0f766e" stroke-width="2"/>
+                <!-- bit 1: 313-363 -->
+                <polyline points="313,62 338,62 338,80 363,80" fill="none" stroke="#0f766e" stroke-width="2"/>
+                <!-- legend -->
+                <rect x="370" y="22" width="8" height="3" fill="#2e86de"/>
+                <text x="380" y="27" font-size="7" fill="#64748b">NZR</text>
+                <rect x="370" y="57" width="8" height="3" fill="#0f766e"/>
+                <text x="380" y="62" font-size="7" fill="#64748b">Manchester</text>
+              </svg>
+            </div>
+          </div>
+
+          <h4 class="font-bold text-navy mt-8 mb-4 text-sm">Codificaciones para velocidades superiores</h4>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr>
+                  <th class="px-4 py-3 text-left">Código</th>
+                  <th class="px-4 py-3 text-left">Velocidad</th>
+                  <th class="px-4 py-3 text-left">Cómo funciona</th>
+                  <th class="px-4 py-3 text-left">Eficiencia</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600">
+                <tr>
+                  <td class="px-4 py-3 font-bold text-navy">4B/5B</td>
+                  <td class="px-4 py-3">100 Mbits/s (Fast Ethernet)</td>
+                  <td class="px-4 py-3 text-xs">Cada grupo de 4 bits se reemplaza por un símbolo de 5 bits de una tabla predefinida. Garantiza al menos una transición cada 3 bits.</td>
+                  <td class="px-4 py-3"><span class="route-chip bg-blue-100 text-blue-800">80%</span></td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-bold text-navy">8B/10B</td>
+                  <td class="px-4 py-3">1 Gbits/s (Gigabit Ethernet)</td>
+                  <td class="px-4 py-3 text-xs">Un byte (8 bits) se divide: 5 bits bajos → código 5B/6B, 3 bits altos → código 3B/4B. Se transmite en orden [parte2 | parte1]. También en USB 3.0, SATA, PCIe.</td>
+                  <td class="px-4 py-3"><span class="route-chip bg-blue-100 text-blue-800">80%</span></td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-bold text-navy">64B/66B</td>
+                  <td class="px-4 py-3">10 / 40 / 100 Gbits/s</td>
+                  <td class="px-4 py-3 text-xs">64 bits de datos se transmiten en 66 bits añadiendo un header de 2 bits de sincronización. Muy eficiente para altas velocidades. También usado en Infiniband.</td>
+                  <td class="px-4 py-3"><span class="route-chip bg-green-100 text-green-800">97%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+            <strong class="text-navy">Regla mental:</strong> Manchester = doble ancho de banda, imposible a 100 Mbits/s con UTP. 4B/5B usa 125 MHz para 100 Mbits/s → justo dentro del límite del cable UTP-5. 64B/66B hace posible 100 Gbits/s sobre fibra.
+          </div>
+        </div>
+
+        <!-- Card 7: CSMA/CD -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">7</span> CSMA/CD — Acceso al medio compartido
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">CSMA/CD (Carrier Sense Multiple Access with Collision Detection) es el protocolo de acceso que usa Ethernet cuando el canal es compartido (Half-Duplex). Evolucionó desde el protocolo ALOHA de la Universidad de Hawaii en 1970.</p>
+
+          <div class="grid md:grid-cols-3 gap-4 mb-8">
+            <div class="diagram-wrap">
+              <h4 class="font-bold text-navy text-center mb-3 text-xs bit-mini">ALOHA (1970)</h4>
+              <p class="text-xs text-slate-600 mb-3">Transmite en cualquier momento. Si hay colisión, espera un tiempo aleatorio t y reintenta.</p>
+              <div class="space-y-2 text-xs">
+                <div class="flex items-center gap-2"><span class="route-chip bg-blue-100 text-blue-800">Ventaja</span><span class="text-slate-600">Totalmente descentralizado.</span></div>
+                <div class="flex items-center gap-2"><span class="route-chip bg-red-100 text-red-800">Problema</span><span class="text-slate-600">Eficiencia máxima ≈ 18%.</span></div>
+              </div>
+            </div>
+            <div class="diagram-wrap">
+              <h4 class="font-bold text-navy text-center mb-3 text-xs bit-mini">CSMA</h4>
+              <p class="text-xs text-slate-600 mb-3">Escucha el canal antes de transmitir (Carrier Sense). Si hay señal → espera. Si no hay → transmite.</p>
+              <div class="space-y-2 text-xs">
+                <div class="flex items-center gap-2"><span class="route-chip bg-blue-100 text-blue-800">Ventaja</span><span class="text-slate-600">Menos colisiones que ALOHA.</span></div>
+                <div class="flex items-center gap-2"><span class="route-chip bg-red-100 text-red-800">Problema</span><span class="text-slate-600">Colisiones aún posibles por t_propagación.</span></div>
+              </div>
+            </div>
+            <div class="diagram-wrap">
+              <h4 class="font-bold text-navy text-center mb-3 text-xs bit-mini">CSMA/CD</h4>
+              <p class="text-xs text-slate-600 mb-3">CSMA + detecta colisión <em>mientras</em> transmite. Si la detecta → para inmediatamente + Jam + espera TBEB.</p>
+              <div class="space-y-2 text-xs">
+                <div class="flex items-center gap-2"><span class="route-chip bg-green-100 text-green-800">Ventaja</span><span class="text-slate-600">No desperdicia canal tras colisión.</span></div>
+                <div class="flex items-center gap-2"><span class="route-chip bg-amber-100 text-amber-800">Nota</span><span class="text-slate-600">Solo en Half-Duplex (HUB). Switch usa Full-Duplex.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <h4 class="font-bold text-navy mb-4 text-sm">Algoritmo CSMA/CD — paso a paso</h4>
+          <div class="space-y-2 mb-6">
+            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">1</span>
+              <div><p class="text-sm font-semibold text-navy">Construir el frame en un buffer local.</p></div>
+            </div>
+            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">2</span>
+              <div><p class="text-sm font-semibold text-navy">¿Hay actividad en el canal?</p><p class="text-xs text-slate-500 mt-1">Si hay señal → esperar hasta que el canal quede libre (CSMA).</p></div>
+            </div>
+            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">3</span>
+              <div><p class="text-sm font-semibold text-navy">Esperar IFS de 96 bits de silencio adicional.</p><p class="text-xs text-slate-500 mt-1">Inter Frame Spacing: evita que un nodo monopolice el canal inmediatamente.</p></div>
+            </div>
+            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">4</span>
+              <div><p class="text-sm font-semibold text-navy">Transmitir monitoreando el canal simultáneamente.</p></div>
+            </div>
+            <div class="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
+              <span class="inline-flex items-center justify-content-center text-xs font-bold bg-red-500 text-white rounded-lg px-2 py-1 flex-shrink-0">4a</span>
+              <div>
+                <p class="text-sm font-semibold text-red-700">Si se detecta colisión:</p>
+                <p class="text-xs text-slate-600 mt-1">1. Parar transmisión inmediatamente. &nbsp; 2. Emitir Jam Sequence (32 bits de ruido, 0xAAAAAAAA) para avisar a todos. &nbsp; 3. Calcular tiempo de espera TBEB. &nbsp; 4. Volver al paso 2.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-4">
+              <span class="inline-flex items-center justify-content-center text-xs font-bold bg-green-600 text-white rounded-lg px-2 py-1 flex-shrink-0">4b</span>
+              <div><p class="text-sm font-semibold text-green-700">Si no hay colisión → seguir transmitiendo hasta completar el frame. ✓</p></div>
+            </div>
+          </div>
+
+          <h4 class="font-bold text-navy mb-3 text-sm">TBEB — Truncated Binary Exponential Backoff</h4>
+          <div class="code-block">t = int(rand() × 2^min(10, n)) × t_512bits
+
+Donde n = número de intento (empieza en 1)
+      t_512bits = tiempo para transmitir 512 bits
+
+Intento 1 → rango [0, 2)   × t_512bits
+Intento 2 → rango [0, 4)   × t_512bits
+Intento 3 → rango [0, 8)   × t_512bits
+   ...
+Intento 10+ → rango [0, 1024) × t_512bits   ← máximo
+Intento 16 → frame descartado definitivamente</div>
+          <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+            <strong class="text-navy">Regla mental:</strong> TBEB funciona porque usa tiempos <em>aleatorios y exponencialmente crecientes</em>. Así la probabilidad de que dos nodos elijan el mismo slot disminuye rápidamente. Si ambos eligieran el mismo tiempo fijo, seguirían colisionando indefinidamente.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 4 · ARP Y HARDWARE
+    ═══════════════════════════════════════════════ -->
+    <section id="hardware" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 4 · ARP y hardware de red</h2>
+      <div class="space-y-10">
+
+        <!-- Card 8: ARP -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">8</span> ARP — Address Resolution Protocol
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">La capa IP conoce la dirección IP del destino, pero el frame Ethernet necesita la <strong class="text-navy">dirección MAC</strong>. ARP resuelve IP → MAC usando broadcast dentro del segmento LAN.</p>
+
+          <div class="grid md:grid-cols-4 gap-4 mb-8">
+            <div class="rounded-xl border border-blue-200 bg-blue-50 p-5 text-center">
+              <div class="text-xs bit-mini text-blue-700 mb-2">Paso 1</div>
+              <h4 class="font-bold text-navy text-sm mb-2">ARP Request</h4>
+              <p class="text-xs text-slate-600">Host A envía un frame broadcast (FF:FF:FF:FF:FF:FF) con "¿Quién tiene la IP 192.168.1.20?"</p>
+            </div>
+            <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5 text-center">
+              <div class="text-xs bit-mini text-yellow-700 mb-2">Paso 2</div>
+              <h4 class="font-bold text-amber-700 text-sm mb-2">Broadcast recibido</h4>
+              <p class="text-xs text-slate-600">Todos los hosts del segmento reciben el frame. Solo el que tiene esa IP responde.</p>
+            </div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5 text-center">
+              <div class="text-xs bit-mini text-rose-700 mb-2">Paso 3</div>
+              <h4 class="font-bold text-burg text-sm mb-2">ARP Reply</h4>
+              <p class="text-xs text-slate-600">Host B responde en unicast: "Soy 192.168.1.20, mi MAC es 00:20:ED:87:FD:E6".</p>
+            </div>
+            <div class="rounded-xl border border-green-200 bg-green-50 p-5 text-center">
+              <div class="text-xs bit-mini text-green-700 mb-2">Paso 4</div>
+              <h4 class="font-bold text-green-700 text-sm mb-2">Caché ARP</h4>
+              <p class="text-xs text-slate-600">Host A guarda la asociación IP↔MAC en su caché con un TTL para evitar broadcasts repetitivos.</p>
+            </div>
+          </div>
+
+          <h4 class="font-bold text-navy mb-3 text-sm">Estructura del paquete ARP (encapsulado en el Payload del frame Ethernet)</h4>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr>
+                  <th class="px-4 py-3 text-left">Campo</th>
+                  <th class="px-4 py-3 text-left">Tamaño</th>
+                  <th class="px-4 py-3 text-left">Descripción</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600 text-xs">
+                <tr><td class="px-4 py-3 font-medium">HW Type</td><td class="px-4 py-3">2 B</td><td class="px-4 py-3">Tipo de hardware. Ethernet = 1.</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Protocol Type</td><td class="px-4 py-3">2 B</td><td class="px-4 py-3">IPv4 = 0x0800 · IPv6 = 0x86DD</td></tr>
+                <tr><td class="px-4 py-3 font-medium">H Len / P Len</td><td class="px-4 py-3">1 B c/u</td><td class="px-4 py-3">Longitud de MAC (6) y de IP (4).</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Operation</td><td class="px-4 py-3">2 B</td><td class="px-4 py-3"><strong class="text-navy">1 = REQUEST</strong> · <strong class="text-navy">2 = REPLY</strong></td></tr>
+                <tr><td class="px-4 py-3 font-medium">Sender MAC</td><td class="px-4 py-3">6 B</td><td class="px-4 py-3">MAC del emisor del paquete ARP.</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Sender IP</td><td class="px-4 py-3">4 B</td><td class="px-4 py-3">IP del emisor (la que busca ser conocida).</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Target MAC</td><td class="px-4 py-3">6 B</td><td class="px-4 py-3">MAC del destino buscado. En REQUEST = 00:00:00:00:00:00 (desconocida).</td></tr>
+                <tr><td class="px-4 py-3 font-medium">Target IP</td><td class="px-4 py-3">4 B</td><td class="px-4 py-3">IP del destino que se quiere resolver.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 mt-4">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+              <strong class="text-navy block mb-1">Punto de certamen</strong>
+              El REQUEST usa MAC destino = FF:FF:FF:FF:FF:FF (broadcast), pero el REPLY es unicast directamente al solicitante. Así no molesta a toda la red con la respuesta.
+            </div>
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
+              <strong class="text-gold block mb-1">Caché ARP</strong>
+              Tiene un TTL (típ. 20 minutos). Si un host cambia de NIC (nueva MAC), el resto de la red lo actualiza automáticamente en el próximo ciclo sin intervención manual.
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 9: HUB / Bridge / Switch -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">9</span> Hardware: HUB, Bridge y Switch
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm">Tres dispositivos con roles muy distintos. Conocer sus diferencias es fundamental para certamen.</p>
+
+          <div class="grid md:grid-cols-3 gap-6 mb-6">
+            <div class="rounded-2xl border-2 border-slate-200 bg-white p-6 text-center">
+              <h4 class="font-bold text-navy mb-3 text-base">HUB</h4>
+              <p class="text-xs bit-mini text-slate-400 mb-3">Capa 1 — Repetidor de bits</p>
+              <ul class="space-y-2 text-xs text-slate-600 text-left">
+                <li>• Reenvía <strong>todo a todos</strong> los puertos (broadcast físico).</li>
+                <li>• Opera en Half-Duplex → CSMA/CD obligatorio.</li>
+                <li>• El ancho de banda es compartido entre todos los nodos.</li>
+                <li>• 100 Mbits/s + 10 hosts = ~10 Mbits/s por host.</li>
+                <li>• Aumenta las colisiones con cada nodo adicional.</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border-2 border-blue-300 bg-blue-50 p-6 text-center">
+              <h4 class="font-bold text-navy mb-3 text-base">Bridge</h4>
+              <p class="text-xs bit-mini text-blue-600 mb-3">Capa 2 — Switching de frames</p>
+              <ul class="space-y-2 text-xs text-slate-600 text-left">
+                <li>• Reenvía frames basado en la <strong>MAC destino</strong>.</li>
+                <li>• Mantiene tabla MAC → Puerto (aprende de los frames).</li>
+                <li>• Solo reenvía al puerto correcto (no broadcast).</li>
+                <li>• Reduce colisiones y permite interconectar tecnologías distintas.</li>
+                <li>• Típicamente pocos puertos (2–4).</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6 text-center">
+              <h4 class="font-bold text-navy mb-3 text-base">Switch</h4>
+              <p class="text-xs bit-mini text-amber-600 mb-3">Capa 2/3 — Bridge de alta performance</p>
+              <ul class="space-y-2 text-xs text-slate-600 text-left">
+                <li>• Ancho de banda <strong>dedicado por puerto</strong>.</li>
+                <li>• Full-Duplex: emite y recibe al mismo tiempo.</li>
+                <li>• Multi-velocidad (10M/100M/1G) con auto-negociación.</li>
+                <li>• Store-and-Forward: almacena el frame, verifica CRC, reenvía.</li>
+                <li>• Aprende tabla MAC automáticamente analizando frames.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h4 class="font-bold text-navy mb-3 text-sm">Tabla MAC de un Switch — aprendizaje automático</h4>
+          <p class="text-slate-600 text-sm mb-3">El switch examina la MAC <em>fuente</em> de cada frame entrante y registra: MAC → Puerto de llegada. Si la MAC destino no está en tabla → flooding (reenvío a todos excepto el puerto de origen).</p>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr>
+                  <th class="px-4 py-3 text-left">MAC Address</th>
+                  <th class="px-4 py-3 text-left">Puerto</th>
+                  <th class="px-4 py-3 text-left">IP (nivel 3)</th>
+                  <th class="px-4 py-3 text-left">TTL</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600 font-mono text-xs">
+                <tr><td class="px-4 py-3">00:10:A4:87:BF:1A</td><td class="px-4 py-3">Puerto 1</td><td class="px-4 py-3">192.168.1.10</td><td class="px-4 py-3">289s</td></tr>
+                <tr><td class="px-4 py-3">00:20:ED:87:FD:E6</td><td class="px-4 py-3">Puerto 3</td><td class="px-4 py-3">192.168.1.20</td><td class="px-4 py-3">120s</td></tr>
+                <tr><td class="px-4 py-3">00:04:76:21:25:EA</td><td class="px-4 py-3">Puerto 2</td><td class="px-4 py-3">192.168.1.1</td><td class="px-4 py-3">295s</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+            <strong class="text-navy">Regla mental:</strong> HUB = todos gritan al mismo tiempo (colisiones). Bridge = conserje con lista (tabla). Switch = Bridge de alta velocidad con banda dedicada por puesto.
+          </div>
+        </div>
+
+        <!-- Card 10: VLAN -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">10</span> VLANs — Virtual Local Area Networks
+          </h3>
+          <p class="text-slate-600 mb-5 text-sm leading-relaxed">Las VLANs permiten segmentar lógicamente una red Ethernet física. Computadores conectados a diferentes puertos (incluso en switches distintos) pueden pertenecer al mismo dominio de broadcast.</p>
+          <div class="grid md:grid-cols-3 gap-4 mb-6">
+            <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">Beneficios</h4>
+              <ul class="space-y-1 text-xs text-slate-600">
+                <li>• Reduce el dominio de broadcast.</li>
+                <li>• Mejora la seguridad (aísla tráfico).</li>
+                <li>• Permite organizar la red por función, no por física.</li>
+              </ul>
+            </div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
+              <h4 class="font-bold text-burg mb-2 text-sm">IEEE 802.1Q</h4>
+              <ul class="space-y-1 text-xs text-slate-600">
+                <li>• Añade 4 bytes al frame Ethernet.</li>
+                <li>• VID de 12 bits → hasta 4096 VLANs.</li>
+                <li>• Frame puede crecer hasta 1522 bytes.</li>
+                <li>• PCP de 3 bits para QoS/prioridad.</li>
+              </ul>
+            </div>
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+              <h4 class="font-bold text-gold mb-2 text-sm">Requisito</h4>
+              <ul class="space-y-1 text-xs text-slate-600">
+                <li>• Solo funciona con Switches.</li>
+                <li>• Para comunicación entre VLANs se necesita un router o switch capa 3.</li>
+                <li>• Normas relacionadas: IEEE 802.3ad, 802.1ax.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+            <strong class="text-navy">Caso práctico:</strong> Una VLAN 10 para estudiantes, VLAN 20 para administrativos y VLAN 30 para servidores. Los equipos de VLAN 10 no pueden hablar directamente con VLAN 30 sin pasar por un router — seguridad incorporada en la capa de datos.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 5 · GESTIÓN DE ERRORES
+    ═══════════════════════════════════════════════ -->
+    <section id="errores" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 5 · Gestión de errores</h2>
+      <div class="space-y-10">
+
+        <!-- Card 11: Paridad -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">11</span> Paridad — 1D y 2D
+          </h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Paridad 1D (simple)</h4>
+              <p class="text-sm text-slate-600 mb-4">Se agrega un bit adicional para que el total de unos sea par (paridad par) o impar (paridad impar).</p>
+              <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <table class="min-w-full text-xs">
+                  <thead class="bg-slate-50 text-slate-700">
+                    <tr><th class="px-3 py-2">Datos (7 bits)</th><th class="px-3 py-2">Unos</th><th class="px-3 py-2">Par</th><th class="px-3 py-2">Impar</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100 font-mono text-slate-700">
+                    <tr><td class="px-3 py-2">0000000</td><td class="px-3 py-2 text-center">0</td><td class="px-3 py-2">0000000<strong class="text-navy">0</strong></td><td class="px-3 py-2">0000000<strong class="text-burg">1</strong></td></tr>
+                    <tr><td class="px-3 py-2">1010001</td><td class="px-3 py-2 text-center">3</td><td class="px-3 py-2">1010001<strong class="text-navy">1</strong></td><td class="px-3 py-2">1010001<strong class="text-burg">0</strong></td></tr>
+                    <tr><td class="px-3 py-2">1101001</td><td class="px-3 py-2 text-center">4</td><td class="px-3 py-2">1101001<strong class="text-navy">0</strong></td><td class="px-3 py-2">1101001<strong class="text-burg">1</strong></td></tr>
+                    <tr><td class="px-3 py-2">1111111</td><td class="px-3 py-2 text-center">7</td><td class="px-3 py-2">1111111<strong class="text-navy">1</strong></td><td class="px-3 py-2">1111111<strong class="text-burg">0</strong></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-slate-700">
+                 <strong class="text-red-700">Problema:</strong> si exactamente 2 bits (o cualquier número par) se corrompen, la paridad sigue siendo válida y el error no se detecta. Probabilidad de detección = 0.5.
+              </div>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Paridad 2D — detecta Y corrige errores simples</h4>
+              <p class="text-sm text-slate-600 mb-3">Organiza los bits en una matriz y calcula bits de paridad por fila y por columna. El bit errado se localiza en la intersección de la fila y columna incorrectas.</p>
+              <div id="parity-area" class="mb-3"><!-- JS renders here --></div>
+              <div id="parity-msg" class="text-xs rounded-xl p-3 hidden"></div>
+              <div class="flex gap-2 mt-3">
+                <button onclick="resetParity()" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow">Reiniciar</button>
+                <button onclick="injectError()" class="flex items-center gap-2 bg-burg text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow hover:opacity-90">Inyectar error</button>
+              </div>
+              <p class="text-xs text-slate-400 mt-2">Haz clic en cualquier bit de datos para simular un error de transmisión.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 12: CRC -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">12</span> CRC — Cyclic Redundancy Check
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">CRC es el mecanismo de detección de errores usado en Ethernet (CRC-32). Los bits del mensaje representan los coeficientes de un polinomio; el checksum es el residuo de la división polinomial sobre GF(2) (aritmética módulo 2, donde suma = XOR).</p>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Idea central</h4>
+              <p class="text-sm text-slate-600 mb-3">El mensaje M de n bits representa un polinomio M(x) de grado n−1. Emisor y receptor acuerdan un <em>polinomio generador</em> G(x) de grado k.</p>
+              <div class="code-block">Ejemplo: M = 111001
+M(x) = x⁵ + x⁴ + x³ + 1
+
+P(x) = xᵏ · M(x)
+     = M desplazado k bits a la izquierda
+     (agregar k ceros al final)
+
+CRC = Resto de P(x) ÷ G(x) en GF(2)</div>
+              <p class="text-sm text-slate-600 mt-4">El emisor transmite M concatenado con CRC. El receptor divide (M+CRC) / G(x). Si el resto es 0 → sin errores.</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Polinomios generadores estándar</h4>
+              <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <table class="min-w-full text-xs">
+                  <thead class="bg-slate-50 text-slate-700">
+                    <tr><th class="px-3 py-2">Nombre</th><th class="px-3 py-2">Bits</th><th class="px-3 py-2">Hex</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100 font-mono text-slate-700">
+                    <tr><td class="px-3 py-2">CRC-12</td><td class="px-3 py-2">12</td><td class="px-3 py-2">0x80F</td></tr>
+                    <tr><td class="px-3 py-2">CRC-16</td><td class="px-3 py-2">16</td><td class="px-3 py-2">0x8005</td></tr>
+                    <tr><td class="px-3 py-2">CRC-CCITT</td><td class="px-3 py-2">16</td><td class="px-3 py-2">0x1021</td></tr>
+                    <tr class="bg-amber-50"><td class="px-3 py-2 font-bold text-navy">CRC-32 ← Ethernet</td><td class="px-3 py-2">32</td><td class="px-3 py-2">0x04C11DB7</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-slate-700">
+                 <strong class="text-red-700">Limitación clave:</strong> CRC detecta el error pero <em>no puede corregirlo</em> (no sabe en qué bit ocurrió). El frame errado se descarta y TCP solicita retransmisión.
+              </div>
+            </div>
+          </div>
+
+          <h4 class="font-bold text-navy mb-3 text-sm">Procedimiento de cálculo — paso a paso</h4>
+          <div class="code-block">1. Tomar el mensaje M en binario.
+2. Agregar k ceros al final de M, donde k = grado del generador G(x).
+   → Esto es P(x) = xᵏ × M(x)
+3. Dividir P(x) entre G(x) usando XOR (no la resta/suma normal).
+4. El resto de la división (k bits) es el CRC checksum.
+5. Transmitir: M + CRC
+6. Receptor: divide (M + CRC) / G(x) → debe dar resto = 0.</div>
+          <div class="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-slate-700">
+            <strong class="text-green-700">Usos reales del CRC:</strong> Ethernet, Compact Disc Audio, DVD, redes celulares (GSM), USB, Bluetooth, reproductores MP3/MP4. La ubicuidad del CRC refleja su excelente relación costo-eficiencia.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 6 · PREGUNTAS TIPO CERTAMEN
+    ═══════════════════════════════════════════════ -->
+    <section class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 6 · Preguntas tipo certamen</h2>
+      <div class="card p-8">
+        <p class="text-slate-500 mb-8 text-sm">Haz clic para revelar explicaciones completas. Las preguntas cubren definiciones, razonamiento conceptual y errores comunes.</p>
+        <div class="space-y-3">
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>1. ¿Cuál es la diferencia entre una dirección IP y una dirección MAC? ¿Cuándo usa el sistema cada una?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              La <strong class="text-navy">IP</strong> identifica un host de forma lógica dentro de la red global. Es asignada por software, tiene estructura jerárquica (red+host) y los routers la usan para enrutar paquetes de extremo a extremo. Puede cambiar (DHCP). La <strong class="text-navy">MAC</strong> identifica una interfaz de red específica. Está grabada en el hardware, es plana (sin jerarquía) y solo se usa dentro de un segmento LAN para entregar el frame al siguiente salto. En cada hop hacia el destino, la IP destino permanece constante, pero la MAC destino cambia (pasa a ser la MAC del siguiente router o del destino final).
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>2. ¿Por qué el frame Ethernet tiene un tamaño mínimo de 64 bytes (46 bytes de datos)?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Para que el emisor pueda detectar una colisión <em>mientras sigue transmitiendo</em>, el frame debe tardar al menos 2×t_propagación en transmitirse (tiempo de ida y vuelta del peor caso). Con un segmento coaxial 10Base5 de hasta 2500 metros, eso equivale a aproximadamente 51.2 µs, suficiente para transmitir 512 bits = 64 bytes a 10 Mbits/s. Si el frame fuera más corto, el emisor terminaría de transmitirlo antes de que el ruido de la colisión más lejana posible llegara de regreso, y asumiría erróneamente que no hubo error. El padding de ceros garantiza el mínimo.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q3', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>3. ¿Cuál es la diferencia entre un HUB y un SWITCH? ¿Por qué los HUBs están obsoletos?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              El <strong class="text-navy">HUB</strong> es un repetidor de bits (capa 1): replica eléctricamente todo lo que recibe en todos sus puertos. El ancho de banda se comparte entre todos los nodos. Con N hosts, cada uno tiene a lo sumo BW/N disponible. Funciona en Half-Duplex y necesita CSMA/CD. El <strong class="text-navy">SWITCH</strong> es un puente de alta performance (capa 2): aprende la tabla MAC→Puerto y envía el frame solo al puerto correcto. Cada puerto tiene su propio dominio de colisión y ancho de banda dedicado. Permite Full-Duplex, eliminando completamente las colisiones. Los HUBs están obsoletos porque los switches son más económicos, más rápidos y sin colisiones.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>4. Explica el TBEB. ¿Por qué no se usa un tiempo fijo de espera tras una colisión?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Con tiempo fijo, todos los nodos esperarían exactamente lo mismo y volverían a colisionar en el siguiente intento, indefinidamente. TBEB elige un tiempo aleatorio dentro de una ventana que se duplica en cada intento: <code>[0, 2ⁿ) × t_512bits</code>. Al ser aleatorio, la probabilidad de que dos nodos elijan el mismo slot decrece rápidamente. La ventana crece exponencialmente para adaptarse a la carga de la red: si hay muchos intentos fallidos, es señal de alta contención y conviene esperar más. Después de 16 intentos fallidos, el frame se descarta definitivamente.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q5', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>5. ¿Puede el CRC-32 detectar todos los errores? ¿Puede corregirlos?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              El CRC-32 es muy eficiente pero no detecta el 100% de los errores: no detecta los que son múltiplos exactos del polinomio generador G(x). En la práctica detecta todos los errores de 1 bit, todos los errores de burst de hasta 32 bits, y la gran mayoría de errores de más bits. Sin embargo, el CRC no puede <em>corregir</em> errores: solo sabe que hubo un error en algún lugar del frame, no en qué bit. El frame simplemente se descarta. Si se necesitara corrección en capa 2, habría que usar códigos FEC (Forward Error Correction) como Hamming, que requieren mucha más redundancia.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q6', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>6. ¿Por qué Manchester funciona para 10 Mbits/s pero no para 100 Mbits/s?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q6" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Manchester introduce una transición obligatoria en el centro de cada período de bit, lo que significa que el ancho de banda del medio necesario es el <em>doble</em> de la velocidad de datos. Para 10 Mbits/s se necesitan 20 MHz, manejable con coaxial o UTP-3. Para 100 Mbits/s se necesitarían 200 MHz, que supera el límite del cable UTP-5 estándar de la época (100 MHz). 4B/5B resuelve esto: solo añade un 25% de overhead (4→5 bits), por lo que 100 Mbits/s requiere 125 MHz, justo dentro del límite del UTP-5. La eficiencia baja de 50% (Manchester) a 80% (4B/5B), pero el medio físico lo aguanta.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q7', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>7. Describe el proceso completo cuando el host A (10.0.0.1) quiere enviar un paquete al host B (10.0.0.5) en la misma LAN.</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q7" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              <strong class="text-navy">Paso 1 — ARP:</strong> A verifica si tiene la MAC de 10.0.0.5 en caché. Si no, envía ARP Request en broadcast (FF:FF:FF:FF:FF:FF): "¿Quién tiene 10.0.0.5?"<br><br>
+              <strong class="text-navy">Paso 2 — ARP Reply:</strong> B reconoce su IP y responde en unicast con su MAC. A guarda MAC_B en su caché ARP.<br><br>
+              <strong class="text-navy">Paso 3 — Construcción del frame:</strong> A ensambla el frame con [Preámbulo | SFD | MAC_B | MAC_A | EtherType=0x0800 | Paquete IP | CRC-32].<br><br>
+              <strong class="text-navy">Paso 4 — CSMA/CD:</strong> A escucha el canal. Si está libre, espera el IFS y comienza a transmitir bit a bit. Si detecta colisión durante la transmisión, aplica TBEB y reintenta.<br><br>
+              <strong class="text-navy">Paso 5 — Switch (si hay):</strong> Almacena el frame, verifica el CRC, busca MAC_B en su tabla y lo reenvía solo por el puerto correcto.<br><br>
+              <strong class="text-navy">Paso 6 — Recepción:</strong> La NIC de B detecta el preámbulo, sincroniza el reloj, lee el frame, verifica que la MAC destino sea la suya, comprueba el CRC. Si todo es correcto, sube el payload IP a la capa de red.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 7 · EJERCITACIÓN GUIADA
+    ═══════════════════════════════════════════════ -->
+    <section id="practica" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 7 · Ejercitación guiada</h2>
+      <div class="space-y-8">
+
+        <!-- Ejercicio 1 -->
+        <div class="card p-8">
+          <span class="inline-flex items-center gap-1.5 bg-blue-50 text-navy border border-blue-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 1 · Tiempo de propagación y bits en tránsito</span>
+          <h3 class="text-xl font-bold text-slate-800 mb-3">Ejercicio resuelto paso a paso</h3>
+          <p class="text-slate-600 text-sm mb-5 leading-relaxed">El Departamento de Informática de la UTFSM conecta su laboratorio al switch central con cable UTP-5 de cobre de <strong>80 metros</strong>. La velocidad del enlace es <strong>100 Mbits/s</strong>. Calcula el tiempo de propagación, los bits en tránsito y el RTT asumiendo un tiempo de procesamiento del switch de 5 µs.</p>
+          <div class="border-l-4 border-navy pl-5 py-2 mb-6 space-y-2.5">
+            <p class="text-slate-700 text-sm font-semibold">Pregunta A: ¿Cuál es el tiempo de propagación de un bit entre el lab y el switch?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta B: ¿Cuántos bits están en tránsito (en el cable) simultáneamente?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta C: ¿Cuál es el RTT incluyendo el tiempo de procesamiento?</p>
+          </div>
+          <div class="flex justify-end border-t border-slate-100 pt-5">
+            <button onclick="toggleAnswer('prac1', this)" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Mostrar resolución</span>
+            </button>
+          </div>
+          <div id="prac1" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl animate-in">
+            <h4 class="font-bold text-navy mb-5 border-b border-slate-200 pb-3">Resolución del caso</h4>
+            <div class="space-y-5 text-sm text-slate-700">
+              <div>
+                <p class="font-bold text-burg mb-2">Respuesta A · Tiempo de propagación</p>
+                <p>Usando V_cobre = 2.3 × 10⁸ m/s y distancia = 80 m:</p>
+                <p class="mt-2 font-mono bg-white border border-slate-200 p-3 rounded-xl text-xs">t_prop = 80 m / (2.3 × 10⁸ m/s) = 3.478 × 10⁻⁷ s ≈ <strong>0.348 µs</strong></p>
+              </div>
+              <div>
+                <p class="font-bold text-gold mb-2">Respuesta B · Bits en tránsito</p>
+                <p>Cuántos bits están "volando" en el cable en un instante dado, a 100 Mbits/s = 10⁸ bits/s:</p>
+                <p class="mt-2 font-mono bg-white border border-slate-200 p-3 rounded-xl text-xs">N_tránsito = t_prop × Velocidad = 3.478 × 10⁻⁷ × 10⁸ = <strong>34.78 ≈ 35 bits</strong></p>
+                <p class="mt-2 text-xs text-slate-500">Esto significa que cuando el emisor termina de transmitir el bit 35, el bit 1 recién llega al receptor.</p>
+              </div>
+              <div>
+                <p class="font-bold text-navy mb-2">Respuesta C · RTT</p>
+                <p>Con t_procesamiento = 5 µs:</p>
+                <p class="mt-2 font-mono bg-white border border-slate-200 p-3 rounded-xl text-xs">RTT = 2 × 0.348 + 5 µs = 0.696 + 5 = <strong>5.696 µs</strong></p>
+                <p class="mt-2 text-xs text-slate-500">El procesamiento del switch domina el RTT en este caso. En enlaces de mayor distancia (ej. 1000 km en fibra) el t_propagación domina.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="card p-8">
+          <span class="inline-flex items-center gap-1.5 bg-rose-50 text-burg border border-rose-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 2 · Cálculo de CRC</span>
+          <h3 class="text-xl font-bold text-slate-800 mb-3">Ejercicio de cálculo manual</h3>
+          <p class="text-slate-600 text-sm mb-5 leading-relaxed">Se desea transmitir el mensaje <strong class="font-mono">M = 1101001</strong> usando el polinomio generador <strong class="font-mono">G(x) = x³ + x + 1</strong> (representación binaria: <strong class="font-mono">1011</strong>). Calcula el CRC de 3 bits que se adjunta al frame.</p>
+          <div class="border-l-4 border-burg pl-5 py-2 mb-6 space-y-2.5">
+            <p class="text-slate-700 text-sm font-semibold">Pregunta A: ¿Cuál es P(x) = M × x³?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta B: ¿Cuál es el resultado de P(x) ÷ G(x) en GF(2)?</p>
+            <p class="text-slate-700 text-sm font-semibold">Pregunta C: ¿Qué bits se transmiten? ¿Cómo verifica el receptor?</p>
+          </div>
+          <div class="flex justify-end border-t border-slate-100 pt-5">
+            <button onclick="toggleAnswer('prac2', this)" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Mostrar resolución</span>
+            </button>
+          </div>
+          <div id="prac2" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl animate-in">
+            <h4 class="font-bold text-navy mb-5 border-b border-slate-200 pb-3">Resolución del caso</h4>
+            <div class="space-y-5 text-sm text-slate-700">
+              <div>
+                <p class="font-bold text-burg mb-2">Respuesta A · P(x) = M × x³</p>
+                <p>Multiplicar por x³ equivale a desplazar 3 posiciones a la izquierda (agregar 3 ceros):</p>
+                <p class="mt-2 font-mono bg-white border border-slate-200 p-3 rounded-xl text-xs">M     = 1101001<br>P(x)  = 1101001<strong>000</strong>  ← se agregan k=3 ceros</p>
+              </div>
+              <div>
+                <p class="font-bold text-gold mb-2">Respuesta B · División P(x) ÷ G(x) en GF(2) (XOR)</p>
+                <div class="code-block" style="color:#7ee8ff;">1101001000 ÷ 1011
+─────────────────────────────
+1101001000
+1011
+────
+ 110001000
+ 1011
+ ────
+  10101000
+  1011
+  ────
+   0111000
+    1011
+    ────
+     100000
+     1011
+     ────
+      01110
+       1011
+       ────
+        101 ← Resto = CRC = 101</div>
+              </div>
+              <div>
+                <p class="font-bold text-navy mb-2">Respuesta C · Frame transmitido y verificación</p>
+                <p class="font-mono bg-white border border-slate-200 p-3 rounded-xl text-xs">Frame = M + CRC = 1101001 + 101 = <strong>1101001101</strong></p>
+                <p class="mt-3">El receptor recibe 1101001101 y divide por G(x)=1011. Si el resto es 000 → sin errores. Si el resto ≠ 0 → hubo un error de transmisión y se descarta el frame.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="card p-8">
+          <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Caso 3 · Diseño de red</span>
+          <h3 class="text-xl font-bold text-slate-800 mb-3">Pregunta conceptual</h3>
+          <p class="text-slate-600 text-sm mb-5 leading-relaxed">La empresa TechUSM tiene 50 empleados. Actualmente usa un HUB de 100 Mbits/s. El CTO propone migrar a un switch de 1 Gbits/s por puerto. Un empleado afirma: "No vale la pena, si el internet es de 100 Mbits/s igual el switch no ayuda en nada". Evalúa críticamente la afirmación.</p>
+          <div class="flex justify-end border-t border-slate-100 pt-5">
+            <button onclick="toggleAnswer('prac3', this)" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Mostrar resolución</span>
+            </button>
+          </div>
+          <div id="prac3" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl animate-in text-sm text-slate-700 leading-relaxed">
+            <h4 class="font-bold text-navy mb-3">La afirmación es incorrecta por varias razones:</h4>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+                <p class="font-bold text-red-700 mb-2 text-xs bit-mini">HUB actual</p>
+                <p class="text-xs text-slate-600">100 Mbits/s compartidos entre 50 usuarios ≈ 2 Mbits/s por host en promedio. Las colisiones frecuentes reducen aún más el throughput efectivo (puede bajar al 30-40% del teórico).</p>
+              </div>
+              <div class="rounded-xl border border-green-200 bg-green-50 p-4">
+                <p class="font-bold text-green-700 mb-2 text-xs bit-mini">Switch propuesto</p>
+                <p class="text-xs text-slate-600">1 Gbits/s por puerto dedicado por usuario. Sin colisiones, Full-Duplex. La transferencia interna entre dos computadores de la red (ej. acceso a servidor NAS local) puede ser hasta 500× más rápida.</p>
+              </div>
+            </div>
+            <p class="mt-4">El empleado confunde el <strong class="text-navy">ancho de banda hacia Internet</strong> (que sí está limitado a 100 Mbits/s) con el <strong class="text-navy">ancho de banda de la red local</strong>. La mayoría del tráfico empresarial (impresoras, servidores internos, almacenamiento, videoconferencias internas) nunca sale a Internet y se beneficia enormemente de un switch más rápido. La migración es claramente justificada.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer style="background:linear-gradient(120deg,#0f1f33,#062b52 55%,#7f1d3c); border-top:2px solid rgba(200,155,60,0.55);">
+    <div class="container mx-auto px-6 py-8 text-center">
+      <p class="text-slate-300 text-sm font-medium">2026 · Ayudantía USM · Redes de Computadores · Capa de Datos</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Accordion / answer toggles (mismo patrón que el original) ── */
+    function toggleAnswer(id, btn) {
+      const el = document.getElementById(id);
+      const hidden = el.classList.contains('hidden');
+      el.classList.toggle('hidden', !hidden);
+      if (hidden) {
+        btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 2l20 20"/><path d="M6.71 6.71A10.61 10.61 0 0 0 2 12a10.54 10.54 0 0 0 11.29 8.05"/></svg><span>Ocultar resolución</span>';
+        btn.className = btn.className.replace('bg-navy hover:bg-navy-dk text-white', 'bg-slate-200 hover:bg-slate-300 text-slate-700');
+      } else {
+        btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span>Mostrar resolución</span>';
+        btn.className = btn.className.replace('bg-slate-200 hover:bg-slate-300 text-slate-700', 'bg-navy hover:bg-navy-dk text-white');
+      }
+    }
+    function toggleAccordion(id, btn) {
+      const el = document.getElementById(id);
+      const icon = btn.querySelector('.accordion-icon');
+      const hidden = el.classList.contains('hidden');
+      el.classList.toggle('hidden', !hidden);
+      if (icon) icon.style.transform = hidden ? 'rotate(180deg)' : 'rotate(0deg)';
+      btn.classList.toggle('bg-slate-100', hidden);
+    }
+
+    /* ── Paridad 2D interactiva ── */
+    const ROWS = 4, COLS = 7;
+    let bits = [];
+    let original = [];
+
+    function initBits() {
+      bits = Array.from({length: ROWS}, () => Array.from({length: COLS}, () => Math.round(Math.random())));
+      original = bits.map(r => [...r]);
+    }
+
+    function parBit(arr) { return arr.reduce((a, b) => a ^ b, 0); }
+
+    function renderParity() {
+      const rowPar = bits.map(r => parBit(r));
+      const colPar = Array.from({length: COLS}, (_, c) => parBit(bits.map(r => r[c])));
+      const rowOk = rowPar.map(p => p === 0);
+      const colOk = colPar.map(p => p === 0);
+
+      const errRows = rowOk.map((ok, i) => !ok ? i : -1).filter(i => i >= 0);
+      const errCols = colOk.map((ok, i) => !ok ? i : -1).filter(i => i >= 0);
+      const errorAt = errRows.length === 1 && errCols.length === 1 ? [errRows[0], errCols[0]] : null;
+
+      let html = `<div style="display:grid;grid-template-columns:repeat(${COLS + 1},36px);gap:3px;">`;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const isErr = errorAt && errorAt[0] === r && errorAt[1] === c;
+          const cls = isErr ? 'pbit err' : (bits[r][c] ? 'pbit one' : 'pbit');
+          html += `<div class="${cls}" onclick="flipBit(${r},${c})" title="Fila ${r+1}, Col ${c+1}">${bits[r][c]}</div>`;
+        }
+        html += `<div class="pbit par ${rowPar[r]===1 ? 'one' : ''}" title="Paridad fila ${r+1}">${rowPar[r]}</div>`;
+      }
+      for (let c = 0; c < COLS; c++) {
+        html += `<div class="pbit par ${colPar[c]===1 ? 'one' : ''}" title="Paridad col ${c+1}">${colPar[c]}</div>`;
+      }
+      html += `<div class="pbit par" title="Paridad esquina">${parBit(rowPar)}</div>`;
+      html += '</div>';
+      document.getElementById('parity-area').innerHTML = html;
+
+      const msg = document.getElementById('parity-msg');
+      if (errRows.length === 0 && errCols.length === 0) {
+        msg.className = 'text-xs rounded-xl p-3 bg-green-50 border border-green-200 text-green-700';
+        msg.textContent = 'Sin errores. Todas las paridades son correctas.';
+        msg.classList.remove('hidden');
+      } else if (errorAt) {
+        msg.className = 'text-xs rounded-xl p-3 bg-red-50 border border-red-200 text-red-700';
+        msg.textContent = `Error detectado y localizado en fila ${errorAt[0]+1}, columna ${errorAt[1]+1}. Corrección: invertir ese bit.`;
+        msg.classList.remove('hidden');
+      } else {
+        msg.className = 'text-xs rounded-xl p-3 bg-amber-50 border border-amber-200 text-amber-700';
+        msg.textContent = `Errores múltiples detectados (${errRows.length} filas, ${errCols.length} cols). La paridad 2D no puede corregir errores múltiples.`;
+        msg.classList.remove('hidden');
+      }
+    }
+
+    function flipBit(r, c) { bits[r][c] ^= 1; renderParity(); }
+    function resetParity() { bits = original.map(r => [...r]); document.getElementById('parity-msg').classList.add('hidden'); renderParity(); }
+    function injectError() { bits = original.map(r => [...r]); const r = Math.floor(Math.random()*ROWS); const c = Math.floor(Math.random()*COLS); bits[r][c] ^= 1; renderParity(); }
+
+    initBits();
+    renderParity();
+  </script>
+</body>
+</html>
