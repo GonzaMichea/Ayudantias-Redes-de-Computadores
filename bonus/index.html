@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certamen tipo · Ruteo IP y Capa de Datos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #062b52;
+      --burg: #7f1d3c;
+      --gold: #c89b3c;
+      --ink: #102033;
+      --paper: #f5f7fb;
+      --card-bg: rgba(255,255,255,0.92);
+      --border: rgba(6,43,82,0.10);
+      --teal: #0f766e;
+      --green: #166534;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--paper);
+      background-image:
+        radial-gradient(ellipse 60% 40% at 8% 8%, rgba(200,155,60,0.18) 0, transparent 60%),
+        radial-gradient(ellipse 48% 45% at 94% 82%, rgba(127,29,60,0.12) 0, transparent 55%),
+        radial-gradient(ellipse 72% 58% at 50% 50%, rgba(6,43,82,0.04) 0, transparent 70%);
+      min-height: 100vh;
+      color: #1e293b;
+    }
+    h1,h2,h3,h4,h5 { font-family: 'Fraunces', serif; }
+    .topbar {
+      background: linear-gradient(100deg, rgba(6,43,82,0.97) 0%, rgba(127,29,60,0.95) 100%);
+      border-bottom: 2px solid rgba(200,155,60,0.55);
+      box-shadow: 0 4px 24px rgba(15,31,51,0.28);
+      backdrop-filter: blur(12px);
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.84);
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: all .22s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: white; background: rgba(255,255,255,0.13); border-color: rgba(200,155,60,0.5); }
+    .section-title { color: var(--ink); border-bottom: 3px solid rgba(6,43,82,0.2); padding-bottom: 1rem; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 32px rgba(15,31,51,0.08), 0 1px 3px rgba(15,31,51,0.06);
+    }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold), #e8c870);
+      color: var(--ink); font-size: 1rem; font-weight: 800;
+    }
+    .seg-field { cursor: help; transition: filter .18s; position: relative; }
+    .seg-field:hover { filter: brightness(0.94) saturate(1.06); }
+    .seg-tooltip {
+      display: none; position: absolute; z-index: 9999;
+      bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+      background: #0f1f33; color: #e2e8f0; font-size: 0.71rem; font-weight: 500;
+      line-height: 1.5; padding: 10px 14px; border-radius: 10px; width: 240px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4); pointer-events: none;
+      white-space: normal; text-align: left; border: 1px solid rgba(255,255,255,0.08);
+    }
+    .seg-tooltip::after {
+      content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+      border: 7px solid transparent; border-top-color: #0f1f33;
+    }
+    .seg-tooltip strong { color: var(--gold); }
+    .seg-field:hover .seg-tooltip { display: block; }
+    .seg-field.tip-left .seg-tooltip { left: auto; right: 0; transform: none; }
+    .seg-field.tip-left .seg-tooltip::after { left: auto; right: 20px; transform: none; }
+    .seg-field.tip-first .seg-tooltip { left: 0; transform: none; }
+    .seg-field.tip-first .seg-tooltip::after { left: 20px; transform: none; }
+    .tbl-wrap { overflow-x: auto; overflow-y: visible; padding-top: 200px; margin-top: -200px; width: 100%; }
+    .code-block {
+      background: #0f1f33; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+      padding: 1rem 1.25rem; font-family: 'Courier New', monospace; font-size: 0.8rem;
+      color: #7ee8a2; line-height: 1.7; overflow-x: auto;
+    }
+    .accordion-icon { transition: transform .3s cubic-bezier(.4,0,.2,1); }
+    .animate-in { animation: fadeUp .4s ease-out both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .text-navy { color: var(--navy); } .text-burg { color: var(--burg); } .text-gold { color: var(--gold); }
+    .bg-navy { background-color: var(--navy); } .bg-burg { background-color: var(--burg); }
+    .hover\:bg-navy-dk:hover { background-color: #041d39; }
+    .bit-mini { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .route-chip { border-radius: 999px; padding: 0.28rem 0.7rem; font-size: 0.72rem; font-weight: 700; }
+    .exam-box { border: 1.5px solid rgba(6,43,82,0.35); border-radius: 0.9rem; background: #fff; }
+    .vf-table { border: 1px solid rgba(6,43,82,0.18); border-radius: 1rem; overflow: hidden; }
+    .vf-cell { border: 1px solid rgba(6,43,82,0.12); padding: 1rem 1.1rem; transition: background-color .25s; }
+    .vf-cell.vf-correct-cell { background: #f0fdf4; }
+    .vf-cell.vf-wrong-cell { background: #fef2f2; }
+    .vf-options { display: flex; gap: 10px; margin-top: 10px; }
+    .vf-btn {
+      padding: 7px 20px; border-radius: 999px; border: 2px solid #cbd5e1;
+      background: #fff; font-size: 0.8rem; font-weight: 700; color: #64748b;
+      cursor: pointer; transition: all .15s;
+    }
+    .vf-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .vf-btn-active { border-color: var(--navy); background: #eaf1ff; color: var(--navy); }
+    .vf-btn-correct { border-color: #166534 !important; background: #dcfce7 !important; color: #166534 !important; }
+    .vf-btn-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; color: #b91c1c !important; }
+    .vf-result-tag { font-size: 0.7rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; margin-left: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- ── TOP NAV ── -->
+  <header class="topbar sticky top-0 z-50">
+    <nav class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center max-w-6xl gap-2">
+      <span class="text-white font-bold text-base sm:text-lg" style="font-family:'Fraunces',serif;">Certamen tipo · Redes</span>
+      <div class="flex flex-wrap gap-1 sm:gap-2">
+        <a href="#ruteo"      class="nav-link">Teoría Ruteo</a>
+        <a href="#datos"      class="nav-link">Capa de Datos</a>
+        <a href="#preg-red"   class="nav-link">Preg. Red</a>
+        <a href="#preg-datos" class="nav-link">Preg. Datos</a>
+        <a href="#vf"         class="nav-link">V/F</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container mx-auto px-4 sm:px-6 py-10 max-w-6xl">
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 1 · TEORÍA COMPLETA DEL RUTEO IP
+    ═══════════════════════════════════════════════ -->
+    <section id="ruteo" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 1 · Todo sobre el ruteo IP</h2>
+      <div class="space-y-10">
+
+        <!-- Card 1: Objetivo capa de red -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">1</span> Objetivo de la capa de red / ruteo IP
+          </h3>
+          <p class="text-slate-600 leading-relaxed text-sm mb-6">
+            La capa de red (Network Layer) tiene como objetivo <strong class="text-navy">entregar paquetes de extremo a extremo</strong> entre dos hosts que pueden estar en redes físicas completamente distintas, posiblemente separadas por muchos saltos. A diferencia de la capa de datos —que solo entrega frames dentro de un mismo segmento LAN— la capa de red sabe <em>rutear</em>: decidir, en cada router intermedio, por cuál interfaz debe salir un paquete para acercarse a su destino final.
+          </p>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">Direccionamiento jerárquico</h4>
+              <p class="text-xs text-slate-600">La IP se organiza en red + host (con máscara de subred), lo que permite agrupar millones de direcciones bajo una sola entrada de ruteo.</p>
+            </div>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
+              <h4 class="font-bold text-burg mb-2 text-sm">Reenvío salto a salto</h4>
+              <p class="text-xs text-slate-600">Cada router solo decide el <em>siguiente</em> salto, no la ruta completa. El paquete avanza router por router hasta llegar al destino.</p>
+            </div>
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+              <h4 class="font-bold text-gold mb-2 text-sm">Servicio no confiable</h4>
+              <p class="text-xs text-slate-600">Igual que la capa de datos, IP es <em>best effort</em>: no garantiza entrega, orden ni ausencia de duplicados. Eso lo resuelve TCP en capa 4.</p>
+            </div>
+          </div>
+          <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-700">
+            <strong class="text-navy">Regla mental:</strong> la capa de datos resuelve "¿cómo llego al vecino directo?"; la capa de red resuelve "¿por dónde salgo para acercarme al destino final, que puede estar a 15 saltos de distancia?".
+          </div>
+        </div>
+
+        <!-- Card 2: Tabla de ruteo -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">2</span> La tabla de ruteo — campo por campo
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Cada router mantiene una <strong class="text-navy">tabla de ruteo</strong> con una entrada por cada red que sabe alcanzar. Pasa el cursor sobre cada columna para ver su significado (formato estilo BSD/Linux <code>netstat -r</code>).</p>
+          <div class="tbl-wrap">
+            <div style="min-width:760px;">
+              <table class="w-full text-xs border border-slate-300 rounded-xl">
+                <thead>
+                  <tr class="bg-slate-100 text-slate-700 font-bold">
+                    <th class="seg-field border border-slate-300 p-2">Destination
+                      <div class="seg-tooltip"><strong>Destination</strong><br>Dirección de red destino (no de un host individual). 0.0.0.0 representa "cualquier red no listada explícitamente" = ruta por defecto.</div>
+                    </th>
+                    <th class="seg-field border border-slate-300 p-2">Gateway
+                      <div class="seg-tooltip"><strong>Gateway</strong><br>IP del siguiente salto al que hay que enviar el paquete. Si es 0.0.0.0, la red está directamente conectada (no se necesita pasar por otro router).</div>
+                    </th>
+                    <th class="seg-field border border-slate-300 p-2">Genmask
+                      <div class="seg-tooltip"><strong>Genmask</strong><br>Máscara de subred aplicada a Destination para saber si una IP destino pertenece a esa red.</div>
+                    </th>
+                    <th class="seg-field border border-slate-300 p-2">Flags
+                      <div class="seg-tooltip"><strong>Flags</strong><br>U = ruta activa (Up). G = se usa un Gateway distinto de la interfaz directa. S = ruta Estática (configurada a mano). D = ruta Dinámica (aprendida por un protocolo de ruteo).</div>
+                    </th>
+                    <th class="seg-field border border-slate-300 p-2">Metric
+                      <div class="seg-tooltip"><strong>Metric</strong><br>Costo asociado a la ruta. Cuando hay varias rutas posibles hacia el mismo destino, se prefiere la de menor métrica.</div>
+                    </th>
+                    <th class="seg-field tip-left border border-slate-300 p-2">Iface
+                      <div class="seg-tooltip tip-left"><strong>Iface</strong><br>Interfaz de red física por la cual el router debe enviar el paquete para llegar a esa ruta.</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 font-mono text-slate-700">
+                  <tr><td class="border border-slate-200 p-2">10.0.1.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">U</td><td class="border border-slate-200 p-2">0</td><td class="border border-slate-200 p-2">eth0</td></tr>
+                  <tr><td class="border border-slate-200 p-2">10.0.2.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">UD</td><td class="border border-slate-200 p-2">0</td><td class="border border-slate-200 p-2">eth1</td></tr>
+                  <tr><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">10.0.1.1</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">UGS</td><td class="border border-slate-200 p-2">0</td><td class="border border-slate-200 p-2">eth0</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 mt-6">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+              <strong class="text-navy block mb-1">Ruta directamente conectada</strong>
+              Gateway = 0.0.0.0 y solo flag U: el router está físicamente en esa red (ej. 10.0.1.0 vía eth0). No necesita reenviar a otro router.
+            </div>
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
+              <strong class="text-gold block mb-1">Ruta por defecto</strong>
+              Destination = 0.0.0.0 y Genmask = 0.0.0.0: coincide con <em>cualquier</em> IP destino que no calzó con ninguna otra entrada más específica de la tabla.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Card 3, 4, 5 viven en la misma Parte 1, sección aparte para mantener layout -->
+    <section class="mb-24">
+      <div class="space-y-10">
+
+        <!-- Card 3: Estática / Dinámica / Default -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">3</span> Rutas estáticas, dinámicas y ruta por defecto
+          </h3>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="rounded-2xl border-2 border-slate-200 bg-white p-6">
+              <h4 class="font-bold text-navy mb-3 text-base">Ruta estática</h4>
+              <p class="text-xs bit-mini text-slate-400 mb-3">Flag S</p>
+              <p class="text-xs text-slate-600">Configurada manualmente por el administrador. No cambia a menos que alguien la edite. Útil para enlaces pequeños o rutas de respaldo, pero no escala a redes grandes.</p>
+            </div>
+            <div class="rounded-2xl border-2 border-blue-300 bg-blue-50 p-6">
+              <h4 class="font-bold text-navy mb-3 text-base">Ruta dinámica</h4>
+              <p class="text-xs bit-mini text-blue-600 mb-3">Flag D</p>
+              <p class="text-xs text-slate-600">Aprendida automáticamente por un protocolo de ruteo (Vector-Distancia, Link-State, BGP). Se actualiza sola si la topología cambia.</p>
+            </div>
+            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6">
+              <h4 class="font-bold text-navy mb-3 text-base">Ruta por defecto</h4>
+              <p class="text-xs bit-mini text-amber-600 mb-3">Destination = 0.0.0.0/0.0.0.0</p>
+              <p class="text-xs text-slate-600">La "ruta de último recurso": se usa cuando ningún otro destino de la tabla coincide. Normalmente apunta hacia el router que da salida a Internet.</p>
+            </div>
+          </div>
+          <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+            <strong class="text-navy">Punto de certamen:</strong> que una ruta tenga Gateway = 0.0.0.0 NO significa que sea estática ni dinámica por sí solo; eso lo indica el flag S o D. Gateway 0.0.0.0 solo indica que la red está directamente conectada a una interfaz del router.
+          </div>
+        </div>
+
+        <!-- Card 4: Algoritmos de ruteo dinámico -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">4</span> Algoritmos de ruteo dinámico
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Los protocolos de ruteo permiten que los routers descubran rutas automáticamente, sin intervención manual. Existen dos familias principales para el interior de una red (IGP) y una para conectar redes distintas en Internet (EGP).</p>
+
+          <div class="space-y-6">
+            <div class="rounded-2xl border-2 border-slate-200 p-6">
+              <h4 class="font-bold text-navy mb-2 text-base">Vector-Distancia (Distance Vector) — ej. RIP</h4>
+              <p class="text-sm text-slate-600 mb-3">Cada router solo conoce la <strong>distancia</strong> (típicamente en saltos) hacia cada red, y comparte periódicamente su tabla completa con sus <strong>vecinos directos</strong>. No conoce la topología completa, solo "rumores" de distancia.</p>
+              <div class="grid md:grid-cols-2 gap-3 text-xs">
+                <div class="rounded-xl bg-red-50 border border-red-200 p-3 text-red-700">
+                  <strong>Por qué no escala:</strong> el algoritmo de Bellman-Ford converge lentamente en redes grandes (cada cambio tarda varios intercambios en propagarse), es vulnerable a loops de ruteo y al problema de "cuenta hasta el infinito", y limita el diámetro de la red (ej. RIP solo permite 15 saltos).
+                </div>
+                <div class="rounded-xl bg-blue-50 border border-blue-200 p-3 text-blue-700">
+                  <strong>Ventaja:</strong> muy simple de implementar y de bajo costo computacional; suficiente para redes pequeñas o planas.
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border-2 border-slate-200 p-6">
+              <h4 class="font-bold text-navy mb-2 text-base">Link State Routing — ej. OSPF</h4>
+              <p class="text-sm text-slate-600 mb-3">Cada router construye y difunde (<em>flooding</em>) un mensaje llamado <strong>LSA (Link State Advertisement)</strong> que describe únicamente sus enlaces directos y su costo. Este LSA se propaga a <strong>todos</strong> los routers del área, no solo a los vecinos.</p>
+              <div class="rounded-xl bg-green-50 border border-green-200 p-4 text-xs text-green-700">
+                <strong>Cómo calcula sus rutas:</strong> al recibir los LSA de todos los demás routers, cada nodo reconstruye un <strong>mapa completo de la topología</strong> de la red (todos los routers y sus enlaces). Con ese mapa completo, ejecuta localmente el <strong>algoritmo de Dijkstra</strong> para calcular el camino más corto desde sí mismo hacia cada una de las demás subredes, y arma su tabla de ruteo con esos resultados.
+              </div>
+              <p class="text-xs text-slate-500 mt-3">Converge mucho más rápido que Vector-Distancia y evita loops, a costa de más memoria y CPU (debe guardar el mapa completo y recalcular Dijkstra).</p>
+            </div>
+
+            <div class="rounded-2xl border-2 border-slate-200 p-6">
+              <h4 class="font-bold text-navy mb-2 text-base">BGP (Border Gateway Protocol) — entre Sistemas Autónomos</h4>
+              <p class="text-sm text-slate-600 mb-3">BGP es un protocolo de <em>vector de camino</em> (path-vector) que rutea entre <strong>Sistemas Autónomos (AS)</strong> distintos —empresas, ISPs, organizaciones— en lugar de routers individuales. En vez de compartir una distancia, cada router BGP anuncia la <strong>secuencia completa de AS</strong> que debe atravesarse para llegar a un destino.</p>
+              <div class="grid md:grid-cols-2 gap-3 text-xs">
+                <div class="rounded-xl bg-red-50 border border-red-200 p-3 text-red-700">
+                  <strong>¿Por qué BGP no asegura la conectividad?</strong> BGP es un protocolo basado en <em>políticas</em>, no en el camino más corto: cada AS decide, por razones comerciales o contractuales, a quién le anuncia sus rutas y cuáles rutas acepta de sus vecinos. Dos AS pueden estar físicamente conectados pero un AS puede decidir no anunciar (o no aceptar) cierta ruta, dejando ese destino inalcanzable aunque exista conectividad física. La alcanzabilidad depende de acuerdos de negocio, no de la topología real.
+                </div>
+                <div class="rounded-xl bg-amber-50 border border-amber-200 p-3 text-amber-700">
+                  <strong>MULTI_EXIT_DISC (MED):</strong> atributo opcional que un AS incluye en su anuncio cuando tiene <em>varios</em> puntos de conexión hacia el mismo AS vecino. Le indica a ese vecino cuál de los puntos de entrada prefiere que use para llegar a él: un valor de MED más bajo es preferido. Sirve para influir en la elección del punto de entrada cuando hay múltiples enlaces entre los mismos dos AS.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white mt-6">
+            <table class="min-w-full text-xs">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr><th class="px-4 py-3 text-left">Protocolo</th><th class="px-4 py-3 text-left">Tipo</th><th class="px-4 py-3 text-left">Conoce</th><th class="px-4 py-3 text-left">Ámbito</th></tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600">
+                <tr><td class="px-4 py-3 font-bold text-navy">RIP</td><td class="px-4 py-3">Vector-Distancia</td><td class="px-4 py-3">Solo la distancia a cada red, vía vecinos</td><td class="px-4 py-3">Intra-AS (IGP)</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">OSPF</td><td class="px-4 py-3">Link-State</td><td class="px-4 py-3">Mapa completo de la topología (Dijkstra)</td><td class="px-4 py-3">Intra-AS (IGP)</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">BGP</td><td class="px-4 py-3">Path-Vector</td><td class="px-4 py-3">Secuencia de AS hacia cada destino + políticas</td><td class="px-4 py-3">Inter-AS (EGP)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Card 5: TTL y MTU -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">5</span> TTL y MTU en el paquete IP
+          </h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">TTL — Time To Live</h4>
+              <p class="text-sm text-slate-600 mb-3">Campo de 8 bits en la cabecera IP. El emisor lo fija en un valor inicial (ej. 64), y <strong class="text-navy">cada router que reenvía el paquete lo decrementa en 1</strong>. Si un router recibe un paquete con TTL = 0, lo descarta y normalmente responde con un mensaje ICMP "Time Exceeded".</p>
+              <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
+                <strong class="text-gold">¿Para qué sirve?</strong> Evita que un paquete circule indefinidamente si existe un loop de ruteo (por ejemplo, por una tabla mal configurada o no convergida). Sin TTL, un paquete atrapado en un ciclo consumiría ancho de banda para siempre.
+              </div>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">MTU — Maximum Transmission Unit</h4>
+              <p class="text-sm text-slate-600 mb-3">Es el <strong class="text-navy">tamaño máximo de payload que una interfaz de red puede transmitir en un solo frame</strong> (ej. 1500 bytes en Ethernet). Cada interfaz de un router puede tener su propio MTU.</p>
+              <div class="rounded-xl border border-blue-200 bg-blue-50 p-4 text-xs text-slate-700">
+                <strong class="text-navy">¿A qué corresponde en un router?</strong> Si un paquete IP es más grande que el MTU de la interfaz de salida, el router debe <em>fragmentarlo</em> en varios paquetes IP más pequeños (o descartarlo y avisar con ICMP si el bit "No fragmentar" está activo, como en Path MTU Discovery).
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 2 · CAPA DE DATOS
+    ═══════════════════════════════════════════════ -->
+    <section id="datos" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 2 · Capa de Datos</h2>
+      <div class="space-y-10">
+
+        <!-- Card 6: MAC -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">6</span> Dirección MAC
+          </h3>
+          <p class="text-slate-600 mb-5 text-sm leading-relaxed">Cada interfaz de red tiene una dirección física única de <strong class="text-navy">6 bytes (48 bits)</strong>: los primeros 3 bytes son el OUI (identifican al fabricante, asignado por IEEE) y los últimos 3 son el número de serie de la NIC. El bit menos significativo del primer byte distingue unicast (0) de multicast/broadcast (1); el broadcast es <code class="text-navy font-bold">FF:FF:FF:FF:FF:FF</code>.</p>
+          <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
+            <strong class="text-gold">MAC vs IP:</strong> la MAC identifica el hardware dentro de un segmento LAN (es plana, sin jerarquía). La IP identifica al host de forma lógica en la red global y es jerárquica (red+host), lo que permite que sea ruteable.
+          </div>
+        </div>
+
+        <!-- Card 7: Frame Ethernet -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">7</span> Estructura del frame Ethernet
+          </h3>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">El frame es la unidad básica de transmisión de la capa de datos. Pasa el cursor sobre cada campo. Tamaño total: entre <strong class="text-navy">64 y 1518 bytes</strong>.</p>
+          <div class="tbl-wrap">
+            <div style="min-width:680px;" class="font-mono border-2 border-slate-300 rounded-xl shadow-inner bg-white">
+              <div class="flex border-b border-slate-300 text-xs font-bold text-center">
+                <div class="seg-field tip-first border-r border-slate-300 bg-slate-100 p-3" style="width:14%">Preámbulo<br><span class="text-slate-400 font-normal">7 B</span>
+                  <div class="seg-tooltip tip-first"><strong>Preámbulo</strong><br>7 bytes (0x55) que permiten sincronizar el reloj del receptor con el del emisor antes de leer datos reales.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-slate-100 p-3" style="width:10%">SFD<br><span class="text-slate-400 font-normal">1 B</span>
+                  <div class="seg-tooltip"><strong>SFD</strong><br>Start Frame Delimiter, valor fijo 0xD5. Marca el inicio de la dirección MAC destino.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-blue-200 p-3" style="width:18%">MAC Destino<br><span class="text-slate-500 font-normal">6 B</span>
+                  <div class="seg-tooltip"><strong>MAC Destino</strong><br>La NIC compara esta dirección con la propia y con la de broadcast. Si no coincide, descarta el frame.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-blue-100 p-3" style="width:18%">MAC Fuente<br><span class="text-slate-500 font-normal">6 B</span>
+                  <div class="seg-tooltip"><strong>MAC Fuente</strong><br>El switch la usa para aprender automáticamente la tabla MAC→Puerto.</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-yellow-100 p-3" style="width:12%">EtherType<br><span class="text-slate-500 font-normal">2 B</span>
+                  <div class="seg-tooltip"><strong>EtherType / Length</strong><br>≤1500: largo del payload. &gt;1500: protocolo encapsulado (0x0800 = IPv4, 0x86DD = IPv6).</div>
+                </div>
+                <div class="seg-field border-r border-slate-300 bg-green-100 p-3" style="width:18%">Payload<br><span class="text-slate-500 font-normal">46–1500 B</span>
+                  <div class="seg-tooltip"><strong>Payload</strong><br>Datos transportados (normalmente un paquete IP). MTU = 1500 B. Mínimo 46 B; si faltan, se rellena con padding de ceros.</div>
+                </div>
+                <div class="seg-field tip-left bg-red-100 p-3" style="width:10%">CRC-32<br><span class="text-slate-500 font-normal">4 B</span>
+                  <div class="seg-tooltip tip-left"><strong>CRC-32</strong><br>Frame Check Sequence. El receptor recalcula y compara: si difiere, el frame se descarta silenciosamente.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs text-slate-700">
+            <strong class="text-burg">Servicio:</strong> Ethernet es <em>sin conexión y no confiable</em> (tipo datagram). No hay handshake ni ACK; los frames con error simplemente se descartan. La fiabilidad se construye en capas superiores (TCP).
+          </div>
+        </div>
+
+        <!-- Card 8: Codificación y tecnologías -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">8</span> Codificación de bits y tecnologías Ethernet
+          </h3>
+          <p class="text-slate-600 mb-5 text-sm leading-relaxed">Ethernet transmite en banda base: los bits se codifican directamente en la señal. El reto es la sincronización de reloj; cada velocidad usa una codificación distinta.</p>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white mb-6">
+            <table class="min-w-full text-xs">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr><th class="px-4 py-3 text-left">Código</th><th class="px-4 py-3 text-left">Velocidad</th><th class="px-4 py-3 text-left">Idea</th></tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600">
+                <tr><td class="px-4 py-3 font-bold text-navy">Manchester</td><td class="px-4 py-3">10 Mbits/s</td><td class="px-4 py-3">XOR entre el flujo NZR y el reloj: transición obligatoria al centro de cada bit. Requiere el doble de ancho de banda.</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">4B/5B</td><td class="px-4 py-3">100 Mbits/s</td><td class="px-4 py-3">Cada grupo de 4 bits se reemplaza por un símbolo de 5 bits, garantizando transiciones frecuentes con solo 25% de overhead.</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">8B/10B</td><td class="px-4 py-3">1 Gbits/s</td><td class="px-4 py-3">Un byte se divide en 3+5 bits, cada parte codificada por separado (3B/4B y 5B/6B) y se transmiten juntas.</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">64B/66B</td><td class="px-4 py-3">10/40/100 Gbits/s</td><td class="px-4 py-3">64 bits de datos viajan en 66 bits (header de 2 bits de sincronización). Eficiencia ≈97%.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-slate-600 mb-3 text-sm leading-relaxed">A lo largo del tiempo, Ethernet cambió de topología (bus → estrella) y de medio (coaxial → UTP → fibra) sin perder su estructura de frame ni su direccionamiento MAC.</p>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table class="min-w-full text-xs">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr><th class="px-4 py-3 text-left">Tecnología</th><th class="px-4 py-3 text-left">Velocidad</th><th class="px-4 py-3 text-left">Topología / Medio</th><th class="px-4 py-3 text-left">Distancia</th></tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600">
+                <tr><td class="px-4 py-3 font-bold text-navy">10Base5 / 10Base2</td><td class="px-4 py-3">10 Mbits/s</td><td class="px-4 py-3">Bus, coaxial (BNC)</td><td class="px-4 py-3">2500 m (4 repetidores)</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">10BaseT / 100BaseTX</td><td class="px-4 py-3">10 / 100 Mbits/s</td><td class="px-4 py-3">Estrella, UTP-3/5, RJ45</td><td class="px-4 py-3">100 m</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">1000BaseT</td><td class="px-4 py-3">1 Gbits/s</td><td class="px-4 py-3">Estrella, UTP-5 (4 pares) o fibra</td><td class="px-4 py-3">100 m (cobre) / 5 km (fibra)</td></tr>
+                <tr><td class="px-4 py-3 font-bold text-navy">10G/40G/100GBaseT</td><td class="px-4 py-3">10–100 Gbits/s</td><td class="px-4 py-3">Solo Switch, Full-Duplex, UTP Cat.6e+ o fibra</td><td class="px-4 py-3">100 m (cobre) / 40 km (fibra)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Card 9: Hardware -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">9</span> Hardware: HUB, Bridge y Switch
+          </h3>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="rounded-2xl border-2 border-slate-200 bg-white p-6 text-center">
+              <h4 class="font-bold text-navy mb-3 text-base">HUB</h4>
+              <p class="text-xs bit-mini text-slate-400 mb-3">Capa 1 — Repetidor</p>
+              <ul class="space-y-2 text-xs text-slate-600 text-left">
+                <li>• Reenvía todo a todos los puertos.</li>
+                <li>• Half-Duplex; ancho de banda compartido.</li>
+                <li>• 100 Mbits/s + 10 hosts ≈ 10 Mbits/s c/u.</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border-2 border-blue-300 bg-blue-50 p-6 text-center">
+              <h4 class="font-bold text-navy mb-3 text-base">Bridge</h4>
+              <p class="text-xs bit-mini text-blue-600 mb-3">Capa 2 — Switching</p>
+              <ul class="space-y-2 text-xs text-slate-600 text-left">
+                <li>• Reenvía según MAC destino.</li>
+                <li>• Mantiene tabla MAC → Puerto.</li>
+                <li>• Pocos puertos, interconecta tecnologías distintas.</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6 text-center">
+              <h4 class="font-bold text-navy mb-3 text-base">Switch</h4>
+              <p class="text-xs bit-mini text-amber-600 mb-3">Capa 2/3 — Alta performance</p>
+              <ul class="space-y-2 text-xs text-slate-600 text-left">
+                <li>• Ancho de banda dedicado por puerto.</li>
+                <li>• Full-Duplex; aprende la tabla MAC automáticamente.</li>
+                <li>• Store-and-Forward: verifica CRC antes de reenviar.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 10: Paridad y CRC -->
+        <div class="card p-8">
+          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+            <span class="step-num">10</span> Gestión de errores: Paridad y CRC
+          </h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">Paridad</h4>
+              <p class="text-sm text-slate-600 mb-3">Se agrega 1 bit para que el total de unos sea par o impar. La paridad 1D solo detecta errores de cantidad <em>impar</em> de bits (probabilidad ≈0.5). La paridad 2D (matriz con paridad por fila y columna) detecta <strong class="text-navy">y corrige</strong> un error simple, localizándolo en la intersección fila/columna incorrecta.</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy mb-3 text-sm">CRC — Cyclic Redundancy Check</h4>
+              <p class="text-sm text-slate-600 mb-3">Los bits del mensaje son los coeficientes de un polinomio M(x). Se agregan k ceros (grado del generador G(x)) y se divide el resultado por G(x) en GF(2) (XOR). El resto es el checksum. Ethernet usa <strong class="text-navy">CRC-32</strong>.</p>
+              <div class="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-slate-700">El CRC <strong>detecta</strong> errores con muy alta probabilidad, pero <strong>no los corrige</strong>: el frame con error simplemente se descarta.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 3 · PREGUNTAS — CAPA DE RED / RUTEO IP
+    ═══════════════════════════════════════════════ -->
+    <section id="preg-red" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 3 · Preguntas tipo certamen — Capa de Red</h2>
+      <div class="card p-8">
+        <p class="text-slate-500 mb-8 text-sm">Haz clic para revelar la respuesta. Preguntas 2.1 a 2.7 (conceptuales) y 2.8 (Verdadero/Falso sobre una tabla de ruteo).</p>
+        <div class="space-y-3">
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('r1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 2.1 — ¿Cuál es el objetivo de la capa de ruteo IP?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="r1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Entregar paquetes de extremo a extremo entre dos hosts que pueden estar en redes físicas distintas y separadas por múltiples routers. Para esto usa direccionamiento jerárquico (IP) y, en cada router, decide solo el siguiente salto según su tabla de ruteo, sin garantizar la entrega (servicio best-effort).
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('r2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 2.2 — ¿Para qué sirve el campo TTL en un paquete IP?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="r2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Limita el número de saltos que puede dar un paquete. Cada router que lo reenvía decrementa el TTL en 1; si llega a 0, el paquete se descarta y se informa con ICMP "Time Exceeded". Evita que un paquete circule indefinidamente si hay un loop de ruteo.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('r3', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 2.3 — ¿A qué corresponde el valor MTU en un router?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="r3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Es el tamaño máximo de payload que una interfaz del router puede transmitir en un solo frame (ej. 1500 B en Ethernet). Si un paquete IP supera el MTU de la interfaz de salida, el router debe fragmentarlo, o descartarlo y avisar por ICMP si el bit "no fragmentar" está activo.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('r4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 2.4 — ¿Por qué el algoritmo de ruteo Vector/Distancia no escala a una red grande?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="r4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Porque cada router solo conoce distancias (no la topología completa) y propaga su tabla completa periódicamente solo a sus vecinos directos. En redes grandes esto converge muy lentamente, es propenso a loops y al problema de "cuenta hasta el infinito", y suele limitar artificialmente el diámetro de la red (ej. máximo 15 saltos en RIP).
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('r5', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 2.5 — Explicar por qué el algoritmo de ruteo BGP no asegura la conectividad.</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="r5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              BGP rutea según <em>políticas comerciales</em> entre Sistemas Autónomos, no según el camino físicamente más corto o la conectividad real. Un AS puede decidir, por acuerdos contractuales, no anunciar una ruta a un vecino o no aceptar la ruta que ese vecino le ofrece. Como resultado, dos redes pueden estar físicamente conectadas (existe un cable o enlace) pero no haber un camino BGP anunciado entre ellas, dejándolas sin conectividad a nivel de Internet aunque la conectividad física exista.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('r6', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 2.6 — En BGP, ¿cuál es el propósito de la opción MULTI_EXIT_DISC en un anuncio?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="r6" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Cuando dos Sistemas Autónomos están conectados por <em>varios</em> enlaces, MULTI_EXIT_DISC (MED) le permite al AS que anuncia una ruta indicarle al AS vecino cuál de esos puntos de entrada prefiere que use. El vecino, al recibir varios anuncios con distinto MED, prefiere el de valor más bajo. Así se influye en la elección del punto de entrada óptimo entre dos AS con múltiples conexiones.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('r7', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 2.7 — En el algoritmo Link State Routing, ¿cómo calcula cada router sus rutas a las otras sub-redes?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="r7" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Cada router difunde (flooding) un LSA describiendo solo sus enlaces directos y el costo de cada uno. Al recibir los LSA de todos los demás routers del área, cada router reconstruye un mapa completo de la topología. Sobre ese mapa, ejecuta localmente el algoritmo de <strong class="text-navy">Dijkstra</strong> para calcular el camino de menor costo desde sí mismo hacia cada subred, y con esos resultados construye su tabla de ruteo.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 3.1 · EJERCICIO V/F TABLA DE RUTEO
+    ═══════════════════════════════════════════════ -->
+    <section id="vf" class="mb-24">
+      <div class="card p-8">
+        <span class="inline-flex items-center gap-1.5 bg-blue-50 text-navy border border-blue-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Pregunta 2.8 · Verdadero / Falso</span>
+        <h3 class="text-xl font-bold text-slate-800 mb-4">Tabla de ruteo del Router A, cuya dirección IP es 192.168.4.5</h3>
+        <div class="tbl-wrap mb-6">
+          <div style="min-width:680px;">
+            <table class="w-full text-xs border border-slate-300 rounded-xl overflow-hidden">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold">
+                  <th class="border border-slate-300 p-2">Ruta</th><th class="border border-slate-300 p-2">Destination</th><th class="border border-slate-300 p-2">Gateway</th><th class="border border-slate-300 p-2">Genmask</th><th class="border border-slate-300 p-2">Flags</th><th class="border border-slate-300 p-2">Iface</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 font-mono text-slate-700">
+                <tr><td class="border border-slate-200 p-2">1</td><td class="border border-slate-200 p-2">192.168.4.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">U</td><td class="border border-slate-200 p-2">eth0</td></tr>
+                <tr><td class="border border-slate-200 p-2">2</td><td class="border border-slate-200 p-2">192.168.5.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">UD</td><td class="border border-slate-200 p-2">eth1</td></tr>
+                <tr><td class="border border-slate-200 p-2">3</td><td class="border border-slate-200 p-2">192.168.6.0</td><td class="border border-slate-200 p-2">192.168.7.1</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">UGS</td><td class="border border-slate-200 p-2">eth2</td></tr>
+                <tr><td class="border border-slate-200 p-2">4</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">192.168.7.1</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">UGS</td><td class="border border-slate-200 p-2">eth2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="vf-table grid md:grid-cols-2" id="vf-net">
+          <div class="vf-cell" data-ans="F">
+            <p class="font-semibold text-slate-700 mb-2">A. La Ruta 1 fue configurada manualmente por el administrador.</p>
+            <div class="vf-options">
+              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
+              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
+            </div>
+            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Falso — no tiene flag S; se crea automáticamente al configurar la IP de la interfaz eth0.</p>
+          </div>
+          <div class="vf-cell" data-ans="F">
+            <p class="font-semibold text-slate-700 mb-2">B. La Ruta 2 corresponde a la red local del Router A.</p>
+            <div class="vf-options">
+              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
+              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
+            </div>
+            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Falso — la red local es 192.168.4.0 (Ruta 1), que coincide con la IP 192.168.4.5 del router.</p>
+          </div>
+          <div class="vf-cell" data-ans="V">
+            <p class="font-semibold text-slate-700 mb-2">C. La Ruta 3 es una ruta estática.</p>
+            <div class="vf-options">
+              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
+              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
+            </div>
+            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Verdadero — tiene flag S (UGS), fue configurada manualmente con un gateway explícito.</p>
+          </div>
+          <div class="vf-cell" data-ans="V">
+            <p class="font-semibold text-slate-700 mb-2">D. La Ruta 4 es la ruta por defecto.</p>
+            <div class="vf-options">
+              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
+              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
+            </div>
+            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Verdadero — Destination y Genmask son 0.0.0.0, coincide con cualquier IP no listada en otra ruta.</p>
+          </div>
+          <div class="vf-cell" data-ans="V">
+            <p class="font-semibold text-slate-700 mb-2">E. La Ruta 2 fue aprendida mediante un protocolo de ruteo.</p>
+            <div class="vf-options">
+              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
+              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
+            </div>
+            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Verdadero — flag D indica que fue instalada dinámicamente por un protocolo de ruteo.</p>
+          </div>
+          <div class="vf-cell" data-ans="F">
+            <p class="font-semibold text-slate-700 mb-2">F. Todas las rutas de esta tabla usan un gateway distinto de 0.0.0.0.</p>
+            <div class="vf-options">
+              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
+              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
+            </div>
+            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Falso — las Rutas 1 y 2 son directamente conectadas, con Gateway = 0.0.0.0.</p>
+          </div>
+        </div>
+        <p id="vf-net-score" class="text-sm font-bold mt-4 min-h-[1.2em]"></p>
+        <div class="flex justify-end gap-3 mt-5">
+          <button onclick="resetVF('vf-net')" class="flex items-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold transition">
+            <span>Reiniciar</span>
+          </button>
+          <button onclick="reviewVF('vf-net')" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            <span>Revisar respuestas</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PARTE 4 · PREGUNTAS — CAPA DE DATOS
+    ═══════════════════════════════════════════════ -->
+    <section id="preg-datos" class="mb-24">
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 4 · Preguntas tipo certamen — Capa de Datos</h2>
+      <div class="card p-8">
+        <p class="text-slate-500 mb-8 text-sm">Excluye CSMA/CD, ARP y VLAN. Haz clic para revelar cada respuesta.</p>
+        <div class="space-y-3">
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('d1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 3.1 — ¿Cuál es la diferencia entre una dirección MAC y una dirección IP?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="d1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              La MAC es una dirección física de 6 bytes grabada en el hardware, plana (sin jerarquía), y solo se usa dentro de un segmento LAN. La IP es una dirección lógica, jerárquica (red+host), asignada por software y usada para enrutar entre redes distintas a través de múltiples routers.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('d2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 3.2 — Una señal tiene 4 niveles y 1500 Bauds. ¿Cuál es su velocidad en Bits/s?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="d2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Con 4 niveles, cada símbolo codifica log₂(4) = 2 bits. <code class="bg-slate-100 px-2 py-1 rounded">Bits/s = log₂(N) × Bauds = 2 × 1500 = 3000 Bits/s</code>. Bauds y Bits/s solo coinciden cuando la señal tiene exactamente 2 niveles.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('d3', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 3.3 — ¿Por qué un Switch permite mayor desempeño que un HUB?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="d3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              El HUB es un repetidor de capa 1: replica todo lo que recibe en todos sus puertos, compartiendo el ancho de banda total entre todos los hosts y operando en Half-Duplex. El Switch es un dispositivo de capa 2 que aprende la tabla MAC→Puerto y reenvía cada frame solo por el puerto correcto, dando a cada puerto ancho de banda dedicado y permitiendo Full-Duplex (emitir y recibir simultáneamente).
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('d4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 3.4 — ¿Puede el CRC-32 corregir los errores que detecta? Justifica.</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="d4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              No. El CRC solo informa que ocurrió un error en algún lugar del frame, pero no en qué bit exacto. Por eso, ante un CRC inválido, el frame simplemente se descarta; corregir requeriría códigos con más redundancia (como Hamming o FEC), que no se usan en Ethernet estándar.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('d5', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 3.5 — ¿Por qué Manchester no se usa para velocidades de 100 Mbits/s en adelante?</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="d5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Manchester exige una transición en el centro de cada bit, lo que duplica el ancho de banda necesario respecto a la velocidad de datos. A 100 Mbits/s requeriría 200 MHz, fuera del límite del UTP-5 (100 MHz). Por eso Fast Ethernet usa 4B/5B (solo 25% de overhead, 125 MHz) en su lugar.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('d6', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 3.6 — ¿Verdadero o falso? "La paridad simple detecta siempre que se corrompe más de un bit." Justifica.</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="d6" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              Falso. Si se corrompe un número par de bits (2, 4, ...), el total de unos vuelve a tener la misma paridad original y el error pasa inadvertido. La paridad simple solo detecta con certeza errores de cantidad impar de bits.
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('d7', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>Pregunta 3.7 — Describe qué hace una NIC al recibir un frame, paso a paso.</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="d7" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              1) Detecta el preámbulo y sincroniza su reloj con el del emisor. 2) Lee el SFD para ubicar el inicio de la MAC destino. 3) Compara la MAC destino con la propia (o con la de broadcast); si no coincide, descarta el frame. 4) Lee el resto de los campos y recalcula el CRC-32 sobre lo recibido. 5) Si el CRC coincide con el recibido, entrega el payload a la capa superior (IP); si no coincide, descarta el frame silenciosamente.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="background:linear-gradient(120deg,#0f1f33,#062b52 55%,#7f1d3c); border-top:2px solid rgba(200,155,60,0.55);">
+    <div class="container mx-auto px-6 py-8 text-center">
+      <p class="text-slate-300 text-sm font-medium">2026 · Material de estudio · Redes de Computadores · Capa de Red (ruteo IP) y Capa de Datos</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleAccordion(id, btn) {
+      const el = document.getElementById(id);
+      const icon = btn.querySelector('.accordion-icon');
+      const hidden = el.classList.contains('hidden');
+      el.classList.toggle('hidden', !hidden);
+      if (icon) icon.style.transform = hidden ? 'rotate(180deg)' : 'rotate(0deg)';
+      btn.classList.toggle('bg-slate-100', hidden);
+    }
+
+    function selectVF(btn) {
+      const cell = btn.closest('.vf-cell');
+      cell.dataset.selected = btn.dataset.val;
+      cell.querySelectorAll('.vf-btn').forEach(b => {
+        b.classList.remove('vf-btn-active', 'vf-btn-correct', 'vf-btn-wrong');
+      });
+      btn.classList.add('vf-btn-active');
+      cell.classList.remove('vf-correct-cell', 'vf-wrong-cell');
+      cell.querySelector('.vf-explain').classList.add('hidden');
+    }
+
+    function reviewVF(containerId) {
+      const container = document.getElementById(containerId);
+      const cells = container.querySelectorAll('.vf-cell');
+      let correct = 0, answered = 0;
+      cells.forEach(cell => {
+        const ans = cell.dataset.ans;
+        const sel = cell.dataset.selected;
+        if (sel) answered++;
+        const isCorrect = sel === ans;
+        if (isCorrect) correct++;
+        cell.classList.remove('vf-correct-cell', 'vf-wrong-cell');
+        if (sel) cell.classList.add(isCorrect ? 'vf-correct-cell' : 'vf-wrong-cell');
+        cell.querySelectorAll('.vf-btn').forEach(b => {
+          b.classList.remove('vf-btn-correct', 'vf-btn-wrong');
+          if (b.dataset.val === ans) b.classList.add('vf-btn-correct');
+          else if (b.dataset.val === sel) b.classList.add('vf-btn-wrong');
+        });
+        cell.querySelector('.vf-explain').classList.remove('hidden');
+      });
+      const scoreEl = document.getElementById(containerId + '-score');
+      if (!scoreEl) return;
+      if (answered < cells.length) {
+        scoreEl.textContent = `Respondiste ${answered} de ${cells.length}. Responde todas para ver tu puntaje.`;
+        scoreEl.className = 'text-sm font-bold mt-4 min-h-[1.2em] text-amber-700';
+      } else {
+        scoreEl.textContent = `Resultado: ${correct} de ${cells.length} correctas.`;
+        scoreEl.className = 'text-sm font-bold mt-4 min-h-[1.2em] ' + (correct === cells.length ? 'text-green-700' : 'text-navy');
+      }
+    }
+
+    function resetVF(containerId) {
+      const container = document.getElementById(containerId);
+      container.querySelectorAll('.vf-cell').forEach(cell => {
+        delete cell.dataset.selected;
+        cell.classList.remove('vf-correct-cell', 'vf-wrong-cell');
+        cell.querySelectorAll('.vf-btn').forEach(b => b.classList.remove('vf-btn-active', 'vf-btn-correct', 'vf-btn-wrong'));
+        cell.querySelector('.vf-explain').classList.add('hidden');
+      });
+      const scoreEl = document.getElementById(containerId + '-score');
+      if (scoreEl) scoreEl.textContent = '';
+    }
+  </script>
+</body>
+</html>

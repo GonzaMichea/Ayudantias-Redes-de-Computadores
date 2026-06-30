@@ -240,7 +240,7 @@
       <div class="hidden md:flex gap-1 sm:gap-2">
         <a href="#teoria"    class="nav-link">Teoría</a>
         <a href="#ethernet"  class="nav-link">Ethernet</a>
-        <a href="#acceso"    class="nav-link">CSMA/CD</a>
+        <a href="#acceso"    class="nav-link">Transmisión</a>
         <a href="#hardware"  class="nav-link">Hardware</a>
         <a href="#errores"   class="nav-link">CRC</a>
         <a href="#practica"  class="nav-link">Práctica</a>
@@ -257,7 +257,7 @@
         Redes de Computadores · Ayudantía de 1 hora
       </div>
       <h1 class="hero-title mb-5">La Capa de Datos</h1>
-      <p class="text-slate-500 text-base font-medium max-w-3xl mx-auto">Ethernet · Dirección MAC · Frame · CSMA/CD · ARP · HUB / Bridge / Switch · Paridad · CRC.</p>
+      <p class="text-slate-500 text-base font-medium max-w-3xl mx-auto">Ethernet · Dirección MAC · Frame · Codificación de bits · Tecnologías Ethernet · HUB / Bridge / Switch · Paridad · CRC.</p>
       <p class="text-slate-400 text-xs mt-3 italic">Diseñada para repasar teoría, visualizar el frame Ethernet y practicar preguntas típicas de certamen.</p>
     </section>
 
@@ -282,8 +282,8 @@
               <p class="text-xs text-slate-600">Empaqueta bits en unidades llamadas frames con cabeceras MAC, payload y checksum.</p>
             </div>
             <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
-              <h4 class="font-bold text-burg mb-2 text-sm">Acceso al medio</h4>
-              <p class="text-xs text-slate-600">Coordina quién transmite cuando varios nodos comparten el mismo canal (CSMA/CD).</p>
+              <h4 class="font-bold text-burg mb-2 text-sm">Gestión de secuencias</h4>
+              <p class="text-xs text-slate-600">Organiza el flujo de bits en frames y delimita su inicio y fin (preámbulo, SFD, CRC).</p>
             </div>
             <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5">
               <h4 class="font-bold text-gold mb-2 text-sm">Direccionamiento MAC</h4>
@@ -294,15 +294,32 @@
               <p class="text-xs text-slate-600">Usa CRC-32 para detectar errores de transmisión. Los frames corruptos se descartan.</p>
             </div>
           </div>
+
+          <h4 class="font-bold text-navy mt-8 mb-3 text-sm">3 tipos de técnicas para la capa de datos</h4>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">Punto a Punto</h4>
+              <p class="text-xs text-slate-600">Un único enlace dedicado entre exactamente dos interfaces. No hay que coordinar el acceso porque nadie más comparte el medio.</p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">Multi-Puntos sin broadcast</h4>
+              <p class="text-xs text-slate-600">Varios nodos comparten el medio, pero un frame puede dirigirse a un destino específico sin que todos lo reciban necesariamente.</p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+              <h4 class="font-bold text-navy mb-2 text-sm">Multi-Puntos con broadcast</h4>
+              <p class="text-xs text-slate-600">Todos los nodos conectados al medio reciben físicamente cada transmisión. Es el caso clásico de Ethernet sobre un bus o HUB compartido.</p>
+            </div>
+          </div>
+
           <div class="grid md:grid-cols-2 gap-6 mt-6">
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
               <h4 class="font-bold text-navy mb-3 text-sm">La capa de datos sí hace</h4>
               <ul class="space-y-2 text-sm text-slate-600">
                 <li>• Encapsular paquetes IP en frames Ethernet.</li>
                 <li>• Identificar emisor y receptor con MACs.</li>
-                <li>• Detectar colisiones y gestionar retransmisión (CSMA/CD).</li>
+                <li>• Definir cómo se codifican los bits en el medio físico.</li>
                 <li>• Verificar integridad con CRC-32.</li>
-                <li>• Resolver MAC a partir de una IP con ARP.</li>
+                <li>• Definir el tamaño mínimo y máximo del frame (MTU).</li>
               </ul>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
@@ -442,7 +459,7 @@ N_tránsito = t_prop × Velocidad (bits en vuelo)</div>
             </div>
             <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
               <h4 class="font-bold text-gold mb-2 text-sm">MAC vs IP</h4>
-              <p class="text-xs text-slate-600">La MAC identifica el <em>hardware</em> dentro de un segmento LAN. La IP identifica al <em>host lógico</em> en la red global. ARP traduce entre ambas.</p>
+              <p class="text-xs text-slate-600">La MAC identifica el <em>hardware</em> dentro de un segmento LAN. La IP identifica al <em>host lógico</em> en la red global: son direcciones de capas distintas con propósitos distintos.</p>
             </div>
           </div>
         </div>
@@ -477,11 +494,11 @@ N_tránsito = t_prop × Velocidad (bits en vuelo)</div>
                 </div>
                 <div class="seg-field border-r border-slate-300 bg-yellow-100 p-3" style="width:13%">
                   Eth.Type<br><span class="text-slate-500 font-normal">2 B</span>
-                  <div class="seg-tooltip"><strong>EtherType / Length</strong><br>Si el valor es ≤ 1500: largo del payload en bytes. Si es > 1500: indica el protocolo encapsulado.<br>0x0800 = IPv4 &nbsp; 0x0806 = ARP &nbsp; 0x86DD = IPv6 &nbsp; 0x8100 = VLAN 802.1Q</div>
+                  <div class="seg-tooltip"><strong>EtherType / Length</strong><br>Si el valor es ≤ 1500: largo del payload en bytes. Si es > 1500: indica el protocolo encapsulado.<br>0x0800 = IPv4 &nbsp; 0x86DD = IPv6</div>
                 </div>
                 <div class="seg-field border-r border-slate-300 bg-green-100 p-3" style="width:20%">
                   Payload (Datos)<br><span class="text-slate-500 font-normal">46–1500 B</span>
-                  <div class="seg-tooltip"><strong>Payload</strong><br>Los datos transportados: normalmente un paquete IP. MTU = 1500 bytes. Mínimo = 46 bytes; si hay menos, se añade padding de ceros. El mínimo es necesario para que CSMA/CD detecte colisiones correctamente.</div>
+                  <div class="seg-tooltip"><strong>Payload</strong><br>Los datos transportados: normalmente un paquete IP. MTU = 1500 bytes. Mínimo = 46 bytes; si hay menos, se añade padding de ceros para asegurar el largo mínimo del frame completo.</div>
                 </div>
                 <div class="seg-field border-r border-slate-300 bg-red-100 p-3" style="width:12%">
                   CRC-32<br><span class="text-slate-500 font-normal">4 B</span>
@@ -503,15 +520,15 @@ N_tránsito = t_prop × Velocidad (bits en vuelo)</div>
           <div class="grid md:grid-cols-3 gap-4 mt-6">
             <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
               <h4 class="font-bold text-navy mb-2 text-sm">¿Por qué mínimo 64 bytes?</h4>
-              <p class="text-xs text-slate-600">El frame debe tardar en transmitirse al menos 2×t_propagación para que el emisor detecte colisiones mientras sigue transmitiendo. Con cables de hasta 2500m eso equivale a 512 bits = 64 bytes.</p>
+              <p class="text-xs text-slate-600">El frame debe tener un largo mínimo para que el medio compartido pueda distinguir correctamente cada transmisión. Con datos insuficientes (&lt;46 B), la NIC agrega padding de ceros hasta completar el mínimo.</p>
             </div>
             <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
               <h4 class="font-bold text-burg mb-2 text-sm">Punto de certamen</h4>
               <p class="text-xs text-slate-600">El frame Ethernet es <em>sin conexión y no confiable</em>. Si el CRC falla, el frame se descarta sin aviso. No hay ACK ni retransmisión a nivel 2. TCP resuelve esto en capa 4.</p>
             </div>
             <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
-              <h4 class="font-bold text-gold mb-2 text-sm">VLAN 802.1Q</h4>
-              <p class="text-xs text-slate-600">Añade 4 bytes extra entre MAC Fuente y EtherType con un VID de 12 bits (hasta 4096 VLANs) y prioridad PCP de 3 bits. El frame puede crecer hasta 1522 bytes.</p>
+              <h4 class="font-bold text-gold mb-2 text-sm">Preámbulo y SFD</h4>
+              <p class="text-xs text-slate-600">Son generados por la propia NIC, no llegan desde la capa superior. Su único objetivo es sincronizar el reloj del receptor antes de leer la dirección MAC destino.</p>
             </div>
           </div>
         </div>
@@ -548,10 +565,10 @@ N_tránsito = t_prop × Velocidad (bits en vuelo)</div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         PARTE 3 · TRANSMISIÓN Y CSMA/CD
+         PARTE 3 · TRANSMISIÓN Y TECNOLOGÍAS
     ═══════════════════════════════════════════════ -->
     <section id="acceso" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 3 · Transmisión y acceso al medio</h2>
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 3 · Transmisión de bits y tecnologías</h2>
       <div class="space-y-10">
 
         <!-- Card 6: Manchester y codificaciones -->
@@ -662,165 +679,77 @@ N_tránsito = t_prop × Velocidad (bits en vuelo)</div>
           </div>
         </div>
 
-        <!-- Card 7: CSMA/CD -->
+        <!-- Card 7: Tecnologías Ethernet -->
         <div class="card p-8">
           <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">7</span> CSMA/CD — Acceso al medio compartido
+            <span class="step-num">7</span> Tecnologías Ethernet — cables, topologías y distancias
           </h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">CSMA/CD (Carrier Sense Multiple Access with Collision Detection) es el protocolo de acceso que usa Ethernet cuando el canal es compartido (Half-Duplex). Evolucionó desde el protocolo ALOHA de la Universidad de Hawaii en 1970.</p>
+          <p class="text-slate-600 mb-6 text-sm leading-relaxed">A lo largo de los años Ethernet evolucionó en topología (bus → estrella), medio físico (coaxial → UTP → fibra) y velocidad, pero siempre conservando direcciones MAC, estructura de frame y un servicio no confiable.</p>
 
-          <div class="grid md:grid-cols-3 gap-4 mb-8">
-            <div class="diagram-wrap">
-              <h4 class="font-bold text-navy text-center mb-3 text-xs bit-mini">ALOHA (1970)</h4>
-              <p class="text-xs text-slate-600 mb-3">Transmite en cualquier momento. Si hay colisión, espera un tiempo aleatorio t y reintenta.</p>
-              <div class="space-y-2 text-xs">
-                <div class="flex items-center gap-2"><span class="route-chip bg-blue-100 text-blue-800">Ventaja</span><span class="text-slate-600">Totalmente descentralizado.</span></div>
-                <div class="flex items-center gap-2"><span class="route-chip bg-red-100 text-red-800">Problema</span><span class="text-slate-600">Eficiencia máxima ≈ 18%.</span></div>
-              </div>
-            </div>
-            <div class="diagram-wrap">
-              <h4 class="font-bold text-navy text-center mb-3 text-xs bit-mini">CSMA</h4>
-              <p class="text-xs text-slate-600 mb-3">Escucha el canal antes de transmitir (Carrier Sense). Si hay señal → espera. Si no hay → transmite.</p>
-              <div class="space-y-2 text-xs">
-                <div class="flex items-center gap-2"><span class="route-chip bg-blue-100 text-blue-800">Ventaja</span><span class="text-slate-600">Menos colisiones que ALOHA.</span></div>
-                <div class="flex items-center gap-2"><span class="route-chip bg-red-100 text-red-800">Problema</span><span class="text-slate-600">Colisiones aún posibles por t_propagación.</span></div>
-              </div>
-            </div>
-            <div class="diagram-wrap">
-              <h4 class="font-bold text-navy text-center mb-3 text-xs bit-mini">CSMA/CD</h4>
-              <p class="text-xs text-slate-600 mb-3">CSMA + detecta colisión <em>mientras</em> transmite. Si la detecta → para inmediatamente + Jam + espera TBEB.</p>
-              <div class="space-y-2 text-xs">
-                <div class="flex items-center gap-2"><span class="route-chip bg-green-100 text-green-800">Ventaja</span><span class="text-slate-600">No desperdicia canal tras colisión.</span></div>
-                <div class="flex items-center gap-2"><span class="route-chip bg-amber-100 text-amber-800">Nota</span><span class="text-slate-600">Solo en Half-Duplex (HUB). Switch usa Full-Duplex.</span></div>
-              </div>
-            </div>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-50 text-slate-700">
+                <tr>
+                  <th class="px-4 py-3 text-left">Tecnología</th>
+                  <th class="px-4 py-3 text-left">Velocidad</th>
+                  <th class="px-4 py-3 text-left">Topología / Medio</th>
+                  <th class="px-4 py-3 text-left">Distancia máx.</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-600 text-xs">
+                <tr>
+                  <td class="px-4 py-3 font-bold text-navy">10Base5 / 10Base2</td>
+                  <td class="px-4 py-3">10 Mbits/s</td>
+                  <td class="px-4 py-3">Bus, cable coaxial con conectores BNC / transceiver</td>
+                  <td class="px-4 py-3">2500 m (con 4 repetidores)</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-bold text-navy">10BaseT / 100BaseTX</td>
+                  <td class="px-4 py-3">10 / 100 Mbits/s</td>
+                  <td class="px-4 py-3">Estrella, UTP-3/5, conectores RJ45. HUB (Half-Duplex) o Switch (Full-Duplex)</td>
+                  <td class="px-4 py-3">100 m por cable</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-bold text-navy">1000BaseT (Gigabit)</td>
+                  <td class="px-4 py-3">1 Gbits/s</td>
+                  <td class="px-4 py-3">UTP-5 (4 pares), codificación 8B/10B. Variantes: 1000BaseCX (STP, 25m), 1000BaseSX (fibra MMF, 500m), 1000BaseLX (fibra MMF/SMF, 5km)</td>
+                  <td class="px-4 py-3">100 m (cobre) / 5 km (fibra)</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-bold text-navy">10G / 40G / 100GBaseT</td>
+                  <td class="px-4 py-3">10 / 40 / 100 Gbits/s</td>
+                  <td class="px-4 py-3">Solo estrella con Switch, solo Full-Duplex. UTP Cat. 6e/6a/7 o fibra óptica, codificación 64B/66B</td>
+                  <td class="px-4 py-3">100 m (cobre 10G) / 40 km (fibra)</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <h4 class="font-bold text-navy mb-4 text-sm">Algoritmo CSMA/CD — paso a paso</h4>
-          <div class="space-y-2 mb-6">
-            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
-              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">1</span>
-              <div><p class="text-sm font-semibold text-navy">Construir el frame en un buffer local.</p></div>
+          <div class="grid md:grid-cols-2 gap-4 mt-6">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5 text-xs text-slate-700">
+              <strong class="text-navy block mb-1">Regla mental</strong>
+              A medida que sube la velocidad, Ethernet abandona el bus compartido y el cobre puro a favor de la estrella con switch y, eventualmente, la fibra óptica. Las velocidades más altas (10G+) ya solo existen con switch y Full-Duplex.
             </div>
-            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
-              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">2</span>
-              <div><p class="text-sm font-semibold text-navy">¿Hay actividad en el canal?</p><p class="text-xs text-slate-500 mt-1">Si hay señal → esperar hasta que el canal quede libre (CSMA).</p></div>
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-5 text-xs text-slate-700">
+              <strong class="text-gold block mb-1">Punto de certamen</strong>
+              10Base5/10Base2 usan topología de <em>bus</em>: todos los hosts comparten el mismo cable coaxial. Desde 10BaseT en adelante, la topología es <em>estrella</em>, con un HUB o Switch en el centro.
             </div>
-            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
-              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">3</span>
-              <div><p class="text-sm font-semibold text-navy">Esperar IFS de 96 bits de silencio adicional.</p><p class="text-xs text-slate-500 mt-1">Inter Frame Spacing: evita que un nodo monopolice el canal inmediatamente.</p></div>
-            </div>
-            <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
-              <span class="step-num text-sm" style="width:30px;height:30px;font-size:0.85rem;">4</span>
-              <div><p class="text-sm font-semibold text-navy">Transmitir monitoreando el canal simultáneamente.</p></div>
-            </div>
-            <div class="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
-              <span class="inline-flex items-center justify-content-center text-xs font-bold bg-red-500 text-white rounded-lg px-2 py-1 flex-shrink-0">4a</span>
-              <div>
-                <p class="text-sm font-semibold text-red-700">Si se detecta colisión:</p>
-                <p class="text-xs text-slate-600 mt-1">1. Parar transmisión inmediatamente. &nbsp; 2. Emitir Jam Sequence (32 bits de ruido, 0xAAAAAAAA) para avisar a todos. &nbsp; 3. Calcular tiempo de espera TBEB. &nbsp; 4. Volver al paso 2.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-4">
-              <span class="inline-flex items-center justify-content-center text-xs font-bold bg-green-600 text-white rounded-lg px-2 py-1 flex-shrink-0">4b</span>
-              <div><p class="text-sm font-semibold text-green-700">Si no hay colisión → seguir transmitiendo hasta completar el frame. ✓</p></div>
-            </div>
-          </div>
-
-          <h4 class="font-bold text-navy mb-3 text-sm">TBEB — Truncated Binary Exponential Backoff</h4>
-          <div class="code-block">t = int(rand() × 2^min(10, n)) × t_512bits
-
-Donde n = número de intento (empieza en 1)
-      t_512bits = tiempo para transmitir 512 bits
-
-Intento 1 → rango [0, 2)   × t_512bits
-Intento 2 → rango [0, 4)   × t_512bits
-Intento 3 → rango [0, 8)   × t_512bits
-   ...
-Intento 10+ → rango [0, 1024) × t_512bits   ← máximo
-Intento 16 → frame descartado definitivamente</div>
-          <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
-            <strong class="text-navy">Regla mental:</strong> TBEB funciona porque usa tiempos <em>aleatorios y exponencialmente crecientes</em>. Así la probabilidad de que dos nodos elijan el mismo slot disminuye rápidamente. Si ambos eligieran el mismo tiempo fijo, seguirían colisionando indefinidamente.
           </div>
         </div>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         PARTE 4 · ARP Y HARDWARE
+         PARTE 4 · HARDWARE DE RED
     ═══════════════════════════════════════════════ -->
     <section id="hardware" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 4 · ARP y hardware de red</h2>
+      <h2 class="section-title text-3xl font-bold mb-10">Parte 4 · Hardware de red</h2>
       <div class="space-y-10">
 
-        <!-- Card 8: ARP -->
+        <!-- Card 8: HUB / Bridge / Switch -->
         <div class="card p-8">
           <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">8</span> ARP — Address Resolution Protocol
-          </h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">La capa IP conoce la dirección IP del destino, pero el frame Ethernet necesita la <strong class="text-navy">dirección MAC</strong>. ARP resuelve IP → MAC usando broadcast dentro del segmento LAN.</p>
-
-          <div class="grid md:grid-cols-4 gap-4 mb-8">
-            <div class="rounded-xl border border-blue-200 bg-blue-50 p-5 text-center">
-              <div class="text-xs bit-mini text-blue-700 mb-2">Paso 1</div>
-              <h4 class="font-bold text-navy text-sm mb-2">ARP Request</h4>
-              <p class="text-xs text-slate-600">Host A envía un frame broadcast (FF:FF:FF:FF:FF:FF) con "¿Quién tiene la IP 192.168.1.20?"</p>
-            </div>
-            <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5 text-center">
-              <div class="text-xs bit-mini text-yellow-700 mb-2">Paso 2</div>
-              <h4 class="font-bold text-amber-700 text-sm mb-2">Broadcast recibido</h4>
-              <p class="text-xs text-slate-600">Todos los hosts del segmento reciben el frame. Solo el que tiene esa IP responde.</p>
-            </div>
-            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5 text-center">
-              <div class="text-xs bit-mini text-rose-700 mb-2">Paso 3</div>
-              <h4 class="font-bold text-burg text-sm mb-2">ARP Reply</h4>
-              <p class="text-xs text-slate-600">Host B responde en unicast: "Soy 192.168.1.20, mi MAC es 00:20:ED:87:FD:E6".</p>
-            </div>
-            <div class="rounded-xl border border-green-200 bg-green-50 p-5 text-center">
-              <div class="text-xs bit-mini text-green-700 mb-2">Paso 4</div>
-              <h4 class="font-bold text-green-700 text-sm mb-2">Caché ARP</h4>
-              <p class="text-xs text-slate-600">Host A guarda la asociación IP↔MAC en su caché con un TTL para evitar broadcasts repetitivos.</p>
-            </div>
-          </div>
-
-          <h4 class="font-bold text-navy mb-3 text-sm">Estructura del paquete ARP (encapsulado en el Payload del frame Ethernet)</h4>
-          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-            <table class="min-w-full text-sm">
-              <thead class="bg-slate-50 text-slate-700">
-                <tr>
-                  <th class="px-4 py-3 text-left">Campo</th>
-                  <th class="px-4 py-3 text-left">Tamaño</th>
-                  <th class="px-4 py-3 text-left">Descripción</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-600 text-xs">
-                <tr><td class="px-4 py-3 font-medium">HW Type</td><td class="px-4 py-3">2 B</td><td class="px-4 py-3">Tipo de hardware. Ethernet = 1.</td></tr>
-                <tr><td class="px-4 py-3 font-medium">Protocol Type</td><td class="px-4 py-3">2 B</td><td class="px-4 py-3">IPv4 = 0x0800 · IPv6 = 0x86DD</td></tr>
-                <tr><td class="px-4 py-3 font-medium">H Len / P Len</td><td class="px-4 py-3">1 B c/u</td><td class="px-4 py-3">Longitud de MAC (6) y de IP (4).</td></tr>
-                <tr><td class="px-4 py-3 font-medium">Operation</td><td class="px-4 py-3">2 B</td><td class="px-4 py-3"><strong class="text-navy">1 = REQUEST</strong> · <strong class="text-navy">2 = REPLY</strong></td></tr>
-                <tr><td class="px-4 py-3 font-medium">Sender MAC</td><td class="px-4 py-3">6 B</td><td class="px-4 py-3">MAC del emisor del paquete ARP.</td></tr>
-                <tr><td class="px-4 py-3 font-medium">Sender IP</td><td class="px-4 py-3">4 B</td><td class="px-4 py-3">IP del emisor (la que busca ser conocida).</td></tr>
-                <tr><td class="px-4 py-3 font-medium">Target MAC</td><td class="px-4 py-3">6 B</td><td class="px-4 py-3">MAC del destino buscado. En REQUEST = 00:00:00:00:00:00 (desconocida).</td></tr>
-                <tr><td class="px-4 py-3 font-medium">Target IP</td><td class="px-4 py-3">4 B</td><td class="px-4 py-3">IP del destino que se quiere resolver.</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="grid md:grid-cols-2 gap-4 mt-4">
-            <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
-              <strong class="text-navy block mb-1">Punto de certamen</strong>
-              El REQUEST usa MAC destino = FF:FF:FF:FF:FF:FF (broadcast), pero el REPLY es unicast directamente al solicitante. Así no molesta a toda la red con la respuesta.
-            </div>
-            <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
-              <strong class="text-gold block mb-1">Caché ARP</strong>
-              Tiene un TTL (típ. 20 minutos). Si un host cambia de NIC (nueva MAC), el resto de la red lo actualiza automáticamente en el próximo ciclo sin intervención manual.
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 9: HUB / Bridge / Switch -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">9</span> Hardware: HUB, Bridge y Switch
+            <span class="step-num">8</span> Hardware: HUB, Bridge y Switch
           </h3>
           <p class="text-slate-600 mb-6 text-sm">Tres dispositivos con roles muy distintos. Conocer sus diferencias es fundamental para certamen.</p>
 
@@ -830,7 +759,7 @@ Intento 16 → frame descartado definitivamente</div>
               <p class="text-xs bit-mini text-slate-400 mb-3">Capa 1 — Repetidor de bits</p>
               <ul class="space-y-2 text-xs text-slate-600 text-left">
                 <li>• Reenvía <strong>todo a todos</strong> los puertos (broadcast físico).</li>
-                <li>• Opera en Half-Duplex → CSMA/CD obligatorio.</li>
+                <li>• Opera en Half-Duplex: o se transmite o se recibe, no ambos.</li>
                 <li>• El ancho de banda es compartido entre todos los nodos.</li>
                 <li>• 100 Mbits/s + 10 hosts = ~10 Mbits/s por host.</li>
                 <li>• Aumenta las colisiones con cada nodo adicional.</li>
@@ -884,43 +813,6 @@ Intento 16 → frame descartado definitivamente</div>
           </div>
         </div>
 
-        <!-- Card 10: VLAN -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">10</span> VLANs — Virtual Local Area Networks
-          </h3>
-          <p class="text-slate-600 mb-5 text-sm leading-relaxed">Las VLANs permiten segmentar lógicamente una red Ethernet física. Computadores conectados a diferentes puertos (incluso en switches distintos) pueden pertenecer al mismo dominio de broadcast.</p>
-          <div class="grid md:grid-cols-3 gap-4 mb-6">
-            <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
-              <h4 class="font-bold text-navy mb-2 text-sm">Beneficios</h4>
-              <ul class="space-y-1 text-xs text-slate-600">
-                <li>• Reduce el dominio de broadcast.</li>
-                <li>• Mejora la seguridad (aísla tráfico).</li>
-                <li>• Permite organizar la red por función, no por física.</li>
-              </ul>
-            </div>
-            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
-              <h4 class="font-bold text-burg mb-2 text-sm">IEEE 802.1Q</h4>
-              <ul class="space-y-1 text-xs text-slate-600">
-                <li>• Añade 4 bytes al frame Ethernet.</li>
-                <li>• VID de 12 bits → hasta 4096 VLANs.</li>
-                <li>• Frame puede crecer hasta 1522 bytes.</li>
-                <li>• PCP de 3 bits para QoS/prioridad.</li>
-              </ul>
-            </div>
-            <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
-              <h4 class="font-bold text-gold mb-2 text-sm">Requisito</h4>
-              <ul class="space-y-1 text-xs text-slate-600">
-                <li>• Solo funciona con Switches.</li>
-                <li>• Para comunicación entre VLANs se necesita un router o switch capa 3.</li>
-                <li>• Normas relacionadas: IEEE 802.3ad, 802.1ax.</li>
-              </ul>
-            </div>
-          </div>
-          <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
-            <strong class="text-navy">Caso práctico:</strong> Una VLAN 10 para estudiantes, VLAN 20 para administrativos y VLAN 30 para servidores. Los equipos de VLAN 10 no pueden hablar directamente con VLAN 30 sin pasar por un router — seguridad incorporada en la capa de datos.
-          </div>
-        </div>
       </div>
     </section>
 
@@ -934,7 +826,7 @@ Intento 16 → frame descartado definitivamente</div>
         <!-- Card 11: Paridad -->
         <div class="card p-8">
           <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">11</span> Paridad — 1D y 2D
+            <span class="step-num">9</span> Paridad — 1D y 2D
           </h3>
           <div class="grid md:grid-cols-2 gap-8">
             <div>
@@ -974,7 +866,7 @@ Intento 16 → frame descartado definitivamente</div>
         <!-- Card 12: CRC -->
         <div class="card p-8">
           <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">12</span> CRC — Cyclic Redundancy Check
+            <span class="step-num">10</span> CRC — Cyclic Redundancy Check
           </h3>
           <p class="text-slate-600 mb-6 text-sm leading-relaxed">CRC es el mecanismo de detección de errores usado en Ethernet (CRC-32). Los bits del mensaje representan los coeficientes de un polinomio; el checksum es el residuo de la división polinomial sobre GF(2) (aritmética módulo 2, donde suma = XOR).</p>
 
@@ -1039,21 +931,21 @@ CRC = Resto de P(x) ÷ G(x) en GF(2)</div>
 
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>1. ¿Cuál es la diferencia entre una dirección IP y una dirección MAC? ¿Cuándo usa el sistema cada una?</span>
+              <span>1. ¿Cuál es la diferencia entre una dirección IP y una dirección MAC?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div id="q1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              La <strong class="text-navy">IP</strong> identifica un host de forma lógica dentro de la red global. Es asignada por software, tiene estructura jerárquica (red+host) y los routers la usan para enrutar paquetes de extremo a extremo. Puede cambiar (DHCP). La <strong class="text-navy">MAC</strong> identifica una interfaz de red específica. Está grabada en el hardware, es plana (sin jerarquía) y solo se usa dentro de un segmento LAN para entregar el frame al siguiente salto. En cada hop hacia el destino, la IP destino permanece constante, pero la MAC destino cambia (pasa a ser la MAC del siguiente router o del destino final).
+              La <strong class="text-navy">IP</strong> identifica un host de forma lógica dentro de la red global. Es asignada por software, tiene estructura jerárquica (red+host) y los routers la usan para enrutar paquetes de extremo a extremo. Puede cambiar. La <strong class="text-navy">MAC</strong> identifica una interfaz de red específica. Está grabada en el hardware, es plana (sin jerarquía) y solo se usa dentro de un segmento LAN. Una IP corresponde a un host en la red global; una MAC corresponde a una tarjeta de red física específica dentro del segmento local.
             </div>
           </div>
 
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>2. ¿Por qué el frame Ethernet tiene un tamaño mínimo de 64 bytes (46 bytes de datos)?</span>
+              <span>2. Una señal tiene 8 niveles distintos y una velocidad de 2000 Bauds. ¿Cuál es su velocidad en bits/s?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div id="q2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Para que el emisor pueda detectar una colisión <em>mientras sigue transmitiendo</em>, el frame debe tardar al menos 2×t_propagación en transmitirse (tiempo de ida y vuelta del peor caso). Con un segmento coaxial 10Base5 de hasta 2500 metros, eso equivale a aproximadamente 51.2 µs, suficiente para transmitir 512 bits = 64 bytes a 10 Mbits/s. Si el frame fuera más corto, el emisor terminaría de transmitirlo antes de que el ruido de la colisión más lejana posible llegara de regreso, y asumiría erróneamente que no hubo error. El padding de ceros garantiza el mínimo.
+              Con 8 niveles, cada símbolo codifica log₂(8) = 3 bits. La velocidad en bits/s es: <code class="bg-slate-100 px-2 py-1 rounded">Bits/s = log₂(N) × Bauds = 3 × 2000 = 6000 Bits/s</code>. Es un error muy frecuente en certamen confundir Bauds (cambios de nivel por segundo) con Bits/s (información transmitida por segundo): solo coinciden cuando la señal tiene exactamente 2 niveles (1 bit/símbolo).
             </div>
           </div>
 
@@ -1063,17 +955,17 @@ CRC = Resto de P(x) ÷ G(x) en GF(2)</div>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div id="q3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              El <strong class="text-navy">HUB</strong> es un repetidor de bits (capa 1): replica eléctricamente todo lo que recibe en todos sus puertos. El ancho de banda se comparte entre todos los nodos. Con N hosts, cada uno tiene a lo sumo BW/N disponible. Funciona en Half-Duplex y necesita CSMA/CD. El <strong class="text-navy">SWITCH</strong> es un puente de alta performance (capa 2): aprende la tabla MAC→Puerto y envía el frame solo al puerto correcto. Cada puerto tiene su propio dominio de colisión y ancho de banda dedicado. Permite Full-Duplex, eliminando completamente las colisiones. Los HUBs están obsoletos porque los switches son más económicos, más rápidos y sin colisiones.
+              El <strong class="text-navy">HUB</strong> es un repetidor de bits (capa 1): replica eléctricamente todo lo que recibe en todos sus puertos. El ancho de banda se comparte entre todos los nodos: con N hosts, cada uno tiene a lo sumo BW/N disponible, y opera en Half-Duplex. El <strong class="text-navy">SWITCH</strong> es un puente de alta performance (capa 2): aprende la tabla MAC→Puerto y envía el frame solo al puerto correcto. Cada puerto tiene su propio ancho de banda dedicado y permite Full-Duplex. Los HUBs están obsoletos porque los switches son hoy igual de económicos, son más rápidos y eliminan por completo el problema del ancho de banda compartido.
             </div>
           </div>
 
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>4. Explica el TBEB. ¿Por qué no se usa un tiempo fijo de espera tras una colisión?</span>
+              <span>4. ¿Por qué la mayoría de las redes Ethernet modernas usan topología de estrella y no de bus?</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div id="q4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Con tiempo fijo, todos los nodos esperarían exactamente lo mismo y volverían a colisionar en el siguiente intento, indefinidamente. TBEB elige un tiempo aleatorio dentro de una ventana que se duplica en cada intento: <code>[0, 2ⁿ) × t_512bits</code>. Al ser aleatorio, la probabilidad de que dos nodos elijan el mismo slot decrece rápidamente. La ventana crece exponencialmente para adaptarse a la carga de la red: si hay muchos intentos fallidos, es señal de alta contención y conviene esperar más. Después de 16 intentos fallidos, el frame se descarta definitivamente.
+              En el bus (10Base5/10Base2) todos los hosts comparten físicamente el mismo cable coaxial: un corte o falla en un punto puede dejar fuera a toda la red, y agregar o quitar un host obliga a manipular el cable compartido. En la estrella (10BaseT en adelante), cada host tiene su propio cable hacia un HUB o Switch central: una falla en un cable solo afecta a ese host, es mucho más fácil de cablear edificios y, con switch, cada puerto obtiene ancho de banda dedicado y Full-Duplex. La estrella escaló mucho mejor a medida que crecieron las velocidades.
             </div>
           </div>
 
@@ -1099,16 +991,24 @@ CRC = Resto de P(x) ÷ G(x) en GF(2)</div>
 
           <div class="border border-slate-200 rounded-xl overflow-hidden">
             <button onclick="toggleAccordion('q7', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>7. Describe el proceso completo cuando el host A (10.0.0.1) quiere enviar un paquete al host B (10.0.0.5) en la misma LAN.</span>
+              <span>7. ¿Verdadero o falso? "Si la paridad de un byte es correcta, entonces el byte llegó sin errores." Justifica.</span>
               <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div id="q7" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              <strong class="text-navy">Paso 1 — ARP:</strong> A verifica si tiene la MAC de 10.0.0.5 en caché. Si no, envía ARP Request en broadcast (FF:FF:FF:FF:FF:FF): "¿Quién tiene 10.0.0.5?"<br><br>
-              <strong class="text-navy">Paso 2 — ARP Reply:</strong> B reconoce su IP y responde en unicast con su MAC. A guarda MAC_B en su caché ARP.<br><br>
-              <strong class="text-navy">Paso 3 — Construcción del frame:</strong> A ensambla el frame con [Preámbulo | SFD | MAC_B | MAC_A | EtherType=0x0800 | Paquete IP | CRC-32].<br><br>
-              <strong class="text-navy">Paso 4 — CSMA/CD:</strong> A escucha el canal. Si está libre, espera el IFS y comienza a transmitir bit a bit. Si detecta colisión durante la transmisión, aplica TBEB y reintenta.<br><br>
-              <strong class="text-navy">Paso 5 — Switch (si hay):</strong> Almacena el frame, verifica el CRC, busca MAC_B en su tabla y lo reenvía solo por el puerto correcto.<br><br>
-              <strong class="text-navy">Paso 6 — Recepción:</strong> La NIC de B detecta el preámbulo, sincroniza el reloj, lee el frame, verifica que la MAC destino sea la suya, comprueba el CRC. Si todo es correcto, sube el payload IP a la capa de red.
+              <strong class="text-navy">Falso.</strong> La paridad solo detecta cuando se corrompe un número <em>impar</em> de bits (1, 3, 5...). Si exactamente 2, 4 o cualquier número par de bits cambian, la cantidad total de unos vuelve a tener la misma paridad que antes, y el chequeo pasa sin detectar el error. La probabilidad de detección de la paridad simple es de solo 0.5 en el peor caso, por eso se usan esquemas más robustos como la paridad 2D (que detecta y corrige errores simples) o el CRC (que detecta una proporción mucho mayor de errores, aunque tampoco corrige).
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <button onclick="toggleAccordion('q8', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
+              <span>8. Describe el proceso completo cuando el host A quiere enviar un paquete IP al host B dentro de la misma LAN, suponiendo que A ya conoce la MAC de B.</span>
+              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="q8" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
+              <strong class="text-navy">Paso 1 — Construcción del frame:</strong> A ensambla el frame con [Preámbulo | SFD | MAC_B | MAC_A | EtherType=0x0800 | Paquete IP | CRC-32]. Si el payload es menor a 46 bytes, se agrega padding de ceros.<br><br>
+              <strong class="text-navy">Paso 2 — Transmisión:</strong> A codifica los bits según la tecnología del medio (Manchester, 4B/5B, 8B/10B o 64B/66B según la velocidad) y los envía por el cable o fibra.<br><br>
+              <strong class="text-navy">Paso 3 — Switch (si hay):</strong> El switch intermedio almacena el frame completo, verifica el CRC y busca MAC_B en su tabla MAC→Puerto para reenviarlo solo por el puerto correcto.<br><br>
+              <strong class="text-navy">Paso 4 — Recepción:</strong> La NIC de B detecta el preámbulo, sincroniza su reloj, lee el frame, verifica que la MAC destino sea la suya y comprueba el CRC. Si todo es correcto, descarta el padding si lo hay y entrega el payload IP a la capa de red.
             </div>
           </div>
 
