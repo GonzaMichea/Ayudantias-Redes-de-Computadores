@@ -20,13 +20,15 @@ Para una mejor experiencia, puedes interactuar con los diagramas de capas, gener
 
 | N° | Tema principal | Contenido clave | Material web |
 | :---: | :--- | :--- | :---: |
-| **01** | **Fundamentos y Criptografía** | Tipos de redes (LAN/WAN), modelo OSI vs. TCP/IP, hashes SHA-256 y firmas digitales. | [Ver Guía 1](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-01) |
-| **02** | **Direccionamiento** | Direcciones MAC vs. IP, netmask y broadcast, clases de IP y redes privadas, cálculo de subredes y DNS. | [Ver Guía 2](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-02) |
-| **03** | **Capa de Aplicación** | Protocolos y encapsulación, sockets y puertos (TCP/UDP), HTTP/HTTPS y certificados X.509, balanceo de cargas y redes P2P. | [Ver Guía 3](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-03) |
-| **04** | **Capa de Transporte** | UDP vs. TCP, multiplexación, 3-way handshake, control de flujo (window size), retransmisión, piggybacking y casos de certamen. | [Ver Guía 4](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-04) |
-| **05** | **Capa de Internet** | IPv4, header IP, TTL, MTU, fragmentación, ruteo, OSPF, BGP, ICMP y DHCP. | [Ver Guía 5](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-05) |
-| **06** | **Capa de Datos** | Ethernet, dirección MAC, trama Ethernet y CRC. | [Ver Guía 6](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-06) |
-| **07** | **BONUS C3** | Capa de Internet (hasta ruteo IP) y capa de datos (excepto VLAN, ARP y otros temas). | [Ver Guía 7](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/bonus) |
+| **01** | **Fundamentos y Criptografía** | Tipos de redes (LAN/WAN), modelo OSI vs TCP/IP, hashes SHA-256 y firmas digitales. | [Ver Guía 1](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-01) |
+| **02** | **Direccionamiento** | Direcciones MAC vs IP, Netmask y Broadcast, Clases de IP y Redes Privadas, Cálculo de Subredes y DNS. | [Ver Guía 2](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-02) |
+| **03** | **Capa de Aplicación** | Protocolos y Encapsulación, Sockets y Puertos (TCP/UDP), HTTP/HTTPS y Certificados X.509, Balanceo de Cargas y Redes P2P. | [Ver Guía 3](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-03) |
+| **04** | **Capa de Transporte** | UDP vs TCP, Multiplexación, 3-Way Handshake, Control de Flujo (Window Size), Retransmisión, Piggybacking y casos de certamen. | [Ver Guía 4](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-04) |
+| **05** | **Capa de Internet** | IPv4, Header IP, TTL, MTU, Fragmentación, Ruteo, OSPF, BGP, ICMP y DHCP. | [Ver Guía 5](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-05) |
+| **06** | **Capa de Datos** | Ethernet, Dirección MAC, Frame Ethernet, y CRC. | [Ver Guía 6](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-06) |
+| **07** | **BONUS C3** | Capa de Internet (hasta ruteo IP) y capa de datos (menos VLAN, ARP y otros temas). | [Ver Guía 7](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/bonus) |
+
+
 ---
 
 ## Contacto y dudas
