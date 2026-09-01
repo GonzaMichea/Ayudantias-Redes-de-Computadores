@@ -1,538 +1,812 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Interactiva: Redes y Criptografía</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --usm-navy: #002b5c;
-            --usm-burgundy: #8c1d40;
-            --usm-gold: #c9a34a;
-            --usm-ink: #0f1f33;
-            --usm-paper: #f6f7fb;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redes de Computadores — Introducción y Criptografía | Ayudantía INF-256</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --usm-navy: #0f2a4a;
+        --usm-burgundy: #7c1d3f;
+        --usm-gold: #b6883c;
+        --usm-ink: #12202f;
+        --usm-paper: #f6f5f1;
+    }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--usm-paper);
-            background-image:
-                radial-gradient(circle at 8% 12%, rgba(201, 163, 74, 0.22) 0%, transparent 28%),
-                radial-gradient(circle at 92% 84%, rgba(140, 29, 64, 0.15) 0%, transparent 32%),
-                linear-gradient(135deg, #f8fafc 0%, #edf2fb 55%, #f8fafc 100%);
-            min-height: 100vh;
-        }
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: var(--usm-paper);
+        color: var(--usm-ink);
+    }
 
-        h1, h2, h3, h4 {
-            font-family: 'Sora', sans-serif;
-            letter-spacing: -0.02em;
-        }
+    h1, h2, h3, h4 { font-family: 'Sora', sans-serif; letter-spacing: -0.01em; }
 
-        .topbar {
-            background: linear-gradient(90deg, rgba(0, 43, 92, 0.95), rgba(140, 29, 64, 0.92));
-            box-shadow: 0 10px 30px rgba(15, 31, 51, 0.25);
-            border-bottom: 2px solid rgba(201, 163, 74, 0.65);
-            backdrop-filter: blur(10px);
-        }
+    .topbar {
+        background: var(--usm-navy);
+        border-bottom: 3px solid var(--usm-gold);
+    }
 
-        .brand-title {
-            color: #ffffff;
-            font-weight: 800;
-        }
+    .eyebrow {
+        font-family: 'Sora', sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        color: var(--usm-gold);
+    }
 
-        .nav-link {
-            color: #f1f5f9;
-            padding: 0.45rem 0.85rem;
-            border-radius: 9999px;
-            transition: all 0.25s ease;
-            border: 1px solid transparent;
-        }
+    .toc-link {
+        display: block;
+        padding: 0.5rem 0.9rem;
+        border-left: 3px solid transparent;
+        color: #4b5b6b;
+        font-weight: 600;
+        font-size: 0.92rem;
+        transition: all .2s ease;
+    }
+    .toc-link:hover { color: var(--usm-navy); border-left-color: rgba(182,136,60,.5); }
+    .toc-link.active { color: var(--usm-navy); border-left-color: var(--usm-gold); background: rgba(15,42,74,0.05); }
 
-        .nav-link:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(201, 163, 74, 0.55);
-        }
+    .card {
+        background: #ffffff;
+        border: 1px solid rgba(15,42,74,0.08);
+        border-radius: 0.9rem;
+        box-shadow: 0 8px 20px rgba(15,32,47,0.05);
+    }
 
-        .hero-title {
-            font-size: clamp(2.3rem, 6vw, 4.2rem);
-            background: linear-gradient(135deg, var(--usm-navy), var(--usm-burgundy));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
+    .section-num {
+        font-family: 'Sora', sans-serif;
+        font-weight: 800;
+        color: var(--usm-gold);
+        font-size: 1.1rem;
+    }
 
-        .hero-subtitle {
-            color: #334155;
-            font-weight: 500;
-        }
+    .layer-btn {
+        border: 1px solid rgba(15,42,74,0.15);
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all .15s ease;
+    }
+    .layer-btn:hover { transform: translateX(2px); }
+    .layer-btn.active {
+        border-color: var(--usm-gold);
+        box-shadow: 0 0 0 2px rgba(182,136,60,0.35);
+    }
 
-        .section-title {
-            border-bottom-width: 3px;
-            color: var(--usm-ink);
-        }
+    .pill {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        background: rgba(15,42,74,0.08);
+        color: var(--usm-navy);
+    }
 
-        .bg-white.p-8.rounded-xl.shadow-lg {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 43, 92, 0.09);
-            box-shadow: 0 16px 30px rgba(15, 31, 51, 0.1);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .bg-white.p-8.rounded-xl.shadow-lg:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 22px 36px rgba(15, 31, 51, 0.16);
-        }
-
-        .text-blue-700, .text-blue-800, .text-blue-600 {
-            color: var(--usm-navy) !important;
-        }
-
-        .text-orange-700, .text-orange-800, .text-orange-600, .text-red-500 {
-            color: var(--usm-burgundy) !important;
-        }
-
-        .border-blue-200 {
-            border-color: rgba(0, 43, 92, 0.28) !important;
-        }
-
-        .border-orange-200 {
-            border-color: rgba(140, 29, 64, 0.35) !important;
-        }
-
-        .bg-blue-600, .hover\:bg-blue-700:hover {
-            background-color: var(--usm-navy) !important;
-        }
-
-        .shadow-blue-200 {
-            box-shadow: 0 10px 20px rgba(0, 43, 92, 0.25) !important;
-        }
-
-        .accent-gold {
-            color: var(--usm-gold);
-        }
-
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-link {
-                padding: 0.35rem 0.6rem;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+    .node { width: 2.75rem; height: 2.75rem; border-radius: 0.5rem; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; border: 2px solid #cbd5e1; background:#f8fafc; color:#334155; transition: all .2s ease;}
+    .node.on { border-color: var(--usm-navy); background: var(--usm-navy); color:#fff; }
+</style>
 </head>
-<body class="text-slate-800">
+<body>
 
-    <header class="topbar sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <h1 class="text-xl brand-title">Guía Interactiva</h1>
-            <div class="space-x-4">
-                <a href="#redes" class="nav-link font-medium transition-colors">Redes</a>
-                <a href="#criptografia" class="nav-link font-medium transition-colors">Criptografía</a>
+<header class="topbar sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <p class="eyebrow">INF-256 · Ayudantía</p>
+            <h1 class="text-white text-lg md:text-xl font-bold">Redes de Computadores — Introducción y Criptografía</h1>
+        </div>
+    </div>
+</header>
+
+<div class="container mx-auto px-6 py-10 grid lg:grid-cols-[220px_1fr] gap-10">
+
+    <!-- TOC lateral -->
+    <aside class="hidden lg:block">
+        <div class="sticky top-24 space-y-6">
+            <div>
+                <p class="eyebrow mb-2" style="color:var(--usm-burgundy)">Índice</p>
+                <nav id="toc" class="border-l border-slate-200">
+                    <a href="#introduccion" class="toc-link">1. Introducción</a>
+                    <a href="#modos" class="toc-link">2. Modos de comunicación</a>
+                    <a href="#arquitectura" class="toc-link">3. Arquitectura de red</a>
+                    <a href="#modelos" class="toc-link">4. Modelos de red</a>
+                    <a href="#hash" class="toc-link">5. Funciones hash</a>
+                    <a href="#hash-apps" class="toc-link">6. Aplicaciones</a>
+                    <a href="#simetrico" class="toc-link">7. Cifrado simétrico</a>
+                    <a href="#asimetrico" class="toc-link">8. Cifrado asimétrico</a>
+                </nav>
             </div>
-        </nav>
-    </header>
+            <div class="text-xs text-slate-500 leading-relaxed border-t border-slate-200 pt-4">
+                <p class="font-semibold text-slate-700 mb-1">Gonzalo Michea</p>
+                <p>Departamento de Informática</p>
+                <p>UTFSM, Valparaíso</p>
+            </div>
+        </div>
+    </aside>
 
-    <main class="container mx-auto px-6 py-12">
-
-        <section id="intro" class="text-center mb-16">
-            <h2 class="hero-title font-bold mb-4">Desde Redes a Criptografía</h2>
-            <p class="text-lg hero-subtitle max-w-3xl mx-auto">Conceptos fundamentales de comunicación y seguridad. Una aproximación interactiva para comprender cómo fluyen y se protegen los datos.</p>
-            <p class="mt-4 text-sm font-bold tracking-wide accent-gold">Edición visual inspirada en identidad USM</p>
+    <main>
+        <!-- HERO -->
+        <section class="mb-14">
+            <p class="eyebrow mb-3">Material de apoyo</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4" style="color:var(--usm-navy)">De un enlace punto a punto a Internet</h2>
+            <p class="text-slate-600 max-w-2xl leading-relaxed">
+                Resumen de la unidad de introducción: qué es una red, cómo se conectan los computadores,
+                qué modos de comunicación existen y cómo se organiza todo en capas mediante los modelos OSI y TCP/IP.
+                Luego, los fundamentos de criptografía: funciones hash, cifrado simétrico y cifrado asimétrico.
+            </p>
         </section>
 
-        <section id="redes" class="mb-20">
-            <h3 class="section-title text-3xl font-bold mb-8 text-center border-b-2 border-blue-200 pb-4">1. Fundamentos de Redes de Computadores</h3>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
-                <h4 class="text-2xl font-bold mb-4 text-blue-700">Conectividad y Escala</h4>
-                <p class="mb-4 text-slate-700">
-                    Una red conecta computadores para compartir recursos. Requiere ser <strong>escalable</strong> (capaz de crecer).
-                    La interconexión más grande es <strong>Internet</strong> (la red de redes), soportada por cables submarinos de fibra óptica.
-                </p>
-                <div class="grid md:grid-cols-3 gap-6 text-center mb-6">
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                        <h5 class="font-bold text-lg text-blue-800">LAN</h5>
-                        <p class="text-sm">Local Area Network (< 1Km). Cobre o fibra óptica.</p>
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                        <h5 class="font-bold text-lg text-blue-800">MAN</h5>
-                        <p class="text-sm">Metropolitan Area Network. Abarca una ciudad.</p>
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                        <h5 class="font-bold text-lg text-blue-800">WAN</h5>
-                        <p class="text-sm">Wide Area Network. Nacional o internacional.</p>
-                    </div>
-                </div>
-                
-                <h5 class="font-bold text-lg mb-2">Conmutación de Paquetes (Packet Switching)</h5>
-                <p class="text-slate-700 mb-4">
-                    La conectividad indirecta en Internet se logra dividiendo la información en "paquetes". Diferentes datos comparten el mismo enlace físico a través de <strong>Multiplexing (STDM)</strong>. Los <em>Routers</em> deciden el camino de estos paquetes.
-                </p>
+        <!-- 1. INTRODUCCIÓN -->
+        <section id="introduccion" class="mb-16 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">1</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Introducción</h3>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-10 mb-10">
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <h4 class="text-2xl font-bold mb-4 text-blue-700">Modos de Comunicación</h4>
-                    <ul class="space-y-4 text-slate-700">
-                        <li class="flex items-center"><span class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded mr-3">Unicast</span> 1 a 1 (Punto a Punto).</li>
-                        <li class="flex items-center"><span class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded mr-3">Broadcast</span> 1 a Todos en la red local.</li>
-                        <li class="flex items-center"><span class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded mr-3">Multicast</span> 1 a un Subgrupo específico.</li>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-2">¿Qué es una red?</h4>
+                    <p class="text-sm text-slate-700 mb-3">Un conjunto de computadores o de redes conectados por enlaces (<em>links</em>) de comunicación.</p>
+                    <ul class="text-sm text-slate-700 space-y-1.5 list-disc list-inside">
+                        <li>Distintos tipos de equipos: PC, servidores, super-computadores.</li>
+                        <li>Distintos tipos de tecnología de red.</li>
+                        <li>Puede contener equipos activos: routers, switches, sondas.</li>
+                        <li>La interconexión de dos o más redes también es una red.</li>
                     </ul>
                 </div>
-
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <h4 class="text-2xl font-bold mb-4 text-blue-700">Canales Abstractos</h4>
-                    <p class="mb-4 text-slate-700">La red provee canales virtuales entre aplicaciones:</p>
-                    <ul class="space-y-4">
-                        <li class="bg-slate-50 p-3 rounded border border-slate-200">
-                            <strong class="text-blue-600 block">Request / Reply (Cliente-Servidor)</strong> 
-                            <span class="text-sm">Peticiones cortas, sin pérdida tolerada. Ej: HTTP (Web), FTP, SQL.</span>
-                        </li>
-                        <li class="bg-slate-50 p-3 rounded border border-slate-200">
-                            <strong class="text-blue-600 block">Message Stream</strong> 
-                            <span class="text-sm">Flujo continuo, tolera pérdida de paquetes. Ej: Video Streaming, VoIP (SIP).</span>
-                        </li>
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-2">¿Por qué una red?</h4>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li><span class="pill">Compartir</span> discos, archivos, impresoras, acceso a Internet.</li>
+                        <li><span class="pill">Ofrecer servicios</span> de impresión, bases de datos, servidor web.</li>
+                        <li><span class="pill">Acceder a recursos</span> de otras redes: interconexión (Internet), computación científica.</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-xl shadow-lg">
-                <h4 class="text-2xl font-bold mb-4 text-blue-700">Modelos de Red: OSI vs. TCP/IP</h4>
-                <p class="mb-4 text-slate-700">
-                    Mientras OSI es un estándar teórico estricto, <strong>TCP/IP</strong> (nacido de ARPANET) es el modelo práctico usado hoy. 
-                    <em>Nota clave:</em> Los <strong>Routers</strong> solo procesan información hasta la capa de Red (Capa 3).
-                </p>
-                <div class="grid grid-cols-2 gap-6 text-center text-sm">
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-3">Requerimientos de una red</h4>
+                <div class="grid md:grid-cols-2 gap-6 text-sm text-slate-700">
                     <div>
-                        <h5 class="font-semibold mb-3 bg-slate-100 py-2 rounded">Modelo OSI (7 Capas)</h5>
-                        <button class="model-layer w-full p-2 bg-orange-200 rounded mb-1 hover:brightness-95" data-info="Protocolos para aplicaciones de usuario (HTTP, FTP, SSH).">7. Aplicación</button>
-                        <button class="model-layer w-full p-2 bg-purple-200 rounded mb-1 hover:brightness-95" data-info="Representación de datos, Big/Little Endian, cifrado (JPEG, MIME).">6. Presentación</button>
-                        <button class="model-layer w-full p-2 bg-cyan-200 rounded mb-1 hover:brightness-95" data-info="Maneja flujos de diferentes transportes de una app.">5. Sesión</button>
-                        <button class="model-layer w-full p-2 bg-green-200 rounded mb-1 hover:brightness-95" data-info="Canales abstractos proceso a proceso. Recuperación de errores (TCP, UDP).">4. Transporte</button>
-                        <button class="model-layer w-full p-2 bg-blue-200 rounded mb-1 border-2 border-blue-400 font-bold hover:brightness-95" data-info="Servicio Host-a-Host. Cálculo de ruta y fragmentación (IP). Los routers llegan hasta aquí.">3. Red (Routers)</button>
-                        <button class="model-layer w-full p-2 bg-yellow-200 rounded mb-1 border-2 border-yellow-400 font-bold hover:brightness-95" data-info="Detección/corrección de errores en un enlace compartido (Ethernet, WiFi).">2. Enlace de Datos</button>
-                        <button class="model-layer w-full p-2 bg-gray-200 rounded border-2 border-gray-400 font-bold hover:brightness-95" data-info="Transmite bits sin estructura (Conectores, Señales, Cables).">1. Física</button>
+                        <p class="font-semibold text-slate-800 mb-1">Desde el usuario</p>
+                        <p>Requiere acceso a la red y a sus servicios. No todo tráfico exige la misma calidad de servicio: la Web no necesita lo mismo que un flujo de video.</p>
                     </div>
                     <div>
-                        <h5 class="font-semibold mb-3 bg-slate-100 py-2 rounded">Modelo TCP/IP (5 Capas)</h5>
-                        <div class="w-full p-2 bg-orange-200 rounded mb-1 h-[116px] flex items-center justify-center font-medium shadow-inner">Aplicación</div>
-                        <div class="w-full p-2 bg-green-200 rounded mb-1 h-[36px] flex items-center justify-center font-medium shadow-inner">Transporte (TCP/UDP)</div>
-                        <div class="w-full p-2 bg-blue-200 rounded mb-1 h-[36px] flex items-center justify-center font-medium shadow-inner">Internet (IP)</div>
-                        <div class="w-full p-2 bg-yellow-200 rounded mb-1 h-[36px] flex items-center justify-center font-medium shadow-inner">Data</div>
-                        <div class="w-full p-2 bg-gray-200 rounded h-[36px] flex items-center justify-center font-medium shadow-inner">Network (Física)</div>
+                        <p class="font-semibold text-slate-800 mb-1">Desde el proveedor</p>
+                        <p>Necesita mecanismos de administración: de los equipos físicos, de los servicios, y de aislamiento/recuperación de fallas.</p>
                     </div>
                 </div>
-                <div id="layer-info" class="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg text-blue-900 text-sm h-20 flex items-center justify-center font-medium transition-all">
-                    <p>Haz clic en una capa del modelo OSI para ver su función específica.</p>
+                <p class="text-sm text-slate-700 mt-3">Toda red debe proveer <strong>conectividad</strong> entre computadores y otras redes, y debe ser <strong>escalable</strong>: capaz de crecer hasta un tamaño máximo (una red universitaria o de empresa) o hasta un tamaño arbitrario, como Internet — la red de todas las redes.</p>
+            </div>
+
+            <div class="card p-6">
+                <h4 class="font-bold text-lg mb-4">Niveles de conectividad</h4>
+                <div class="grid md:grid-cols-3 gap-4 text-sm text-slate-700">
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <p class="font-semibold text-slate-800 mb-1">Punto a punto</p>
+                        <p>Conexión directa entre dos computadores.</p>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <p class="font-semibold text-slate-800 mb-1">Acceso múltiple</p>
+                        <p>Varios computadores comparten un mismo medio, con limitaciones de escalabilidad.</p>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <p class="font-semibold text-slate-800 mb-1">Conexión indirecta</p>
+                        <p>Redes de <strong>packet switching</strong>: la información se transmite como paquetes o mensajes a través de switches/routers.</p>
+                    </div>
                 </div>
+                <p class="text-sm text-slate-700 mt-4">La <strong>interconexión de redes (internetworking)</strong> es un conjunto de redes distintas conectadas entre sí usando routers.</p>
             </div>
         </section>
 
-        <section id="criptografia">
-            <h3 class="section-title text-3xl font-bold mb-8 text-center border-b-2 border-orange-200 pb-4">2. Principios de Criptografía</h3>
+        <!-- 2. MODOS DE COMUNICACIÓN -->
+        <section id="modos" class="mb-16 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">2</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Modos de comunicación</h3>
+            </div>
 
-            <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
-                <h4 class="text-2xl font-bold mb-2 text-orange-700">Funciones Hash Criptográficas Fuertes</h4>
-                <p class="mb-4 text-slate-700">Mapean un conjunto infinito de datos (A) a un conjunto finito de bits (B). Vitales para la <strong>Integridad</strong>.</p>
-                
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <ul class="text-sm space-y-2 mb-4 bg-orange-50 p-4 rounded-lg">
-                            <li><strong>Determinismo:</strong> Misma entrada, mismo hash.</li>
-                            <li><strong>No Reversibilidad:</strong> Imposible obtener el dato a partir del hash.</li>
-                            <li><strong>Efecto Avalancha (Numerical Closeness):</strong> Un cambio mínimo en la entrada cambia radicalmente el hash.</li>
-                            <li><strong>Infactibilidad Computacional:</strong> Imposible encontrar otro valor distinto que genere el mismo hash.</li>
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-4">Unicast, Broadcast y Multicast</h4>
+                <p class="text-sm text-slate-600 mb-4">Selecciona un modo para ver a quién llegan los datos enviados por <strong>A</strong>.</p>
+                <div class="flex gap-2 mb-5">
+                    <button data-mode="unicast" class="mode-btn px-4 py-1.5 rounded-full text-sm font-bold border" style="border-color: var(--usm-navy); color: var(--usm-navy);">Unicast</button>
+                    <button data-mode="broadcast" class="mode-btn px-4 py-1.5 rounded-full text-sm font-bold border" style="border-color: var(--usm-navy); color: var(--usm-navy);">Broadcast</button>
+                    <button data-mode="multicast" class="mode-btn px-4 py-1.5 rounded-full text-sm font-bold border" style="border-color: var(--usm-navy); color: var(--usm-navy);">Multicast</button>
+                </div>
+                <div id="cast-nodes" class="flex gap-3 mb-4">
+                    <div class="node" data-id="A">A</div>
+                    <div class="node" data-id="B">B</div>
+                    <div class="node" data-id="C">C</div>
+                    <div class="node" data-id="D">D</div>
+                    <div class="node" data-id="E">E</div>
+                    <div class="node" data-id="F">F</div>
+                </div>
+                <p id="cast-desc" class="text-sm text-slate-700 min-h-[2.5rem]">Elige un modo para ver la descripción.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="card p-5 text-center">
+                    <p class="font-bold text-lg" style="color:var(--usm-navy)">LAN</p>
+                    <p class="text-xs text-slate-500 mb-2">Local Area Network</p>
+                    <p class="text-sm text-slate-700">Tamaño pequeño, generalmente menos de 1 km. Cobre o fibra óptica.</p>
+                </div>
+                <div class="card p-5 text-center">
+                    <p class="font-bold text-lg" style="color:var(--usm-navy)">MAN</p>
+                    <p class="text-xs text-slate-500 mb-2">Metropolitan Area Network</p>
+                    <p class="text-sm text-slate-700">Tamaño mediano, del orden de una ciudad. Tecnología mixta.</p>
+                </div>
+                <div class="card p-5 text-center">
+                    <p class="font-bold text-lg" style="color:var(--usm-navy)">WAN</p>
+                    <p class="text-xs text-slate-500 mb-2">Wide Area Network</p>
+                    <p class="text-sm text-slate-700">Gran tamaño: un país completo o a nivel internacional. Fibra óptica.</p>
+                </div>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-2">Multiplexing: STDM</h4>
+                <p class="text-sm text-slate-700 mb-4"><strong>Synchronous Time Division Multiplexing</strong> es la idea central del packet switching: múltiples flujos de datos comparten el mismo enlace físico.</p>
+                <div class="flex items-center justify-center gap-4 flex-wrap text-xs font-bold">
+                    <div class="flex flex-col gap-2">
+                        <div class="px-3 py-2 rounded bg-blue-100 text-blue-800">A</div>
+                        <div class="px-3 py-2 rounded bg-red-100 text-red-800">B</div>
+                        <div class="px-3 py-2 rounded bg-amber-100 text-amber-800">C</div>
+                    </div>
+                    <span class="text-slate-400 text-lg">→</span>
+                    <div class="px-3 py-2 rounded" style="background:var(--usm-navy); color:#fff;">Switch</div>
+                    <div class="flex gap-1 px-2 py-2 rounded border border-slate-200">
+                        <span class="px-2 py-1 rounded bg-amber-100 text-amber-800">C</span>
+                        <span class="px-2 py-1 rounded bg-red-100 text-red-800">B</span>
+                        <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">A</span>
+                    </div>
+                    <span class="text-slate-400 text-lg">→</span>
+                    <div class="px-3 py-2 rounded" style="background:var(--usm-navy); color:#fff;">Switch</div>
+                    <span class="text-slate-400 text-lg">→</span>
+                    <div class="flex flex-col gap-2">
+                        <div class="px-3 py-2 rounded bg-blue-100 text-blue-800">A</div>
+                        <div class="px-3 py-2 rounded bg-red-100 text-red-800">B</div>
+                        <div class="px-3 py-2 rounded bg-amber-100 text-amber-800">C</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h4 class="font-bold text-lg mb-1">Canales abstractos</h4>
+                <p class="text-sm text-slate-600 mb-4">La red se puede ver como proveedora de canales abstractos entre aplicaciones. Existen dos tipos de protocolos:</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <p class="font-semibold mb-1">Request / Reply (RRP) — Cliente/Servidor</p>
+                        <ul class="text-sm text-slate-700 space-y-1 list-disc list-inside">
+                            <li>Mensajes de request cortos (ej: <code>GET /pub/www/index.html</code>).</li>
+                            <li>Respuesta corta o larga.</li>
+                            <li>Generalmente no se acepta pérdida de mensajes.</li>
+                            <li>Ejemplos: FTP, HTTP, bases de datos.</li>
                         </ul>
-                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h5 class="font-bold mb-2">Passwords y el uso de SALT</h5>
-                            <p class="text-sm text-slate-700">Para evitar que dos usuarios con la misma clave tengan el mismo hash, se concatena una perturbación aleatoria (SALT) a la clave antes de aplicar el hash. El estándar actual es <strong>SHA-256</strong>.</p>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <p class="font-semibold mb-1">Message Stream (MSP)</p>
+                        <ul class="text-sm text-slate-700 space-y-1 list-disc list-inside">
+                            <li>Tráfico full-duplex o half-duplex.</li>
+                            <li>Los mensajes deben llegar en orden.</li>
+                            <li>No es necesario recibir todos los mensajes.</li>
+                            <li>Ejemplos: video streaming, videoconferencia, radio/MP3 por Internet.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ARQUITECTURA DE RED -->
+        <section id="arquitectura" class="mb-16 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">3</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Arquitectura de red</h3>
+            </div>
+            <div class="card p-6">
+                <p class="text-sm text-slate-600 mb-5">Una arquitectura de red es a la vez una organización física y una organización lógica.</p>
+                <div class="grid md:grid-cols-2 gap-6 text-sm text-slate-700">
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <p class="font-semibold text-slate-800 mb-2">Organización física</p>
+                        <div class="flex gap-6 justify-around text-xs font-semibold text-slate-600 mb-1">
+                            <span>Nodos</span><span>Switches</span><span>Routers</span>
+                        </div>
+                        <p>Los equipos concretos que forman la red.</p>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <p class="font-semibold text-slate-800 mb-2">Organización lógica</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Sistema de comunicación complejo</li>
+                            <li>Abstracciones</li>
+                            <li>Capas de red</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-700 mt-4">Además, toda arquitectura debe considerar <strong>requerimientos de seguridad</strong> y <strong>requerimientos de escalabilidad</strong>.</p>
+            </div>
+        </section>
+
+        <!-- 4. MODELOS DE RED -->
+        <section id="modelos" class="mb-10 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">4</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Modelos de red</h3>
+            </div>
+
+            <p class="text-sm text-slate-700 mb-6 max-w-3xl">
+                Existen dos modelos de referencia. El modelo <strong>OSI</strong> (norma ISO) es el más estructurado, con 7 capas, pero no se usa tal cual en la práctica.
+                El modelo <strong>TCP/IP</strong> (norma del IETF) es menos estructurado, con 5 capas, pero es el único en uso en las redes actuales: más simple y eficiente.
+            </p>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-4">Modelo OSI en 7 capas</h4>
+                <p class="text-sm text-slate-600 mb-4">Haz clic en una capa para ver su objetivo.</p>
+                <div class="grid md:grid-cols-[1fr_1.3fr] gap-6">
+                    <div class="space-y-1.5">
+                        <button class="osi-layer layer-btn w-full p-2.5 rounded bg-orange-100" data-info="Objetivo: proveer una interfaz para las aplicaciones e implementar protocolos de nivel aplicación. Ejemplos: FTP, HTTP, VoIP/SIP.">7. Aplicación</button>
+                        <button class="osi-layer layer-btn w-full p-2.5 rounded bg-rose-100" data-info="Objetivo: representación de los datos. Resuelve diferencias entre procesadores Little Endian y Big Endian, y el número de bits usado (16, 32, 64, 128).">6. Presentación</button>
+                        <button class="osi-layer layer-btn w-full p-2.5 rounded bg-amber-100" data-info="Objetivo: ofrecer servicios sobre un flujo full-duplex confiable de la capa de transporte, manejando distintos streams que pertenecen a una misma aplicación (ej: audio y video de una videoconferencia).">5. Sesión</button>
+                        <button class="osi-layer layer-btn w-full p-2.5 rounded bg-emerald-100" data-info="Objetivo: establecer un canal abstracto proceso a proceso. Resuelve errores de la capa de red: pérdida, duplicación y reordenamiento de paquetes. Corre en los hosts, no en los routers.">4. Transporte</button>
+                        <button class="osi-layer layer-btn w-full p-2.5 rounded bg-sky-100 border-2" style="border-color: var(--usm-navy)" data-info="Objetivo: permitir que cualquier par de hosts se comunique (servicio host-to-host), encontrando un camino entre nodos. Resuelve el cálculo de ruta y la fragmentación/reensamblado de paquetes. Los routers llegan hasta esta capa.">3. Red</button>
+                        <button class="osi-layer layer-btn w-full p-2.5 rounded bg-yellow-100 border-2" style="border-color: var(--usm-gold)" data-info="Objetivo: transmitir pedazos de información a través de un enlace. Resuelve detección y corrección de corrupción de datos, y coordinación del uso de medios compartidos.">2. Enlace de datos</button>
+                        <button class="osi-layer layer-btn w-full p-2.5 rounded bg-slate-200" data-info="Objetivo: transmitir bits sin estructura sobre un enlace. Resuelve el tamaño/forma de conectores y la conversión de bits en señales eléctricas (cable coaxial, UTP, fibra, WiFi...).">1. Física</button>
+                    </div>
+                    <div id="osi-info" class="border border-slate-200 rounded-lg p-5 text-sm text-slate-700 flex items-center" style="background: rgba(15,42,74,0.03);">
+                        Selecciona una capa del modelo OSI a la izquierda.
+                    </div>
+                </div>
+                <p class="text-sm text-slate-700 mt-4"><strong>Los routers usan solamente las tres primeras capas</strong> (física, enlace de datos y red) del modelo OSI.</p>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-2">Modelo TCP/IP en 5 capas</h4>
+                <p class="text-sm text-slate-700 mb-4">Nace del proyecto <strong>ARPANET</strong>, creado por las universidades de UCLA, Stanford y Utah; ARPANET se transforma en Internet en los años 80.</p>
+                <div class="grid md:grid-cols-5 gap-2 text-xs font-semibold text-center mb-2">
+                    <div class="p-3 rounded bg-orange-100">Aplicación<br><span class="font-normal text-slate-500">aplicaciones</span></div>
+                    <div class="p-3 rounded bg-amber-200">Transporte<br><span class="font-normal text-slate-500">canales abstractos</span></div>
+                    <div class="p-3 rounded bg-sky-100">Internet<br><span class="font-normal text-slate-500">paquetes / ruteo IP</span></div>
+                    <div class="p-3 rounded bg-emerald-100">Enlace de datos<br><span class="font-normal text-slate-500">transmisión de bits</span></div>
+                    <div class="p-3 rounded bg-slate-200">Red<br><span class="font-normal text-slate-500">soporte físico</span></div>
+                </div>
+                <p class="text-sm text-slate-700 mt-3">A diferencia de OSI, en TCP/IP las <strong>aplicaciones pueden acceder directamente a todas las capas</strong> (por ejemplo, para acceder a raw sockets).</p>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-4">OSI vs. TCP/IP: protocolos por capa</h4>
+                <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left border-collapse">
+                    <thead>
+                        <tr class="text-slate-500 border-b border-slate-200">
+                            <th class="py-2 pr-4">Capa OSI</th>
+                            <th class="py-2 pr-4">Capa TCP/IP</th>
+                            <th class="py-2">Protocolos típicos</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700">
+                        <tr class="border-b border-slate-100"><td class="py-2 pr-4">Aplicación</td><td rowspan="3" class="py-2 pr-4 align-top">Aplicación</td><td class="py-2">HTTP, HTTPS, FTP, IMAP, POP3, NTP, SIP, SSH, SMTP, SNMP, DHCP, Telnet, RTP, DNS</td></tr>
+                        <tr class="border-b border-slate-100"><td class="py-2 pr-4">Presentación</td><td class="py-2">MIME, JPEG, MPEG, XDR</td></tr>
+                        <tr class="border-b border-slate-100"><td class="py-2 pr-4">Sesión</td><td class="py-2">NetBIOS, NFS, SQL, LDAP</td></tr>
+                        <tr class="border-b border-slate-100"><td class="py-2 pr-4">Transporte</td><td class="py-2 pr-4">Transporte</td><td class="py-2">UDP, TCP, SCTP, DCCP</td></tr>
+                        <tr class="border-b border-slate-100"><td class="py-2 pr-4">Red</td><td class="py-2 pr-4">Internet</td><td class="py-2">IPv4, IPv6, ICMP, IPsec, RIP, BGP</td></tr>
+                        <tr class="border-b border-slate-100"><td class="py-2 pr-4">Enlace de datos</td><td class="py-2 pr-4">Enlace de datos</td><td class="py-2">ARP, HDLC, PPP, PPPoE, PPPoA</td></tr>
+                        <tr><td class="py-2 pr-4">Física</td><td class="py-2 pr-4">Red</td><td class="py-2">Ethernet, WiFi, Bluetooth, ADSL</td></tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h4 class="font-bold text-lg mb-2">Filosofía del modelo TCP/IP</h4>
+                <p class="text-sm text-slate-700">Cualquiera puede proponer un protocolo, pero debe entregar una especificación del protocolo y una o dos implementaciones representativas. El protocolo queda aceptado y normalizado por el <strong>IETF</strong> (Internet Engineering Task Force).</p>
+            </div>
+        </section>
+
+        <!-- 5. FUNCIONES HASH -->
+        <section id="hash" class="mb-16 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">5</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Funciones hash criptográficas fuertes</h3>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-2">Definición</h4>
+                <p class="text-sm text-slate-700 mb-2">Una función de hash <code>h</code> mapea un conjunto <code>A</code> (de tamaño finito o infinito) a un conjunto <code>B</code> de <code>2<sup>n</sup></code> valores posibles: <code>h: A → B</code>. Se dice que <code>h</code> es una función de hash de <code>n</code> bits.</p>
+                <p class="text-sm text-slate-700">A diferencia de las funciones de hash comunes usadas en estructuras de datos, las funciones <strong>criptográficas fuertes</strong> cumplen propiedades matemáticas estrictas y son la base de buena parte de la seguridad de la información.</p>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-4">Propiedades</h4>
+                <p class="text-sm text-slate-600 mb-4">Haz clic en cada propiedad para ver su detalle.</p>
+                <div class="grid md:grid-cols-[1fr_1.3fr] gap-6">
+                    <div class="space-y-1.5">
+                        <button class="hash-prop layer-btn w-full p-2.5 rounded bg-orange-100" data-info="Para un mismo valor x, la función de hash entrega siempre el mismo resultado h(x). Formalmente: x1 = x2 ⟹ h(x1) = h(x2).">1. Determinismo</button>
+                        <button class="hash-prop layer-btn w-full p-2.5 rounded bg-rose-100" data-info="Dado un valor de hash y = h(x), no existe una función inversa h⁻¹ que permita recuperar x a partir de y.">2. No reversibilidad</button>
+                        <button class="hash-prop layer-btn w-full p-2.5 rounded bg-amber-100" data-info="Dado un valor de hash y = h(x1), existen uno o más valores x2 ≠ x1 tales que h(x2) = y. Si |A| ≫ |B| (o |A| es infinito), es muy probable/seguro que existan colisiones. Mientras más bits tiene h, menos colisiones ocurren cuando |A| es finito.">3. Colisiones</button>
+                        <button class="hash-prop layer-btn w-full p-2.5 rounded bg-emerald-100" data-info="Efecto avalancha: si dos valores xi y xj son muy parecidos, sus hashes h(xi) y h(xj) son muy diferentes entre sí.">4. Cercanía numérica</button>
+                        <button class="hash-prop layer-btn w-full p-2.5 rounded bg-sky-100" data-info="Si dos hashes yi e yj son muy parecidos, los valores de origen xi y xj (tales que yi = h(xi), yj = h(xj)) son, sin embargo, muy diferentes entre sí.">5. Cercanía imposible</button>
+                        <button class="hash-prop layer-btn w-full p-2.5 rounded bg-yellow-100" data-info="Dado y = h(xi), es computacionalmente infactible encontrar otro valor xj ≠ xi tal que h(xj) = y.">6. Infactibilidad computacional</button>
+                    </div>
+                    <div id="hash-info" class="border border-slate-200 rounded-lg p-5 text-sm text-slate-700 flex items-center" style="background: rgba(15,42,74,0.03);">
+                        Selecciona una propiedad a la izquierda.
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-3">Principales funciones de hash</h4>
+                    <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left border-collapse">
+                        <thead>
+                            <tr class="text-slate-500 border-b border-slate-200">
+                                <th class="py-2 pr-4">Función</th>
+                                <th class="py-2 pr-4">Bits</th>
+                                <th class="py-2">Comentario</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700">
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">MD4</td><td class="py-2 pr-4">128</td><td class="py-2">No es segura</td></tr>
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">MD5</td><td class="py-2 pr-4">128</td><td class="py-2">Se puede romper con potencia de cálculo</td></tr>
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">SHA</td><td class="py-2 pr-4">128</td><td class="py-2">Se puede romper con potencia de cálculo (Google)</td></tr>
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">SHA-1</td><td class="py-2 pr-4">160</td><td class="py-2">Mínimo actual, no aconsejada</td></tr>
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">SHA-2 (224/256/384/512)</td><td class="py-2 pr-4">224–512</td><td class="py-2">SHA-256 es el estándar actual; SHA-512 el de mañana</td></tr>
+                            <tr><td class="py-2 pr-4">SHA-3 (256/384/512)</td><td class="py-2 pr-4">256–512</td><td class="py-2">Propuesta ante posibles fallas de SHA-2</td></tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="p-6 rounded-xl shadow-inner" style="background: var(--usm-ink); color:#e2e8f0;">
+                    <label for="hash-input" class="block mb-2 font-medium" style="color: var(--usm-gold);">Prueba el efecto avalancha en vivo:</label>
+                    <textarea id="hash-input" rows="3" class="w-full p-2 bg-slate-700 text-white border border-slate-600 rounded-md focus:ring-2 focus:outline-none mb-4" style="--tw-ring-color: var(--usm-gold);">Redes UTFSM</textarea>
+                    <p class="font-medium text-sm text-slate-400 mb-1">Hash SHA-256:</p>
+                    <pre id="hash-output" class="w-full p-3 bg-black rounded-md text-xs text-green-400 break-all font-mono">...</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. APLICACIONES DE HASH -->
+        <section id="hash-apps" class="mb-16 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">6</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Aplicaciones de las funciones hash</h3>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-3">Integridad de datos</h4>
+                <p class="text-sm text-slate-700 mb-3">El servidor envía los datos junto con su hash; el cliente calcula el hash de lo recibido y lo compara con el recibido del servidor. Por la propiedad de infactibilidad computacional:</p>
+                <div class="flex items-center justify-center gap-4 flex-wrap text-xs font-semibold mb-3">
+                    <div class="px-3 py-2 rounded bg-sky-100 text-slate-800">Server</div>
+                    <span class="text-slate-400 text-lg">→ datos + hash →</span>
+                    <div class="px-3 py-2 rounded bg-emerald-100 text-slate-800">Client</div>
+                </div>
+                <p class="text-sm text-slate-700 mb-2"><code>y₁ = h(datos_enviados)</code>, <code>y₂ = h(datos_recibidos)</code>, y si <code>y₁ = y₂</code> entonces <code>datos_enviados = datos_recibidos</code>.</p>
+                <p class="text-sm text-slate-700">Permite asegurar que no hay errores de transmisión (el checksum de TCP es débil) y evitar ataques de tipo <strong>Man in the Middle</strong>.</p>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-3">Almacenamiento de passwords</h4>
+                <p class="text-sm text-slate-700 mb-3">El sistema operativo no almacena la password sino su hash <code>h(password)</code>. Por no reversibilidad, es imposible revertir el hash aunque se tenga acceso a la base de datos. Al conectarse, se compara <code>h(password)</code> con <code>h(password<sub>BD</sub>)</code>.</p>
+                <p class="text-sm text-slate-700 mb-3">Problema: si dos usuarios eligen la misma password, obtienen el mismo hash (por determinismo). La solución es usar un <strong>SALT</strong>: una perturbación aleatoria concatenada a la password antes de calcular el hash, de modo que dos passwords idénticas produzcan hashes distintos.</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-lg p-4 text-sm text-slate-700">
+                        <p class="font-semibold text-slate-800 mb-1">Con SALT</p>
+                        <p><code>h("XGD" + password)</code> ≠ <code>h("TFU" + password)</code></p>
+                        <p class="mt-2">El SALT se puede almacenar en claro en la base de datos, ya que no ayuda a revertir el hash.</p>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg p-4 text-sm text-slate-700">
+                        <p class="font-semibold text-slate-800 mb-1">Ataque y mitigación</p>
+                        <p>Ataque posible: fuerza bruta por diccionario (más fácil si se conoce el SALT).</p>
+                        <p class="mt-1">Mitigación: password de al menos 16 caracteres alfanuméricos + símbolos (22 a futuro cercano), y un SALT suficientemente grande.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CIFRADO SIMÉTRICO -->
+        <section id="simetrico" class="mb-16 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">7</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Cifrado simétrico</h3>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-2">Definición</h4>
+                <p class="text-sm text-slate-700">Dado un mensaje <code>m</code>, una función de cifrado <code>E</code> y una clave <code>k</code>, <code>E</code> es una función de cifrado simétrico si todo lo cifrado con <code>E</code> y <code>k</code> se descifra con la función inversa <code>E⁻¹</code> y la <strong>misma</strong> clave <code>k</code>: <code>m' = E(m, k) ⟹ m = E⁻¹(m', k)</code>. En general <code>E⁻¹ = E</code>. El algoritmo <code>E</code> es conocido y público; la seguridad recae solo en la clave.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-3">Propiedades</h4>
+                    <ul class="text-sm text-slate-700 space-y-2 list-disc list-inside">
+                        <li><strong>Algoritmo público:</strong> conocer E, E⁻¹ y m' sin la clave k no permite descifrar m.</li>
+                        <li><strong>Imposibilidad parcial:</strong> conociendo E, E⁻¹ y k, es imposible descifrar solo una sub-parte de m'.</li>
+                        <li><strong>Modificación parcial:</strong> cualquier alteración de m' impide descifrarlo, aunque se conozcan E, E⁻¹ y k.</li>
+                        <li><strong>Sin cercanía:</strong> si m₁ y m₂ son parecidos, sus cifrados m'₁ = E(m₁,k) y m'₂ = E(m₂,k) son muy diferentes.</li>
+                    </ul>
+                </div>
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-3">Ataques y algoritmos</h4>
+                    <p class="text-sm text-slate-700 mb-3">Posibles ataques: fuerza bruta (probar todas las claves) o exponer la clave (ofuscación insuficiente en el binario). Se aconseja una clave de al menos <strong>256 bits</strong>.</p>
+                    <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left border-collapse">
+                        <thead>
+                            <tr class="text-slate-500 border-b border-slate-200">
+                                <th class="py-2 pr-4">Algoritmo</th>
+                                <th class="py-2 pr-4">Bits</th>
+                                <th class="py-2">Comentario</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700">
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">DES</td><td class="py-2 pr-4">56</td><td class="py-2">Obsoleto</td></tr>
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">3DES</td><td class="py-2 pr-4">56/112/168</td><td class="py-2">También obsoleto</td></tr>
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">IDEA</td><td class="py-2 pr-4">128</td><td class="py-2">Fallas reportadas</td></tr>
+                            <tr class="border-b border-slate-100"><td class="py-2 pr-4">Blowfish</td><td class="py-2 pr-4">32–448</td><td class="py-2">Ataques posibles (Birthday Attack)</td></tr>
+                            <tr><td class="py-2 pr-4"><strong>AES</strong></td><td class="py-2 pr-4">128/192/256</td><td class="py-2">El campeón actual, sin ataques disponibles</td></tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. CIFRADO ASIMÉTRICO -->
+        <section id="asimetrico" class="mb-10 scroll-mt-24">
+            <div class="flex items-baseline gap-3 mb-6">
+                <span class="section-num">8</span>
+                <h3 class="text-2xl font-bold" style="color:var(--usm-navy)">Cifrado asimétrico</h3>
+            </div>
+
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-2">Definición y propiedades</h4>
+                <p class="text-sm text-slate-700 mb-3">Se genera un par de claves <code>(k1, k2)</code>. Todo lo cifrado con una clave se descifra con la <strong>otra</strong> clave y la función inversa: <code>m' = E(m,k1) ⟹ m = E⁻¹(m',k2)</code>, y viceversa. Además, lo cifrado con una clave <strong>no</strong> se puede descifrar con la misma clave, y es imposible descifrar una sub-parte de un mensaje cifrado aunque la clave sea correcta.</p>
+                <p class="text-sm text-slate-700">Una vez generado el par, se elige una clave como <strong>pública</strong> (se difunde) y la otra como <strong>privada</strong> (se mantiene secreta). Esta elección no se puede invertir después.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-3">Mensajes privados</h4>
+                    <p class="text-sm text-slate-700 mb-2">Para que A envíe un mensaje privado a B: A cifra con la clave <strong>pública de B</strong>, <code>m' = E(m, k<sup>B</sup><sub>pub</sub>)</code>; B descifra con su clave <strong>privada</strong>, <code>m = E⁻¹(m', k<sup>B</sup><sub>priv</sub>)</code>.</p>
+                    <p class="text-sm text-slate-700">Ventaja: nadie más que B puede leer el mensaje, ni modificarlo en el camino. Limitación: B no puede verificar que fue realmente A quien lo envió (sin identificación).</p>
+                </div>
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-3">Comparación simétrico vs. asimétrico</h4>
+                    <div class="space-y-4">
+                        <div class="border-l-4 pl-4" style="border-color: var(--usm-navy);">
+                            <p class="font-semibold text-slate-800">Simétrico</p>
+                            <p class="text-sm text-slate-600">Misma clave para cifrar y descifrar. Muy rápido. Estándar: AES (256 bits). Débil para difundir la clave a un grupo.</p>
+                        </div>
+                        <div class="border-l-4 pl-4" style="border-color: var(--usm-burgundy);">
+                            <p class="font-semibold text-slate-800">Asimétrico</p>
+                            <p class="text-sm text-slate-600">Par de claves pública/privada. Resuelve la distribución de claves, pero es lento y no está adaptado a grandes volúmenes de datos ni a comunicación de grupo. Estándares: RSA (1024–4096 bits), DSA (mín. 2048 bits), Diffie–Hellman (intercambio de claves).</p>
                         </div>
                     </div>
-                    
-                    <div class="bg-slate-800 text-white p-6 rounded-xl flex flex-col justify-center shadow-inner">
-                        <label for="hash-input" class="block mb-2 font-medium text-orange-400">Prueba el Efecto Avalancha en vivo:</label>
-                        <textarea id="hash-input" rows="3" class="w-full p-2 bg-slate-700 text-white border border-slate-600 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none transition mb-4">Redes UTFSM</textarea>
-                        <p class="font-medium text-sm text-slate-400 mb-1">Hash SHA-256:</p>
-                        <pre id="hash-output" class="w-full p-3 bg-black rounded-md text-xs text-green-400 break-all font-mono">...</pre>
-                    </div>
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-10 mb-10">
-                 <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <h4 class="text-2xl font-bold mb-4 text-orange-700">Tipos de Cifrado</h4>
-                    <p class="mb-4 text-slate-700">Garantizan la <strong>Confidencialidad</strong>. El algoritmo siempre es público, la seguridad recae únicamente en la clave.</p>
-                     <div class="chart-container">
-                        <canvas id="cryptoChart"></canvas>
-                    </div>
-                 </div>
-                 <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col justify-center space-y-6">
-                    <div class="border-l-4 border-blue-500 pl-4">
-                        <h5 class="font-bold text-lg text-slate-800">Cifrado Simétrico</h5>
-                        <p class="text-sm text-slate-600 mb-2">Usa la <strong>misma clave</strong> para cifrar y descifrar (E = E<sup>-1</sup>). Muy rápido.</p>
-                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold">Estándar Actual: AES (256 bits)</span>
-                    </div>
-                    <div class="border-l-4 border-orange-500 pl-4">
-                        <h5 class="font-bold text-lg text-slate-800">Cifrado Asimétrico</h5>
-                        <p class="text-sm text-slate-600 mb-2">Par de claves: <strong>Pública</strong> (cifrar/enviar) y <strong>Privada</strong> (descifrar/firmar). Resuelve la distribución de claves pero es más lento.</p>
-                        <span class="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded font-bold mr-2">Estándar: RSA (mínimo 2048 bits)</span>
-                        <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded font-bold">Intercambio: Diffie-Hellman</span>
-                    </div>
-                    <div class="bg-slate-50 p-4 rounded border border-slate-200">
-                        <h6 class="font-bold text-sm">Problema de Shamir (Secret Sharing)</h6>
-                        <p class="text-xs text-slate-600">Divide un secreto usando polinomios algebraicos (Lagrange). Se requieren <em>k</em> de <em>N</em> participantes para reconstruir la clave maestra. Ideal para alta seguridad en grupos.</p>
-                    </div>
-                </div>
-            </div>
+            <div class="card p-6 mb-6">
+                <h4 class="font-bold text-lg mb-2">Demostración: email seguro (firma + cifrado)</h4>
+                <p class="text-sm text-slate-600 mb-6">Combina el hash, la firma digital (autenticidad y no repudio) y el cifrado asimétrico (confidencialidad). Ana envía un mensaje a Beto.</p>
 
-            <div class="bg-white p-8 rounded-xl shadow-lg">
-                <h4 class="text-2xl font-bold mb-2 text-orange-700">Demostración: Email Seguro (Firma + Cifrado)</h4>
-                <p class="mb-6 text-slate-600">Combina la rapidez del hash, la firma (autenticidad/no repudio) y el cifrado asimétrico (confidencialidad). <em>Ana envía a Beto.</em></p>
-                
-                <div id="signature-demo" class="relative min-h-[250px] bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <div id="signature-demo" class="relative min-h-[230px] rounded-xl p-6 border border-slate-200" style="background: rgba(15,42,74,0.03);">
                     <div class="signature-step" data-step="1">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 1: Ana calcula el HASH del mensaje.</p>
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 1: Ana calcula el HASH del mensaje.</p>
                         <div class="flex justify-center items-center space-x-6">
-                            <div class="text-center"><div class="w-28 h-28 bg-blue-100 border border-blue-300 rounded-xl flex items-center justify-center p-2 text-sm font-medium shadow">Mensaje Original</div><p class="mt-3 font-bold text-blue-600">Ana</p></div>
-                            <div class="text-5xl text-slate-400 font-light">&rarr;</div>
-                            <div class="text-center"><div class="w-28 h-28 bg-orange-100 border border-orange-300 rounded-xl flex items-center justify-center p-2 text-sm font-mono shadow">Hash(Msj)</div></div>
+                            <div class="text-center"><div class="w-28 h-28 bg-sky-100 border border-sky-300 rounded-xl flex items-center justify-center p-2 text-xs font-medium shadow">Mensaje Original</div><p class="mt-3 font-bold" style="color:var(--usm-navy)">Ana</p></div>
+                            <div class="text-4xl text-slate-400 font-light">&rarr;</div>
+                            <div class="text-center"><div class="w-28 h-28 bg-amber-100 border border-amber-300 rounded-xl flex items-center justify-center p-2 text-xs font-mono shadow">Hash(Msj)</div></div>
                         </div>
                     </div>
                     <div class="signature-step hidden" data-step="2">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 2: Ana cifra el HASH con su <span class="text-red-500">CLAVE PRIVADA</span> (Firma Digital).</p>
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 2: Ana cifra el HASH con su <span style="color:var(--usm-burgundy)">CLAVE PRIVADA</span> (firma digital).</p>
                         <div class="flex justify-center items-center space-x-4">
-                            <div class="text-center"><div class="w-24 h-24 bg-orange-100 border border-orange-300 rounded-xl flex items-center justify-center p-2 text-sm font-mono shadow">Hash</div></div>
-                            <div class="text-5xl text-slate-400">+</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-red-200 border border-red-400 rounded-full flex items-center justify-center p-2 text-sm font-bold shadow">K_Priv<br>(Ana)</div></div>
-                            <div class="text-5xl text-slate-400 font-light">&rarr;</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-green-200 border border-green-400 rounded-xl flex items-center justify-center p-2 text-sm font-bold shadow text-green-900">Firma Digital</div></div>
+                            <div class="text-center"><div class="w-24 h-24 bg-amber-100 border border-amber-300 rounded-xl flex items-center justify-center p-2 text-xs font-mono shadow">Hash</div></div>
+                            <div class="text-4xl text-slate-400">+</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-rose-200 border border-rose-400 rounded-full flex items-center justify-center p-2 text-xs font-bold shadow">K_Priv<br>(Ana)</div></div>
+                            <div class="text-4xl text-slate-400 font-light">&rarr;</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-emerald-200 border border-emerald-400 rounded-xl flex items-center justify-center p-2 text-xs font-bold shadow text-emerald-900">Firma Digital</div></div>
                         </div>
                     </div>
-                     <div class="signature-step hidden" data-step="3">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 3: Ana cifra todo [Mensaje + Firma] con la <span class="text-blue-500">CLAVE PÚBLICA de Beto</span>.</p>
+                    <div class="signature-step hidden" data-step="3">
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 3: Ana cifra [Mensaje + Firma] con la <span style="color:var(--usm-navy)">CLAVE PÚBLICA de Beto</span>.</p>
                         <div class="flex justify-center items-center space-x-4">
-                            <div class="text-center border-2 border-dashed border-gray-400 p-3 rounded-xl bg-white shadow-sm">
-                                <div class="w-24 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-sm font-medium">Mensaje</div>
-                                <div class="w-24 h-12 bg-green-200 rounded-lg flex items-center justify-center text-sm font-bold mt-2">Firma</div>
+                            <div class="text-center border-2 border-dashed border-slate-300 p-3 rounded-xl bg-white shadow-sm">
+                                <div class="w-24 h-11 bg-sky-100 rounded-lg flex items-center justify-center text-xs font-medium">Mensaje</div>
+                                <div class="w-24 h-11 bg-emerald-200 rounded-lg flex items-center justify-center text-xs font-bold mt-2">Firma</div>
                             </div>
-                            <div class="text-5xl text-slate-400">+</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-blue-200 border border-blue-400 rounded-full flex items-center justify-center p-2 text-sm font-bold shadow">K_Pub<br>(Beto)</div></div>
-                            <div class="text-5xl text-slate-400 font-light">&rarr;</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-purple-600 text-white rounded-xl flex items-center justify-center p-2 text-sm font-bold shadow-lg">Paquete Cifrado</div></div>
+                            <div class="text-4xl text-slate-400">+</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-sky-200 border border-sky-400 rounded-full flex items-center justify-center p-2 text-xs font-bold shadow">K_Pub<br>(Beto)</div></div>
+                            <div class="text-4xl text-slate-400 font-light">&rarr;</div>
+                            <div class="text-center"><div class="w-24 h-24 rounded-xl flex items-center justify-center p-2 text-xs font-bold shadow-lg text-white" style="background: var(--usm-navy);">Paquete Cifrado</div></div>
                         </div>
                     </div>
                     <div class="signature-step hidden" data-step="4">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 4: Envío por la red pública (Nadie en el camino puede leerlo).</p>
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 4: Envío por la red pública (nadie en el camino puede leerlo).</p>
                         <div class="flex justify-around items-center px-10">
-                            <div class="text-center"><div class="w-24 h-24 bg-purple-600 text-white rounded-xl flex items-center justify-center p-2 text-sm font-bold shadow-lg">Cifrado</div><p class="mt-3 font-bold text-blue-600">Ana</p></div>
-                            <div class="text-5xl text-slate-400 animate-pulse font-light">&rarr;&rarr;&rarr;</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-gray-200 border-2 border-dashed border-gray-400 rounded-xl flex items-center justify-center p-2 text-sm shadow">Recibiendo</div><p class="mt-3 font-bold text-orange-600">Beto</p></div>
+                            <div class="text-center"><div class="w-24 h-24 rounded-xl flex items-center justify-center p-2 text-xs font-bold shadow-lg text-white" style="background: var(--usm-navy);">Cifrado</div><p class="mt-3 font-bold" style="color:var(--usm-navy)">Ana</p></div>
+                            <div class="text-4xl text-slate-400 font-light">&rarr;&rarr;&rarr;</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center p-2 text-xs shadow">Recibiendo</div><p class="mt-3 font-bold" style="color:var(--usm-burgundy)">Beto</p></div>
                         </div>
                     </div>
                     <div class="signature-step hidden" data-step="5">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 5: Beto descifra el paquete con su <span class="text-red-500">CLAVE PRIVADA</span>.</p>
-                         <div class="flex justify-center items-center space-x-4">
-                            <div class="text-center"><div class="w-24 h-24 bg-purple-600 text-white rounded-xl flex items-center justify-center p-2 text-sm font-bold shadow-lg">Paquete</div><p class="mt-2 font-bold text-orange-600">Beto</p></div>
-                            <div class="text-5xl text-slate-400">+</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-red-200 border border-red-400 rounded-full flex items-center justify-center p-2 text-sm font-bold shadow">K_Priv<br>(Beto)</div></div>
-                            <div class="text-5xl text-slate-400 font-light">&rarr;</div>
-                            <div class="text-center border-2 border-dashed border-gray-400 p-3 rounded-xl bg-white shadow-sm">
-                                <div class="w-24 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-sm font-medium">Mensaje</div>
-                                <div class="w-24 h-12 bg-green-200 rounded-lg flex items-center justify-center text-sm font-bold mt-2">Firma</div>
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 5: Beto descifra el paquete con su <span style="color:var(--usm-burgundy)">CLAVE PRIVADA</span>.</p>
+                        <div class="flex justify-center items-center space-x-4">
+                            <div class="text-center"><div class="w-24 h-24 rounded-xl flex items-center justify-center p-2 text-xs font-bold shadow-lg text-white" style="background: var(--usm-navy);">Paquete</div><p class="mt-2 font-bold" style="color:var(--usm-burgundy)">Beto</p></div>
+                            <div class="text-4xl text-slate-400">+</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-rose-200 border border-rose-400 rounded-full flex items-center justify-center p-2 text-xs font-bold shadow">K_Priv<br>(Beto)</div></div>
+                            <div class="text-4xl text-slate-400 font-light">&rarr;</div>
+                            <div class="text-center border-2 border-dashed border-slate-300 p-3 rounded-xl bg-white shadow-sm">
+                                <div class="w-24 h-11 bg-sky-100 rounded-lg flex items-center justify-center text-xs font-medium">Mensaje</div>
+                                <div class="w-24 h-11 bg-emerald-200 rounded-lg flex items-center justify-center text-xs font-bold mt-2">Firma</div>
                             </div>
                         </div>
                     </div>
-                     <div class="signature-step hidden" data-step="6">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 6: Beto calcula el HASH del mensaje que acaba de revelar.</p>
+                    <div class="signature-step hidden" data-step="6">
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 6: Beto calcula el HASH del mensaje que acaba de revelar.</p>
                         <div class="flex justify-center items-center space-x-6">
-                            <div class="text-center"><div class="w-28 h-28 bg-blue-100 border border-blue-300 rounded-xl flex items-center justify-center p-2 text-sm font-medium shadow">Mensaje Extraído</div></div>
-                            <div class="text-5xl text-slate-400 font-light">&rarr;</div>
-                            <div class="text-center"><div class="w-28 h-28 bg-orange-100 border border-orange-300 rounded-xl flex items-center justify-center p-2 text-sm font-mono shadow">Hash Calc.</div></div>
+                            <div class="text-center"><div class="w-28 h-28 bg-sky-100 border border-sky-300 rounded-xl flex items-center justify-center p-2 text-xs font-medium shadow">Mensaje Extraído</div></div>
+                            <div class="text-4xl text-slate-400 font-light">&rarr;</div>
+                            <div class="text-center"><div class="w-28 h-28 bg-amber-100 border border-amber-300 rounded-xl flex items-center justify-center p-2 text-xs font-mono shadow">Hash Calc.</div></div>
                         </div>
                     </div>
-                     <div class="signature-step hidden" data-step="7">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 7: Beto descifra la firma con la <span class="text-blue-500">CLAVE PÚBLICA de Ana</span>.</p>
+                    <div class="signature-step hidden" data-step="7">
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 7: Beto descifra la firma con la <span style="color:var(--usm-navy)">CLAVE PÚBLICA de Ana</span>.</p>
                         <div class="flex justify-center items-center space-x-4">
-                            <div class="text-center"><div class="w-24 h-24 bg-green-200 border border-green-400 rounded-xl flex items-center justify-center p-2 text-sm font-bold shadow">Firma Extraída</div></div>
-                            <div class="text-5xl text-slate-400">+</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-blue-200 border border-blue-400 rounded-full flex items-center justify-center p-2 text-sm font-bold shadow">K_Pub<br>(Ana)</div></div>
-                            <div class="text-5xl text-slate-400 font-light">&rarr;</div>
-                            <div class="text-center"><div class="w-24 h-24 bg-yellow-100 border border-yellow-300 rounded-xl flex items-center justify-center p-2 text-sm font-mono shadow">Hash Orig.</div></div>
+                            <div class="text-center"><div class="w-24 h-24 bg-emerald-200 border border-emerald-400 rounded-xl flex items-center justify-center p-2 text-xs font-bold shadow">Firma Extraída</div></div>
+                            <div class="text-4xl text-slate-400">+</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-sky-200 border border-sky-400 rounded-full flex items-center justify-center p-2 text-xs font-bold shadow">K_Pub<br>(Ana)</div></div>
+                            <div class="text-4xl text-slate-400 font-light">&rarr;</div>
+                            <div class="text-center"><div class="w-24 h-24 bg-yellow-100 border border-yellow-300 rounded-xl flex items-center justify-center p-2 text-xs font-mono shadow">Hash Orig.</div></div>
                         </div>
                     </div>
                     <div class="signature-step hidden" data-step="8">
-                        <p class="text-center font-bold text-lg mb-6 text-slate-800">Paso 8: Beto compara los dos HASHES.</p>
-                         <div class="flex justify-center items-center space-x-6">
-                            <div class="w-28 h-28 bg-orange-100 border border-orange-300 rounded-xl flex items-center justify-center p-2 text-sm font-mono shadow">Hash Calc.</div>
-                            <div id="comparison-result" class="text-6xl text-green-500 font-black">=</div>
-                            <div class="w-28 h-28 bg-yellow-100 border border-yellow-300 rounded-xl flex items-center justify-center p-2 text-sm font-mono shadow">Hash Orig.</div>
+                        <p class="text-center font-bold text-base mb-6 text-slate-800">Paso 8: Beto compara los dos HASHES.</p>
+                        <div class="flex justify-center items-center space-x-6">
+                            <div class="w-28 h-28 bg-amber-100 border border-amber-300 rounded-xl flex items-center justify-center p-2 text-xs font-mono shadow">Hash Calc.</div>
+                            <div id="comparison-result" class="text-5xl font-black" style="color: #16a34a;">=</div>
+                            <div class="w-28 h-28 bg-yellow-100 border border-yellow-300 rounded-xl flex items-center justify-center p-2 text-xs font-mono shadow">Hash Orig.</div>
                         </div>
-                        <div class="mt-8 bg-green-100 border border-green-400 p-4 rounded-lg">
-                            <p id="verification-status" class="text-center text-green-800 font-bold text-lg">
+                        <div class="mt-8 rounded-lg p-4 border" style="background: rgba(22,163,74,0.08); border-color: rgba(22,163,74,0.4);">
+                            <p class="text-center font-bold text-sm" style="color:#166534;">
                                 ¡VERIFICADO!<br>
-                                <span class="font-normal text-sm">El mensaje es de Ana (Autenticidad), no fue alterado (Integridad) y nadie más pudo leerlo (Confidencialidad).</span>
+                                <span class="font-normal text-xs">El mensaje es de Ana (autenticidad), no fue alterado (integridad) y nadie más pudo leerlo (confidencialidad).</span>
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-8 flex justify-center space-x-4">
-                    <button id="prev-step" class="px-8 py-3 bg-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-300 transition disabled:opacity-50" disabled>Anterior</button>
-                    <button id="next-step" class="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-md shadow-blue-200">Siguiente Paso</button>
+                <div class="mt-6 flex justify-center space-x-4">
+                    <button id="prev-step" class="px-6 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-300 transition disabled:opacity-50 text-sm" disabled>Anterior</button>
+                    <button id="next-step" class="px-6 py-2.5 text-white font-bold rounded-lg transition text-sm" style="background: var(--usm-navy);">Siguiente Paso</button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-3">Difusión de claves simétricas y Diffie–Hellman</h4>
+                    <p class="text-sm text-slate-700 mb-3">Como el cifrado asimétrico es lento y no se adapta a grandes volúmenes de datos ni a comunicación de grupo, se suele usar cifrado <strong>simétrico</strong> para los datos, distribuyendo la clave simétrica de forma segura con cifrado asimétrico para cada participante, o mediante el protocolo <strong>Diffie–Hellman</strong>.</p>
+                    <p class="text-sm text-slate-700">Problema: la comunicación queda vulnerable si la clave simétrica se expone o si un miembro abandona el grupo, ya que hay que regenerar y redistribuir la clave, lo que puede ser costoso.</p>
+                </div>
+                <div class="card p-6">
+                    <h4 class="font-bold text-lg mb-3">Problema de Shamir (secret sharing)</h4>
+                    <p class="text-sm text-slate-700 mb-3">Divide un secreto en <code>N</code> partes, de modo que se necesiten al menos <code>k</code> de ellas para reconstruirlo (umbral). Se genera un polinomio de grado <code>k−1</code> cuyo término independiente <code>a₀</code> es la clave secreta, y se entrega a cada participante un punto <code>(i, f(i))</code> del polinomio.</p>
+                    <p class="text-sm text-slate-700">Con <code>k</code> puntos (de los <code>N</code> repartidos) se puede reconstruir el polinomio (interpolación de Lagrange) y obtener <code>a₀</code>. Útil cuando se requiere la presencia de varias personas para generar una clave secreta de alta seguridad.</p>
                 </div>
             </div>
         </section>
-
     </main>
+</div>
 
-    <footer class="mt-20" style="background: linear-gradient(120deg, #0f1f33 0%, #002b5c 55%, #8c1d40 100%); color: #e2e8f0; border-top: 2px solid rgba(201,163,74,0.6);">
-        <div class="container mx-auto px-6 py-8 text-center text-sm">
-            <p>&copy; 2026 Ayudantía - Redes de Computadores.</p>
-        </div>
-    </footer>
+<footer class="mt-8" style="background: var(--usm-navy); color: #cbd5e1;">
+    <div class="container mx-auto px-6 py-8 text-sm flex flex-wrap items-center justify-between gap-3">
+        <p>Ayudantía — Redes de Computadores, INF-256.</p>
+        <p> Departamento de Informática, UTFSM</p>
+    </div>
+</footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Interacción del Modelo OSI
-            const layerButtons = document.querySelectorAll('.model-layer');
-            const infoDisplay = document.getElementById('layer-info');
-
-            layerButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    infoDisplay.innerHTML = `<p>${button.dataset.info}</p>`;
-                });
-            });
-
-            // Demo de Hash en tiempo real
-            const hashInput = document.getElementById('hash-input');
-            const hashOutput = document.getElementById('hash-output');
-
-            async function updateHash() {
-                const text = hashInput.value;
-                if (!text) {
-                    hashOutput.textContent = '';
-                    return;
-                }
-                const encoder = new TextEncoder();
-                const data = encoder.encode(text);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                hashOutput.textContent = hashHex;
+<script>
+    // Scroll-spy TOC
+    const sections = document.querySelectorAll('main section[id]');
+    const tocLinks = document.querySelectorAll('#toc .toc-link');
+    const spy = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const link = document.querySelector(`#toc .toc-link[href="#${entry.target.id}"]`);
+            if (!link) return;
+            if (entry.isIntersecting) {
+                tocLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
             }
-
-            hashInput.addEventListener('input', updateHash);
-            updateHash(); // Cálculo inicial
-
-            // Gráfico de Criptografía
-            const ctx = document.getElementById('cryptoChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Velocidad', 'Gestión de Claves', 'Seguridad Escalable'],
-                    datasets: [{
-                        label: 'Cifrado Simétrico',
-                        data: [9, 2, 6],
-                        backgroundColor: 'rgba(0, 43, 92, 0.82)',
-                        borderColor: 'rgba(0, 43, 92, 1)',
-                        borderWidth: 1
-                    }, {
-                        label: 'Cifrado Asimétrico',
-                        data: [3, 9, 9],
-                        backgroundColor: 'rgba(140, 29, 64, 0.82)',
-                        borderColor: 'rgba(140, 29, 64, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 10,
-                            title: {
-                                display: true,
-                                text: 'Puntuación Relativa'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Comparación Práctica de Tipos de Cifrado',
-                            font: { size: 16, family: 'Sora' },
-                            color: '#0f1f33'
-                        }
-                    }
-                }
-            });
-
-            // Demo de Firma Digital
-            const prevBtn = document.getElementById('prev-step');
-            const nextBtn = document.getElementById('next-step');
-            const steps = document.querySelectorAll('.signature-step');
-            const totalSteps = steps.length;
-            let currentStep = 1;
-
-            function showStep(stepNumber) {
-                steps.forEach(step => {
-                    if (parseInt(step.dataset.step) === stepNumber) {
-                        step.classList.remove('hidden');
-                        // Resetear animación si es el paso 4
-                        if(stepNumber === 4) {
-                            const arrow = step.querySelector('.animate-pulse');
-                            arrow.style.animation = 'none';
-                            arrow.offsetHeight; /* trigger reflow */
-                            arrow.style.animation = null; 
-                        }
-                    } else {
-                        step.classList.add('hidden');
-                    }
-                });
-                
-                prevBtn.disabled = stepNumber === 1;
-                nextBtn.disabled = stepNumber === totalSteps;
-                nextBtn.textContent = stepNumber === totalSteps ? 'Finalizado' : 'Siguiente Paso';
-            }
-
-            nextBtn.addEventListener('click', () => {
-                if (currentStep < totalSteps) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
-            });
-
-            prevBtn.addEventListener('click', () => {
-                if (currentStep > 1) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
         });
-    </script>
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(s => spy.observe(s));
+
+    // OSI layer info
+    const osiButtons = document.querySelectorAll('.osi-layer');
+    const osiInfo = document.getElementById('osi-info');
+    osiButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            osiButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            osiInfo.textContent = btn.dataset.info;
+        });
+    });
+
+    // Unicast / Broadcast / Multicast demo
+    const modeButtons = document.querySelectorAll('.mode-btn');
+    const nodes = document.querySelectorAll('#cast-nodes .node');
+    const castDesc = document.getElementById('cast-desc');
+    const modeMap = {
+        unicast: { targets: ['B'], text: 'Unicast: transmisión de datos de un computador A a un solo destino, B.' },
+        broadcast: { targets: ['B','C','D','E','F'], text: 'Broadcast: transmisión de datos de A a todos los computadores de la red local.' },
+        multicast: { targets: ['B','D','E'], text: 'Multicast: transmisión de datos de A a un sub-conjunto de computadores de la red local.' }
+    };
+    function applyMode(mode) {
+        modeButtons.forEach(b => {
+            const active = b.dataset.mode === mode;
+            b.style.background = active ? 'var(--usm-navy)' : '';
+            b.style.color = active ? '#fff' : 'var(--usm-navy)';
+        });
+        nodes.forEach(n => {
+            const id = n.dataset.id;
+            n.classList.toggle('on', modeMap[mode].targets.includes(id) || id === 'A');
+        });
+        castDesc.textContent = modeMap[mode].text;
+    }
+    modeButtons.forEach(b => b.addEventListener('click', () => applyMode(b.dataset.mode)));
+    applyMode('unicast');
+
+    // Hash properties info panel
+    const hashPropButtons = document.querySelectorAll('.hash-prop');
+    const hashInfo = document.getElementById('hash-info');
+    hashPropButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            hashPropButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            hashInfo.textContent = btn.dataset.info;
+        });
+    });
+
+    // Live SHA-256 demo (efecto avalancha)
+    const hashInput = document.getElementById('hash-input');
+    const hashOutput = document.getElementById('hash-output');
+    async function updateHash() {
+        const text = hashInput.value;
+        if (!text) { hashOutput.textContent = ''; return; }
+        const data = new TextEncoder().encode(text);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashHex = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+        hashOutput.textContent = hashHex;
+    }
+    if (hashInput) {
+        hashInput.addEventListener('input', updateHash);
+        updateHash();
+    }
+
+    // Digital signature step-by-step demo
+    const prevBtn = document.getElementById('prev-step');
+    const nextBtn = document.getElementById('next-step');
+    const sigSteps = document.querySelectorAll('.signature-step');
+    if (prevBtn && nextBtn && sigSteps.length) {
+        const totalSteps = sigSteps.length;
+        let currentStep = 1;
+        function showStep(stepNumber) {
+            sigSteps.forEach(step => {
+                step.classList.toggle('hidden', parseInt(step.dataset.step) !== stepNumber);
+            });
+            prevBtn.disabled = stepNumber === 1;
+            nextBtn.disabled = stepNumber === totalSteps;
+            nextBtn.textContent = stepNumber === totalSteps ? 'Finalizado' : 'Siguiente Paso';
+        }
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) { currentStep++; showStep(currentStep); }
+        });
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) { currentStep--; showStep(currentStep); }
+        });
+        showStep(currentStep);
+    }
+</script>
 </body>
 </html>
