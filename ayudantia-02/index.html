@@ -39,10 +39,7 @@
             backdrop-filter: blur(10px);
         }
 
-        .brand-title {
-            color: #ffffff;
-            font-weight: 800;
-        }
+        .brand-title { color: #ffffff; font-weight: 800; }
 
         .nav-link {
             color: #f1f5f9;
@@ -50,6 +47,7 @@
             border-radius: 9999px;
             transition: all 0.25s ease;
             border: 1px solid transparent;
+            white-space: nowrap;
         }
 
         .nav-link:hover {
@@ -66,10 +64,7 @@
             color: transparent;
         }
 
-        .hero-subtitle {
-            color: #334155;
-            font-weight: 500;
-        }
+        .hero-subtitle { color: #334155; font-weight: 500; }
 
         .section-title {
             border-bottom-width: 3px;
@@ -77,17 +72,14 @@
             border-color: rgba(0, 43, 92, 0.28);
         }
 
-        .bg-white.p-8.rounded-xl.shadow-lg, .card-hover {
+        .card, .bg-white.rounded-xl.shadow-lg {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(0, 43, 92, 0.09);
             box-shadow: 0 16px 30px rgba(15, 31, 51, 0.1);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .bg-white.p-8.rounded-xl.shadow-lg:hover, .card-hover:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 22px 36px rgba(15, 31, 51, 0.16);
-        }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 22px 36px rgba(15, 31, 51, 0.16); }
 
         .text-usm-navy { color: var(--usm-navy) !important; }
         .text-usm-burgundy { color: var(--usm-burgundy) !important; }
@@ -95,29 +87,46 @@
         .bg-usm-navy:hover { background-color: #001a3b !important; }
         .accent-gold { color: var(--usm-gold); }
 
-        .tab-active {
-            background-color: var(--usm-navy);
-            color: white;
-            border-radius: 0.5rem;
+        .bit-box {
+            display: inline-flex;
+            width: 1.65rem;
+            height: 1.65rem;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-weight: 700;
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
         }
+        .bit-net { background: #dbeafe; color: var(--usm-navy); border: 1px solid #93c5fd; }
+        .bit-host { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
         .animate-fadeIn { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        table.data-table th, table.data-table td {
+            padding: 0.6rem 0.9rem;
+            border-bottom: 1px solid rgba(0,43,92,0.1);
+        }
+        table.data-table th { background: rgba(0,43,92,0.06); color: var(--usm-navy); text-align: left; }
+        table.data-table tr:last-child td { border-bottom: none; }
     </style>
 </head>
 <body class="text-slate-800">
 
     <header class="topbar sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <h1 class="text-xl brand-title">Direccionamiento y Subneteo</h1>
-            <div class="space-x-2 sm:space-x-4 hidden md:block">
-                <a href="#fundamentos" class="nav-link font-medium transition-colors text-xs sm:text-base">Fundamentos</a>
-                <a href="#clases" class="nav-link font-medium transition-colors text-xs sm:text-base">Clases y NAT</a>
-                <a href="#subneteo" class="nav-link font-medium transition-colors text-xs sm:text-base">Subneteo</a>
-                <a href="#ejercicios" class="nav-link font-medium transition-colors text-xs sm:text-base">Ejercicios</a>
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center overflow-x-auto">
+            <h1 class="text-xl brand-title mr-6">Direccionamiento IP</h1>
+            <div class="space-x-1 sm:space-x-2 flex">
+                <a href="#mac-ip" class="nav-link font-medium text-xs sm:text-sm">MAC vs IP</a>
+                <a href="#red-host" class="nav-link font-medium text-xs sm:text-sm">Red y Host</a>
+                <a href="#clases" class="nav-link font-medium text-xs sm:text-sm">Clases y NAT</a>
+                <a href="#subneteo" class="nav-link font-medium text-xs sm:text-sm">Subneteo</a>
+                <a href="#calculadora" class="nav-link font-medium text-xs sm:text-sm">Calculadora</a>
+                <a href="#ejercicios" class="nav-link font-medium text-xs sm:text-sm">Ejercicios</a>
             </div>
         </nav>
     </header>
@@ -126,236 +135,348 @@
 
         <section id="intro" class="text-center mb-16">
             <h2 class="hero-title font-bold mb-4">Direccionamiento en Redes</h2>
-            <p class="text-lg hero-subtitle max-w-3xl mx-auto">Comprende cómo los dispositivos se encuentran, se agrupan y se comunican a través de Internet mediante direcciones IP, máscaras y subneteo.</p>
+            <p class="text-lg hero-subtitle max-w-3xl mx-auto">Cómo se identifica un computador dentro de su red local y dentro de todo Internet, cómo se calcula la dirección de red de una subred, y cómo dividir una red grande en varias más pequeñas.</p>
         </section>
 
-        <section id="fundamentos" class="mb-20">
-            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">1. Anatomía de una IP: Red, Host y Broadcast</h3>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg mb-10">
-                <h4 class="text-2xl font-bold mb-4 text-usm-navy">Porción de Red vs. Porción de Host</h4>
-                <p class="mb-6 text-slate-700">Una dirección IPv4 tiene 32 bits y siempre se divide lógicamente en dos partes. Piensa en una IP como si fuera una dirección postal:</p>
-                
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <!-- ===================== MAC vs IP ===================== -->
+        <section id="mac-ip" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">1. Dos formas de identificar un computador</h3>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg card mb-10">
+                <p class="mb-6 text-slate-700">Todo dispositivo conectado a una red necesita una identificación única, pero en realidad usamos <strong>dos</strong> identificadores distintos que operan en niveles diferentes:</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
                     <div class="bg-blue-50 border-l-4 border-usm-navy p-5 rounded">
-                        <h5 class="font-bold text-usm-navy mb-2">1. Identificador de Red (Network ID)</h5>
-                        <p class="text-sm text-slate-700">Es como el <strong>nombre de la calle o el barrio</strong>. Todos los computadores conectados al mismo switch o router local comparten esta misma porción. Los routers de Internet solo miran esta parte para saber hacia dónde enviar un paquete por el mundo.</p>
+                        <h5 class="font-bold text-usm-navy mb-2">Dirección MAC (física)</h5>
+                        <p class="text-sm text-slate-700 mb-2">Viene grabada en la tarjeta de red (Ethernet/Wi-Fi) de fábrica. Identifica el <strong>aparato dentro de su red local</strong>, no en todo Internet: un switch la usa para saber a qué puerto entregar una trama, pero un router de Internet jamás la ve fuera de ese segmento.</p>
+                        <ul class="text-sm text-slate-700 list-disc pl-5 space-y-1">
+                            <li>Tamaño: <strong>6 bytes (48 bits)</strong>.</li>
+                            <li>Notación: 6 grupos hexadecimales separados por <code>:</code>. Ej: <code>01:23:45:67:89:ab</code>.</li>
+                            <li>Se divide en dos mitades de 3 bytes cada una: el <strong>OUI</strong> (Organizationally Unique Identifier), que identifica al fabricante de la tarjeta, y el identificador propio de esa tarjeta (<strong>NIC specific</strong>).</li>
+                            <li>Es fija: normalmente no cambia aunque muevas el computador a otra red.</li>
+                        </ul>
                     </div>
                     <div class="bg-orange-50 border-l-4 border-usm-gold p-5 rounded">
-                        <h5 class="font-bold text-usm-gold mb-2">2. Identificador de Host (Host ID)</h5>
-                        <p class="text-sm text-slate-700">Es como el <strong>número de la casa</strong> dentro de esa calle. Identifica de manera única a tu computador, teléfono o impresora dentro de esa red local.</p>
+                        <h5 class="font-bold text-usm-gold mb-2">Dirección IP (lógica)</h5>
+                        <p class="text-sm text-slate-700 mb-2">Es la dirección que identifica de forma única a un computador <strong>en toda Internet</strong>, sin importar en qué red física esté. Es la que usan los routers para decidir el camino de un paquete a través del mundo.</p>
+                        <ul class="text-sm text-slate-700 list-disc pl-5 space-y-1">
+                            <li>Tamaño: <strong>4 bytes (32 bits)</strong>, en IPv4.</li>
+                            <li>Notación habitual: 4 bytes en decimal separados por puntos. Ej: <code>200.1.19.1</code>.</li>
+                            <li>Depende de la red a la que estés conectado: si cambias de red (de tu casa a la universidad), tu IP cambia; tu MAC no.</li>
+                            <li>Se organiza en 5 "clases" históricas (A-E) y hoy se administra sin clases, con CIDR.</li>
+                        </ul>
                     </div>
                 </div>
 
-                <h4 class="text-xl font-bold mb-3 text-usm-burgundy">Direcciones Especiales en cada Red</h4>
-                <p class="mb-4 text-sm text-slate-700">Dentro de cualquier red, la primera y la última dirección no se le pueden asignar a ningún computador, ya que están reservadas:</p>
-                <ul class="space-y-3 mb-6">
-                    <li class="bg-slate-50 p-4 rounded border border-slate-200 text-sm">
-                        <strong class="text-usm-navy">La Dirección de Red:</strong> Es la primera dirección. Se obtiene poniendo <strong>todos los bits de la porción de host en 0</strong>. Sirve para nombrar a la red en las tablas de ruteo.
-                    </li>
-                    <li class="bg-slate-50 p-4 rounded border border-slate-200 text-sm">
-                        <strong class="text-red-600">La Dirección de Broadcast:</strong> Es la última dirección. Se obtiene poniendo <strong>todos los bits de la porción de host en 1</strong>. Si envías un paquete a esta IP, el switch hará copias y se lo entregará a <em>todos</em> los dispositivos de esa red al mismo tiempo (como un altavoz en la calle).
-                    </li>
-                </ul>
+                <div class="mt-8 bg-slate-800 text-white p-5 rounded-lg">
+                    <p class="text-sm text-slate-300 mb-3">Estructura de una dirección MAC de 6 bytes (48 bits):</p>
+                    <div class="flex flex-wrap justify-center gap-1 font-mono text-xs mb-3">
+                        <div class="bg-blue-500/30 border border-blue-300 rounded px-3 py-2 text-center">
+                            <div class="text-blue-200 mb-1">OUI (fabricante)</div>
+                            <div>byte 1 . byte 2 . byte 3</div>
+                        </div>
+                        <div class="bg-emerald-500/30 border border-emerald-300 rounded px-3 py-2 text-center">
+                            <div class="text-emerald-200 mb-1">NIC específico (esa tarjeta)</div>
+                            <div>byte 4 . byte 5 . byte 6</div>
+                        </div>
+                    </div>
+                    <p class="text-center text-usm-gold font-bold">01 : 23 : 45 &nbsp;|&nbsp; 67 : 89 : ab</p>
+                </div>
 
-                <h4 class="text-xl font-bold mb-3 text-usm-navy">La Máscara de Red y el CIDR</h4>
-                <p class="text-sm text-slate-700 mb-4">¿Cómo sabe el computador dónde termina la "calle" y dónde empieza la "casa"? Usando la <strong>Máscara de Red (Netmask)</strong>. Los "1s" de la máscara indican la red, y los "0s" indican el host. Hoy en día usamos <strong>CIDR (Classless Inter-Domain Routing)</strong>, que simplifica la escritura indicando cuántos "1s" seguidos tiene la máscara con una barra diagonal.</p>
-                <div class="bg-slate-800 text-white p-4 rounded-lg font-mono text-sm text-center">
-                    IP: 192.168.1.10 <span class="text-usm-gold">/24</span><br>
-                    <span class="text-slate-400 text-xs">Esto significa que la máscara tiene 24 bits en "1":</span><br>
-                    11111111.11111111.11111111.00000000<br>
-                    <span class="text-green-400">255 . 255 . 255 . 0</span>
+                <p class="mt-6 text-sm text-slate-600 italic">En resumen: la MAC resuelve "¿a qué cable/puerto físico está conectado este dispositivo dentro de mi red local?"; la IP resuelve "¿en qué red del mundo, y qué host dentro de ella, está este dispositivo?". Ambas trabajan juntas: para llegar a otro computador, tu equipo usa la IP destino para decidir la ruta, pero en cada segmento de red usa direcciones MAC para la entrega física.</p>
+            </div>
+        </section>
+
+        <!-- ===================== RED, HOST, NETMASK ===================== -->
+        <section id="red-host" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">2. Anatomía de una IP: Red, Host, Netmask y Broadcast</h3>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg card mb-10">
+                <h4 class="text-2xl font-bold mb-4 text-usm-navy">Porción de Red vs. Porción de Host</h4>
+                <p class="mb-6 text-slate-700">Una IP de 32 bits siempre se divide lógicamente en dos partes. Piensa en ella como una dirección postal:</p>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-blue-50 border-l-4 border-usm-navy p-5 rounded">
+                        <h5 class="font-bold text-usm-navy mb-2">Identificador de Red (Network ID)</h5>
+                        <p class="text-sm text-slate-700">Es como la <strong>calle o el barrio</strong>. Todos los equipos conectados al mismo switch/router local comparten esta misma porción. Un router de Internet solo mira esta parte para decidir hacia dónde reenviar el paquete.</p>
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-usm-gold p-5 rounded">
+                        <h5 class="font-bold text-usm-gold mb-2">Identificador de Host (Host ID)</h5>
+                        <p class="text-sm text-slate-700">Es el <strong>número de la casa</strong> dentro de esa calle. Identifica de manera única a un computador, teléfono o impresora concreto dentro de esa red.</p>
+                    </div>
+                </div>
+
+                <h4 class="text-xl font-bold mb-3 text-usm-navy">La Máscara de Red (Netmask) y CIDR</h4>
+                <p class="text-sm text-slate-700 mb-4">¿Cómo sabe el computador dónde termina la "calle" y dónde empieza la "casa"? Con la <strong>máscara de red</strong>: sus bits en "1" marcan la porción de red, y sus bits en "0" marcan la porción de host. Existen dos notaciones equivalentes:</p>
+                <div class="grid md:grid-cols-2 gap-4 mb-6 text-sm">
+                    <div class="bg-slate-50 border border-slate-200 rounded p-4">
+                        <strong class="text-usm-navy">Notación decimal (histórica):</strong> 4 bytes en decimal, ej. <code>255.255.255.0</code>.
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded p-4">
+                        <strong class="text-usm-navy">Notación CIDR:</strong> se escribe solo el número de bits en "1" desde el más significativo, ej. <code>/24</code> (equivalente a 255.255.255.0).
+                    </div>
+                </div>
+
+                <h4 class="text-xl font-bold mb-3 text-usm-burgundy">Cómo se calcula la Dirección de Red: el AND binario</h4>
+                <p class="text-sm text-slate-700 mb-4">La dirección de red <strong>no se lee, se calcula</strong>. La fórmula es un AND bit a bit entre la IP y la máscara:</p>
+                <div class="bg-slate-800 text-white text-center py-3 rounded-lg font-mono text-lg mb-6">RED = IP <span class="text-usm-gold">AND</span> Netmask</div>
+
+                <p class="text-sm text-slate-700 mb-3">Ejemplo: IP <code>192.168.1.235</code> con máscara <code>/26</code> (255.255.255.192). Solo el último octeto cambia respecto a una máscara clase C completa, así que binaricemos ese octeto:</p>
+                <div class="overflow-x-auto mb-4">
+                    <table class="w-full text-center font-mono text-sm border-collapse">
+                        <tr>
+                            <td class="pr-3 text-slate-500 text-xs text-right w-28">IP (235)</td>
+                            <td><span class="bit-box bit-net">1</span></td><td><span class="bit-box bit-net">1</span></td>
+                            <td><span class="bit-box bit-host">1</span></td><td><span class="bit-box bit-host">0</span></td>
+                            <td><span class="bit-box bit-host">1</span></td><td><span class="bit-box bit-host">0</span></td>
+                            <td><span class="bit-box bit-host">1</span></td><td><span class="bit-box bit-host">1</span></td>
+                        </tr>
+                        <tr>
+                            <td class="pr-3 text-slate-500 text-xs text-right">Máscara (192)</td>
+                            <td><span class="bit-box bit-net">1</span></td><td><span class="bit-box bit-net">1</span></td>
+                            <td><span class="bit-box bit-host">0</span></td><td><span class="bit-box bit-host">0</span></td>
+                            <td><span class="bit-box bit-host">0</span></td><td><span class="bit-box bit-host">0</span></td>
+                            <td><span class="bit-box bit-host">0</span></td><td><span class="bit-box bit-host">0</span></td>
+                        </tr>
+                        <tr class="border-t-2 border-slate-300">
+                            <td class="pr-3 text-slate-500 text-xs text-right font-bold">AND = Red (192)</td>
+                            <td><span class="bit-box bit-net">1</span></td><td><span class="bit-box bit-net">1</span></td>
+                            <td><span class="bit-box bit-host">0</span></td><td><span class="bit-box bit-host">0</span></td>
+                            <td><span class="bit-box bit-host">0</span></td><td><span class="bit-box bit-host">0</span></td>
+                            <td><span class="bit-box bit-host">0</span></td><td><span class="bit-box bit-host">0</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <p class="text-sm text-slate-700 mb-6">El AND bit a bit da <code>11000000 = 192</code>. Como los primeros 3 octetos quedan intactos (todos en "1" en la máscara), la <strong>dirección de red es 192.168.1.192</strong>. Nota algo clave: <em>cualquier</em> IP entre .192 y .255 en ese último octeto pertenece a la misma red, porque al aplicar el AND todas colapsan al mismo resultado en los 2 bits de red que quedan libres del último byte.</p>
+
+                <h4 class="text-xl font-bold mb-3 text-usm-burgundy">Dirección de Broadcast</h4>
+                <p class="text-sm text-slate-700 mb-4">Sirve para enviar un mismo mensaje a <strong>todos</strong> los computadores de una red a la vez. Se calcula poniendo en "1" todos los bits de la porción de host (lo opuesto a la dirección de red):</p>
+                <div class="bg-slate-800 text-white text-center py-3 rounded-lg font-mono text-lg mb-4">BROADCAST = Red <span class="text-usm-gold">OR</span> (NOT Netmask)</div>
+                <p class="text-sm text-slate-700">Siguiendo el ejemplo: los 6 bits de host del último octeto en "1" son <code>111111 = 63</code>. Entonces el broadcast es <code>192.168.1.192 + 63 = 192.168.1.255</code>.</p>
+
+                <div class="mt-6 grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="bg-blue-50 border border-blue-200 rounded p-4">
+                        <strong class="text-usm-navy">Dirección de Red</strong><br>Primera IP del rango. Todos los bits de host en 0. No se asigna a ningún host, identifica la red completa (ej. en tablas de ruteo).
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded p-4">
+                        <strong class="text-usm-navy">Rango de Hosts</strong><br>Todas las IPs entre la de red y la de broadcast (ambas excluidas) sí se pueden asignar a equipos.
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded p-4">
+                        <strong class="text-red-700">Dirección de Broadcast</strong><br>Última IP del rango. Todos los bits de host en 1. Tampoco se asigna a un host individual.
+                    </div>
                 </div>
             </div>
         </section>
-        
-        <section id="clases" class="mb-20">
-            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">2. Clases IP y Direcciones Privadas</h3>
 
-            <div class="grid md:grid-cols-2 gap-10 mb-10">
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">Clases Históricas</h4>
-                    <p class="text-sm text-slate-700 mb-4">Originalmente, las IPs se dividían en clases estrictas según sus primeros bits:</p>
-                    <ul class="space-y-4 text-sm">
-                        <li class="border-b border-slate-100 pb-2">
-                            <strong class="text-usm-burgundy text-lg">Clase A:</strong> Máscara por defecto <strong>/8</strong>. Rango: 1 a 126. Creada para unas pocas redes gigantes (16 millones de hosts por red).
-                        </li>
-                        <li class="border-b border-slate-100 pb-2">
-                            <strong class="text-usm-burgundy text-lg">Clase B:</strong> Máscara por defecto <strong>/16</strong>. Rango: 128 a 191. Redes medianas (65,534 hosts por red).
-                        </li>
-                        <li class="border-b border-slate-100 pb-2">
-                            <strong class="text-usm-burgundy text-lg">Clase C:</strong> Máscara por defecto <strong>/24</strong>. Rango: 192 a 223. Para muchísimas redes pequeñas (254 hosts por red).
-                        </li>
+        <!-- ===================== CLASES Y NAT ===================== -->
+        <section id="clases" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">3. Clases IP, Direcciones Privadas y NAT</h3>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg card mb-8">
+                <h4 class="text-2xl font-bold mb-4 text-usm-navy">Las 5 Clases Históricas</h4>
+                <p class="text-sm text-slate-700 mb-4">Antes de CIDR, el primer byte de la IP definía automáticamente cuántos bits eran de red. Se reconoce la clase mirando los bits más significativos del primer byte:</p>
+                <div class="overflow-x-auto">
+                    <table class="data-table w-full text-sm">
+                        <thead>
+                            <tr><th>Clase</th><th>Bits iniciales</th><th>Rango 1er byte</th><th>Netmask por defecto</th><th>Hosts por red</th><th>Uso</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="font-bold text-usm-burgundy">A</td><td class="font-mono">0</td><td class="font-mono">1 – 126</td><td class="font-mono">/8 (255.0.0.0)</td><td>~16.7 millones</td><td>Muy pocas redes gigantes</td></tr>
+                            <tr><td class="font-bold text-usm-burgundy">B</td><td class="font-mono">10</td><td class="font-mono">128 – 191</td><td class="font-mono">/16 (255.255.0.0)</td><td>~65.534</td><td>Redes medianas</td></tr>
+                            <tr><td class="font-bold text-usm-burgundy">C</td><td class="font-mono">110</td><td class="font-mono">192 – 223</td><td class="font-mono">/24 (255.255.255.0)</td><td>254</td><td>Muchas redes pequeñas</td></tr>
+                            <tr><td class="font-bold text-usm-burgundy">D</td><td class="font-mono">1110</td><td class="font-mono">224 – 239</td><td class="text-slate-400">No aplica</td><td class="text-slate-400">No aplica</td><td>Multicast</td></tr>
+                            <tr><td class="font-bold text-usm-burgundy">E</td><td class="font-mono">1111</td><td class="font-mono">240 – 255</td><td class="text-slate-400">No aplica</td><td class="text-slate-400">No aplica</td><td>Experimental / investigación</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-slate-500 mt-3">Nota: 127.0.0.0/8 se usa para loopback y no se asigna como red normal. Hoy en día casi nadie asigna direcciones "por clase": se usa CIDR con cualquier prefijo, pero identificar la clase sigue siendo útil para saber el tamaño de bloque de referencia.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg card">
+                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">Rangos Privados</h4>
+                    <p class="text-sm text-slate-700 mb-4">Dado que las IPv4 públicas se agotan, se reservaron bloques <strong>privados</strong> que no son ruteables en Internet: se pueden repetir en tu casa, tu universidad y una empresa sin chocar entre sí.</p>
+                    <table class="data-table w-full text-sm">
+                        <thead><tr><th>Bloque</th><th>Rango</th><th># direcciones</th></tr></thead>
+                        <tbody>
+                            <tr><td>10.0.0.0/8</td><td class="font-mono">10.0.0.0 – 10.255.255.255</td><td>16.777.216</td></tr>
+                            <tr><td>172.16.0.0/12</td><td class="font-mono">172.16.0.0 – 172.31.255.255</td><td>1.048.576</td></tr>
+                            <tr><td>192.168.0.0/16</td><td class="font-mono">192.168.0.0 – 192.168.255.255</td><td>65.536</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg card">
+                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">NAT (Network Address Translation)</h4>
+                    <p class="text-sm text-slate-700 mb-4">Es el mecanismo que permite que una red privada completa navegue por Internet usando una sola IP pública dinámica.</p>
+                    <ul class="text-sm text-slate-700 list-disc pl-5 space-y-2">
+                        <li>El router de la empresa/casa recibe la dirección pública desde el ISP (fija o dinámica).</li>
+                        <li>Cuando un equipo interno (IP privada) sale a Internet, el router sustituye su IP privada por la IP pública, asignando además un número de puerto dinámico para diferenciar cada conexión.</li>
+                        <li>Al volver la respuesta, el router hace la traducción inversa y la entrega al equipo interno correcto.</li>
+                        <li>Actúa como un "puente" (Proxy) entre la red privada y la red externa.</li>
                     </ul>
                 </div>
-
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <h4 class="text-2xl font-bold mb-4 text-usm-navy">Rangos Privados y NAT</h4>
-                    <p class="text-sm text-slate-700 mb-4">Dado que las IPv4 se estaban agotando, se reservaron bloques <strong>Privados</strong> que no pueden navegar por Internet. Se pueden repetir en tu casa, en la universidad y en una empresa sin chocar entre sí.</p>
-                    
-                    <div class="bg-slate-50 border border-slate-200 rounded p-4 mb-4">
-                        <ul class="text-sm font-mono space-y-2 text-slate-800">
-                            <li><strong>Clase A:</strong> 10.0.0.0 a 10.255.255.255</li>
-                            <li><strong>Clase B:</strong> 172.16.0.0 a 172.31.255.255</li>
-                            <li><strong>Clase C:</strong> 192.168.0.0 a 192.168.255.255</li>
-                        </ul>
-                    </div>
-                    
-                    <h5 class="font-bold text-usm-burgundy mb-2">Traducción de Red (NAT)</h5>
-                    <p class="text-sm text-slate-700">Para que tu PC con IP privada (ej: 192.168.1.5) vea YouTube, tu router de la casa aplica <strong>NAT (Network Address Translation)</strong>. NAT enmascara tu IP privada y le pone la única IP pública que te dio la compañía de Internet.</p>
-                </div>
             </div>
         </section>
 
+        <!-- ===================== SUBNETEO ===================== -->
         <section id="subneteo" class="mb-20">
-            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">3. ¿Cómo dividir Redes? (Subneteo)</h3>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg mb-10 border-t-4 border-usm-gold">
-                <p class="mb-6 text-slate-700 text-center max-w-3xl mx-auto">El Subneteo consiste en "robarle" bits a la porción de host para dárselos a la porción de red, logrando dividir una red grande en varias subredes más pequeñas para mejor seguridad y administración.</p>
-                
-                <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">4. ¿Cómo dividir una red? (Subneteo)</h3>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg card mb-10 border-t-4" style="border-top-color: var(--usm-gold);">
+                <p class="mb-6 text-slate-700 text-center max-w-3xl mx-auto">Subnetear consiste en "robarle" bits a la porción de host para dárselos a la porción de red, dividiendo una red grande en varias subredes más pequeñas e independientes (mejor seguridad, tráfico segmentado y administración).</p>
+
+                <div class="grid md:grid-cols-4 gap-4 mb-10">
                     <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                        <div class="text-3xl font-black text-slate-300 mb-2">01</div>
+                        <div class="text-3xl font-black text-slate-300 mb-2">1</div>
                         <h5 class="font-bold text-usm-navy mb-2">Identificar la necesidad</h5>
-                        <p class="text-sm text-slate-600">Si tienes una red 192.168.1.0/24 y necesitas 4 subredes (ej: Finanzas, RRHH, TI, Invitados).</p>
+                        <p class="text-sm text-slate-600">Ej: tienes <code>192.168.1.0/24</code> y necesitas 4 subredes (Finanzas, RRHH, TI, Invitados).</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                        <div class="text-3xl font-black text-slate-300 mb-2">02</div>
+                        <div class="text-3xl font-black text-slate-300 mb-2">2</div>
                         <h5 class="font-bold text-usm-navy mb-2">Calcular bits prestados</h5>
-                        <p class="text-sm text-slate-600">Fórmula: 2^n >= Subredes. Para 4 redes, necesitamos robar n = 2 bits (2^2 = 4).</p>
+                        <p class="text-sm text-slate-600">Fórmula: 2<sup>n</sup> ≥ subredes necesarias. Para 4 redes: n = 2, porque 2² = 4.</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                        <div class="text-3xl font-black text-slate-300 mb-2">03</div>
-                        <h5 class="font-bold text-usm-navy mb-2">Nueva Máscara</h5>
-                        <p class="text-sm text-slate-600">La máscara vieja era /24. Le sumamos los 2 bits robados. La nueva máscara es <strong>/26</strong>.</p>
+                        <div class="text-3xl font-black text-slate-300 mb-2">3</div>
+                        <h5 class="font-bold text-usm-navy mb-2">Nueva máscara</h5>
+                        <p class="text-sm text-slate-600">Máscara original /24 + 2 bits robados = nueva máscara <strong>/26</strong>.</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <div class="text-3xl font-black text-slate-300 mb-2">4</div>
+                        <h5 class="font-bold text-usm-navy mb-2">Listar las subredes</h5>
+                        <p class="text-sm text-slate-600">El "salto" entre cada subred es 256 − máscara decimal = 256 − 192 = <strong>64</strong>.</p>
                     </div>
                 </div>
 
-                <h4 class="text-2xl font-bold mb-4 text-center mt-12 text-usm-burgundy">Calculadora de Subredes</h4>
-                <div class="max-w-3xl mx-auto">
-                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                        <div class="flex-grow">
-                            <label for="ip-input" class="block mb-2 font-medium text-slate-700">Dirección IP:</label>
-                            <input type="text" id="ip-input" value="192.168.1.10" placeholder="Ej: 192.168.1.10" class="w-full p-3 border border-slate-300 rounded-md font-mono focus:ring-2 focus:ring-usm-navy outline-none transition">
-                        </div>
-                        <div>
-                            <label for="cidr-input" class="block mb-2 font-medium text-slate-700">Prefijo CIDR:</label>
-                            <input type="number" id="cidr-input" value="26" min="1" max="32" class="w-full sm:w-24 p-3 border border-slate-300 rounded-md font-mono focus:ring-2 focus:ring-usm-navy outline-none transition">
-                        </div>
-                    </div>
-                    
-                    <button type="button" id="calculate-btn" class="w-full bg-usm-navy text-white font-bold py-3 rounded-lg shadow-md transition-colors hover:bg-blue-900">Analizar Red</button>
-
-                    <div id="results-container" class="mt-8 border-t border-slate-200 pt-6 hidden">
-                         <div class="grid md:grid-cols-2 gap-x-8 gap-y-4 font-mono text-sm">
-                             <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>IP Base:</strong> <span id="res-ip" class="text-usm-navy font-bold"></span></div>
-                             <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Prefijo CIDR:</strong> <span id="res-cidr" class="font-bold"></span></div>
-                             <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Máscara Decimal:</strong> <span id="res-netmask"></span></div>
-                             <div class="bg-blue-50 p-3 rounded-md break-words border border-blue-200 shadow-sm"><strong class="text-usm-navy">Dirección de RED:</strong> <br><span id="res-network" class="text-lg text-usm-navy font-bold"></span></div>
-                             <div class="bg-red-50 p-3 rounded-md break-words border border-red-200 shadow-sm"><strong class="text-red-700">Dir. de BROADCAST:</strong> <br><span id="res-broadcast" class="text-lg text-red-600 font-bold"></span></div>
-                             <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100 col-span-1 md:col-span-2"><strong>Rango IPs Usables para Hosts:</strong> <span id="res-host-range" class="text-green-700 font-bold"></span></div>
-                             <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Total Hosts Usables:</strong> <span id="res-total-hosts"></span> computadores</div>
-                             <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Subredes Posibles:</strong> <span id="res-subnets"></span></div>
-                         </div>
-                    </div>
-                    <div id="error-container" class="mt-6 text-center text-red-600 font-semibold hidden"></div>
+                <h4 class="text-xl font-bold mb-3 text-usm-burgundy">Ejemplo completo resuelto: dividir 200.1.19.0/24 en 4 subredes</h4>
+                <p class="text-sm text-slate-700 mb-4">Con /26 el salto es de 64 direcciones. Partiendo desde <code>200.1.19.0</code>, cada subred ocupa un bloque de 64 IPs:</p>
+                <div class="overflow-x-auto mb-6">
+                    <table class="data-table w-full text-sm text-center">
+                        <thead>
+                            <tr><th>Subred</th><th>Dirección de Red</th><th>Primer host</th><th>Último host</th><th>Broadcast</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="font-bold">RED 1</td><td class="font-mono">200.1.19.0</td><td class="font-mono">200.1.19.1</td><td class="font-mono">200.1.19.62</td><td class="font-mono text-red-600">200.1.19.63</td></tr>
+                            <tr><td class="font-bold">RED 2</td><td class="font-mono">200.1.19.64</td><td class="font-mono">200.1.19.65</td><td class="font-mono">200.1.19.126</td><td class="font-mono text-red-600">200.1.19.127</td></tr>
+                            <tr><td class="font-bold">RED 3</td><td class="font-mono">200.1.19.128</td><td class="font-mono">200.1.19.129</td><td class="font-mono">200.1.19.190</td><td class="font-mono text-red-600">200.1.19.191</td></tr>
+                            <tr><td class="font-bold">RED 4</td><td class="font-mono">200.1.19.192</td><td class="font-mono">200.1.19.193</td><td class="font-mono">200.1.19.254</td><td class="font-mono text-red-600">200.1.19.255</td></tr>
+                        </tbody>
+                    </table>
                 </div>
+                <p class="text-sm text-slate-700 mb-8">Cada subred queda con 64 − 2 = <strong>62 hosts utilizables</strong> (se restan la dirección de red y la de broadcast, que nunca se asignan a un equipo). Esto es exactamente lo que verías en un router conectando 4 redes distintas hacia Internet: cada interfaz queda en una subred /26 diferente, todas dentro del bloque original /24.</p>
+
+                <h4 class="text-xl font-bold mb-3 text-usm-navy">Tabla de referencia rápida (subneteando una red Clase C)</h4>
+                <div class="overflow-x-auto">
+                    <table class="data-table w-full text-sm text-center">
+                        <thead><tr><th>Prefijo</th><th>Máscara de red</th><th># Subredes</th><th>Hosts por subred</th><th>Total hosts usables</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-mono">/24</td><td class="font-mono">255.255.255.0</td><td>1</td><td>254</td><td>254</td></tr>
+                            <tr><td class="font-mono">/25</td><td class="font-mono">255.255.255.128</td><td>2</td><td>126</td><td>252</td></tr>
+                            <tr><td class="font-mono">/26</td><td class="font-mono">255.255.255.192</td><td>4</td><td>62</td><td>248</td></tr>
+                            <tr><td class="font-mono">/27</td><td class="font-mono">255.255.255.224</td><td>8</td><td>30</td><td>240</td></tr>
+                            <tr><td class="font-mono">/28</td><td class="font-mono">255.255.255.240</td><td>16</td><td>14</td><td>224</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-slate-500 mt-3">Fórmulas generales: si "h" es la cantidad de bits de host que quedan, entonces <strong>hosts utilizables = 2<sup>h</sup> − 2</strong>. Si "n" es la cantidad de bits que se le restan a la porción de host original (los bits "robados"), entonces <strong>subredes posibles = 2<sup>n</sup></strong>.</p>
             </div>
         </section>
 
+        <!-- ===================== CALCULADORA ===================== -->
+        <section id="calculadora" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 text-center pb-4">5. Calculadora de Subredes</h3>
+            <div class="bg-white p-8 rounded-xl shadow-lg card max-w-3xl mx-auto">
+                <p class="text-sm text-slate-600 mb-6 text-center">Ingresa cualquier IP y prefijo CIDR para ver el desglose completo: úsala para comprobar tus propios cálculos a mano.</p>
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <div class="flex-grow">
+                        <label for="ip-input" class="block mb-2 font-medium text-slate-700 text-sm">Dirección IP:</label>
+                        <input type="text" id="ip-input" value="200.1.19.235" placeholder="Ej: 192.168.1.10" class="w-full p-3 border border-slate-300 rounded-md font-mono focus:ring-2 focus:ring-usm-navy outline-none transition">
+                    </div>
+                    <div>
+                        <label for="cidr-input" class="block mb-2 font-medium text-slate-700 text-sm">Prefijo CIDR:</label>
+                        <input type="number" id="cidr-input" value="26" min="1" max="32" class="w-full sm:w-24 p-3 border border-slate-300 rounded-md font-mono focus:ring-2 focus:ring-usm-navy outline-none transition">
+                    </div>
+                </div>
+
+                <button type="button" id="calculate-btn" class="w-full bg-usm-navy text-white font-bold py-3 rounded-lg shadow-md transition-colors hover:bg-blue-900">Analizar Red</button>
+
+                <div id="results-container" class="mt-8 border-t border-slate-200 pt-6 hidden">
+                     <div class="grid md:grid-cols-2 gap-x-8 gap-y-4 font-mono text-sm">
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>IP ingresada:</strong> <span id="res-ip" class="text-usm-navy font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Prefijo CIDR:</strong> <span id="res-cidr" class="font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Máscara decimal:</strong> <span id="res-netmask"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Clase original:</strong> <span id="res-class"></span></div>
+                         <div class="bg-blue-50 p-3 rounded-md break-words border border-blue-200 shadow-sm"><strong class="text-usm-navy">Dirección de RED:</strong><br><span id="res-network" class="text-lg text-usm-navy font-bold"></span></div>
+                         <div class="bg-red-50 p-3 rounded-md break-words border border-red-200 shadow-sm"><strong class="text-red-700">Dirección de BROADCAST:</strong><br><span id="res-broadcast" class="text-lg text-red-600 font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100 col-span-1 md:col-span-2"><strong>Rango de hosts usables:</strong> <span id="res-host-range" class="text-green-700 font-bold"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Hosts usables:</strong> <span id="res-total-hosts"></span></div>
+                         <div class="bg-slate-50 p-3 rounded-md break-words border border-slate-100"><strong>Subredes posibles (desde la clase):</strong> <span id="res-subnets"></span></div>
+                     </div>
+                </div>
+                <div id="error-container" class="mt-6 text-center text-red-600 font-semibold hidden"></div>
+            </div>
+        </section>
+
+        <!-- ===================== EJERCICIOS ===================== -->
         <section id="ejercicios">
             <h3 class="section-title text-3xl font-bold mb-8 pb-4">Prueba de Conocimientos: Ejercicios</h3>
-            <p class="text-slate-600 mb-8 max-w-3xl">Pon a prueba tu conocimiento. Haz clic en "Mostrar Resolución" para ver la explicación paso a paso.</p>
+            <p class="text-slate-600 mb-8 max-w-3xl">Pon a prueba lo aprendido. Haz clic en "Mostrar Resolución" para ver la explicación paso a paso.</p>
 
             <div class="space-y-8">
-                
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden card">
                     <div class="p-6 md:p-8">
-                        <span class="inline-block bg-blue-100 text-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-3 border border-usm-navy">Pregunta 1: Subnetting</span>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">Cálculo de Subredes en Clase C</h3>
-                        <p class="text-slate-700 text-sm mb-4">¿Cuántas subredes puedes crear con una máscara <strong>/26</strong> en una dirección IP de <strong>Clase C</strong>?</p>
+                        <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-indigo-500">Pregunta 1: MAC vs IP</span>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">¿Cuál identificador usa un router para enrutar por Internet?</h3>
+                        <p class="text-slate-700 text-sm mb-4">Un paquete debe viajar desde tu computador en Valparaíso hasta un servidor en Japón, pasando por varios routers intermedios. ¿Qué dirección usan esos routers para decidir el siguiente salto?</p>
                         <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium">
-                            <li class="p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-200 cursor-pointer">A) 2</li>
-                            <li class="p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-200 cursor-pointer">B) 4</li>
-                            <li class="p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-200 cursor-pointer">C) 8</li>
-                            <li class="p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-200 cursor-pointer">D) 16</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">A) La dirección MAC de destino</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">B) La dirección IP de destino</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">C) Ambas por igual en cada salto</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">D) Ninguna, se usa el nombre DNS</li>
                         </ul>
                     </div>
                     <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                        <button type="button" onclick="toggleAnswer('ans1', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                        <button type="button" onclick="toggleAnswer('ans0', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> <span>Mostrar Resolución</span>
                         </button>
                     </div>
-                    <div id="ans1" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
-                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: B) 4</p>
-                        <p class="text-sm text-slate-700 mb-2"><strong>Explicación:</strong></p>
-                        <p class="text-sm text-slate-700">La máscara por defecto para una IP de Clase C es <strong>/24</strong>. Si usamos una máscara <strong>/26</strong>, significa que hemos tomado prestados bits de la porción de host para subredes:</p>
-                        <ul class="list-disc pl-5 mt-2 text-sm text-slate-700">
-                            <li>Bits prestados = 26 - 24 = <strong>2 bits</strong>.</li>
-                            <li>Fórmula de subredes = 2 elevado a 'n' (donde n son los bits prestados).</li>
-                            <li>Resultado: 2 elevado a 2 = <strong>4 subredes</strong>.</li>
-                        </ul>
+                    <div id="ans0" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
+                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: B) La dirección IP de destino</p>
+                        <p class="text-sm text-slate-700">La IP de destino no cambia durante todo el viaje, es la que identifica de forma única al servidor en cualquier parte de Internet. La dirección MAC sí cambia en cada salto: en cada segmento de red, el paquete se re-envuelve con la MAC del siguiente router o del destino final, porque la MAC solo tiene sentido dentro de una red local.</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden card">
                     <div class="p-6 md:p-8">
-                        <span class="inline-block bg-red-100 text-usm-burgundy text-xs font-bold px-3 py-1 rounded-full mb-3 border border-usm-burgundy">Pregunta 2: Protocolos</span>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">Traducción de Direcciones</h3>
-                        <p class="text-slate-700 text-sm mb-4">¿Qué tecnología se utiliza para traducir IPs privadas a públicas para permitir el acceso a Internet?</p>
-                        <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium">
-                            <li class="p-2 hover:bg-slate-50 rounded">A) DNS</li>
-                            <li class="p-2 hover:bg-slate-50 rounded">B) VPN</li>
-                            <li class="p-2 hover:bg-slate-50 rounded">C) DHCP</li>
-                            <li class="p-2 hover:bg-slate-50 rounded">D) NAT</li>
-                        </ul>
-                    </div>
-                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                        <button type="button" onclick="toggleAnswer('ans2', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> <span>Mostrar Resolución</span>
-                        </button>
-                    </div>
-                    <div id="ans2" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
-                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: D) NAT</p>
-                        <p class="text-sm text-slate-700 mb-2"><strong>Explicación:</strong></p>
-                        <p class="text-sm text-slate-700"><strong>NAT (Network Address Translation)</strong> es el mecanismo que implementan los routers para modificar los paquetes de red, sustituyendo la IP privada de origen (que no puede navegar en Internet) por la IP pública asignada por el proveedor de servicios (ISP).</p>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-6 md:p-8">
-                        <span class="inline-block bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-teal-500">Pregunta 3: Direccionamiento</span>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">Reconocimiento de IP Privada</h3>
-                        <p class="text-slate-700 text-sm mb-4">De las siguientes direcciones IP, ¿cuál corresponde a una dirección <strong>Privada</strong> que NO es ruteable en Internet?</p>
+                        <span class="inline-block bg-blue-100 text-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-3 border border-usm-navy">Pregunta 2: Dirección de Red (AND)</span>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Calcular una dirección de red</h3>
+                        <p class="text-slate-700 text-sm mb-4">Dada la IP <code>172.16.5.130</code> con máscara <code>/25</code> (255.255.255.128), ¿cuál es su dirección de red?</p>
                         <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium font-mono">
-                            <li class="p-2 hover:bg-slate-50 rounded">A) 8.8.8.8</li>
-                            <li class="p-2 hover:bg-slate-50 rounded">B) 172.20.5.1</li>
-                            <li class="p-2 hover:bg-slate-50 rounded">C) 192.169.1.1</li>
-                            <li class="p-2 hover:bg-slate-50 rounded">D) 11.0.0.1</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">A) 172.16.5.0</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">B) 172.16.5.128</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">C) 172.16.5.129</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">D) 172.16.0.0</li>
                         </ul>
                     </div>
                     <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                        <button type="button" onclick="toggleAnswer('ans3', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                        <button type="button" onclick="toggleAnswer('ans1b', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> <span>Mostrar Resolución</span>
                         </button>
                     </div>
-                    <div id="ans3" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
-                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: B) 172.20.5.1</p>
-                        <p class="text-sm text-slate-700 mb-2"><strong>Explicación:</strong></p>
-                        <p class="text-sm text-slate-700">Revisemos los rangos privados reservados:</p>
-                        <ul class="list-disc pl-5 mt-2 text-sm text-slate-700 font-mono">
-                            <li>Clase A: 10.0.0.0 a 10.255.255.255 (La opción D es 11, por ende es pública).</li>
-                            <li>Clase B: 172.16.0.0 a 172.31.255.255 <strong>(La opción B cae en este rango).</strong></li>
-                            <li>Clase C: 192.168.0.0 a 192.168.255.255 (La opción C es 192.<strong>169</strong>, por ende es pública).</li>
-                        </ul>
+                    <div id="ans1b" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
+                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: B) 172.16.5.128</p>
+                        <p class="text-sm text-slate-700 mb-2"><strong>Explicación:</strong> los 3 primeros octetos coinciden completos con la máscara (255.255.255), así que se copian igual: 172.16.5. El último octeto hay que binarizarlo:</p>
+                        <p class="text-sm text-slate-700 font-mono mb-2">130 = 10000010 &nbsp;&nbsp;|&nbsp;&nbsp; 128 = 10000000</p>
+                        <p class="text-sm text-slate-700">AND bit a bit: <code>10000010 AND 10000000 = 10000000 = 128</code>. Por lo tanto la red es <strong>172.16.5.128</strong>. Con /25 cada subred tiene 128 direcciones, así que el bloque va de .128 a .255; la IP .130 cae dentro de ese bloque.</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden card">
                     <div class="p-6 md:p-8">
-                        <span class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-orange-500">Pregunta 4: Broadcast</span>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">Cálculo Rápido de Broadcast</h3>
-                        <p class="text-slate-700 text-sm mb-4">Si tienes una red local cuya dirección de red base es <code>192.168.10.0 /24</code>, ¿Cuál de las siguientes es su dirección de Broadcast?</p>
+                        <span class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-orange-500">Pregunta 3: Broadcast</span>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Cálculo rápido de Broadcast</h3>
+                        <p class="text-slate-700 text-sm mb-4">Si la dirección de red base es <code>192.168.10.0/24</code>, ¿cuál es su dirección de Broadcast?</p>
                         <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium font-mono">
                             <li class="p-2 hover:bg-slate-50 rounded">A) 192.168.10.1</li>
                             <li class="p-2 hover:bg-slate-50 rounded">B) 192.168.10.254</li>
@@ -370,17 +491,66 @@
                     </div>
                     <div id="ans4" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
                         <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: C) 192.168.10.255</p>
-                        <p class="text-sm text-slate-700 mb-2"><strong>Explicación:</strong></p>
-                        <p class="text-sm text-slate-700">La máscara <strong>/24</strong> indica que los primeros 3 octetos (192.168.10) pertenecen a la RED y son intocables. El último octeto completo (8 bits) pertenece al HOST.</p>
-                        <p class="text-sm text-slate-700 mt-2">Para obtener la dirección de Broadcast, todos los bits de Host deben estar encendidos (en 1). 8 bits en "1" en binario (<code>11111111</code>) equivalen a <strong>255</strong> en decimal. Por lo tanto, el broadcast es <code>192.168.10.255</code>.</p>
+                        <p class="text-sm text-slate-700">La máscara /24 indica que los primeros 3 octetos (192.168.10) son la porción de red y no se tocan. El último octeto completo es host: para el broadcast se ponen sus 8 bits en "1" (<code>11111111 = 255</code>), quedando <strong>192.168.10.255</strong>.</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden card">
                     <div class="p-6 md:p-8">
-                        <span class="inline-block bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-purple-500">Pregunta 5: Máscaras</span>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">Conversión CIDR a Decimal</h3>
-                        <p class="text-slate-700 text-sm mb-4">¿Cuál es la representación decimal punteada para la máscara de subred <strong>/26</strong>?</p>
+                        <span class="inline-block bg-red-100 text-usm-burgundy text-xs font-bold px-3 py-1 rounded-full mb-3 border border-usm-burgundy">Pregunta 4: NAT</span>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Traducción de direcciones</h3>
+                        <p class="text-slate-700 text-sm mb-4">¿Qué tecnología traduce IPs privadas a públicas para permitir el acceso a Internet?</p>
+                        <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium">
+                            <li class="p-2 hover:bg-slate-50 rounded">A) DNS</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">B) VPN</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">C) DHCP</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">D) NAT</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                        <button type="button" onclick="toggleAnswer('ans2', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> <span>Mostrar Resolución</span>
+                        </button>
+                    </div>
+                    <div id="ans2" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
+                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: D) NAT</p>
+                        <p class="text-sm text-slate-700"><strong>NAT (Network Address Translation)</strong> es el mecanismo que implementan los routers para modificar los paquetes, sustituyendo la IP privada de origen (no ruteable en Internet) por la IP pública asignada por el ISP.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden card">
+                    <div class="p-6 md:p-8">
+                        <span class="inline-block bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-teal-500">Pregunta 5: Direccionamiento</span>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Reconocimiento de IP privada</h3>
+                        <p class="text-slate-700 text-sm mb-4">¿Cuál de estas direcciones IP es <strong>privada</strong> (no ruteable en Internet)?</p>
+                        <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium font-mono">
+                            <li class="p-2 hover:bg-slate-50 rounded">A) 8.8.8.8</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">B) 172.20.5.1</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">C) 192.169.1.1</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">D) 11.0.0.1</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                        <button type="button" onclick="toggleAnswer('ans3', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> <span>Mostrar Resolución</span>
+                        </button>
+                    </div>
+                    <div id="ans3" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
+                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: B) 172.20.5.1</p>
+                        <p class="text-sm text-slate-700 mb-2"><strong>Explicación:</strong> revisando los rangos privados:</p>
+                        <ul class="list-disc pl-5 mt-2 text-sm text-slate-700 font-mono">
+                            <li>Clase A privada: 10.0.0.0 – 10.255.255.255 (la opción D es 11.x, pública)</li>
+                            <li>Clase B privada: 172.16.0.0 – 172.31.255.255 <strong>(la opción B cae aquí)</strong></li>
+                            <li>Clase C privada: 192.168.0.0 – 192.168.255.255 (la opción C es 192.<strong>169</strong>.x, pública)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden card">
+                    <div class="p-6 md:p-8">
+                        <span class="inline-block bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-purple-500">Pregunta 6: Máscaras</span>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Conversión CIDR a decimal</h3>
+                        <p class="text-slate-700 text-sm mb-4">¿Cuál es la representación decimal punteada para la máscara <strong>/26</strong>?</p>
                         <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium font-mono">
                             <li class="p-2 hover:bg-slate-50 rounded">A) 255.255.255.128</li>
                             <li class="p-2 hover:bg-slate-50 rounded">B) 255.255.255.192</li>
@@ -395,12 +565,33 @@
                     </div>
                     <div id="ans5" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
                         <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: B) 255.255.255.192</p>
-                        <p class="text-sm text-slate-700 mb-2"><strong>Explicación:</strong></p>
-                        <p class="text-sm text-slate-700">El /26 significa que hay 26 bits en "1" de izquierda a derecha en la máscara:</p>
-                        <div class="bg-slate-50 p-3 rounded font-mono text-sm mt-2 mb-2 border border-slate-200 overflow-x-auto">
-                            11111111 . 11111111 . 11111111 . 11000000
-                        </div>
-                        <p class="text-sm text-slate-700">Los primeros 3 octetos llenos equivalen a 255. El último octeto es <code>11000000</code>. En binario, los valores posicionales de esos dos primeros bits son 128 y 64. Sumándolos: 128 + 64 = <strong>192</strong>.</p>
+                        <p class="text-sm text-slate-700">/26 son 26 bits en "1" seguidos: <code>11111111.11111111.11111111.11000000</code>. Los primeros 3 octetos llenos son 255. El último octeto <code>11000000</code> equivale a 128+64 = <strong>192</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden card">
+                    <div class="p-6 md:p-8">
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-emerald-500">Pregunta 7: Subneteo</span>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Diseño de subredes</h3>
+                        <p class="text-slate-700 text-sm mb-4">Tienes la red <code>10.10.20.0/24</code> y necesitas <strong>8 subredes</strong> del mismo tamaño para 8 sucursales. ¿Cuál es la nueva máscara y cuántos hosts usables tendrá cada subred?</p>
+                        <ul class="list-none pl-2 text-sm space-y-2 text-slate-600 mb-6 font-medium font-mono">
+                            <li class="p-2 hover:bg-slate-50 rounded">A) /26 con 62 hosts</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">B) /27 con 30 hosts</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">C) /27 con 32 hosts</li>
+                            <li class="p-2 hover:bg-slate-50 rounded">D) /28 con 14 hosts</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                        <button type="button" onclick="toggleAnswer('ans6', this)" class="bg-usm-navy hover:bg-blue-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> <span>Mostrar Resolución</span>
+                        </button>
+                    </div>
+                    <div id="ans6" class="hidden p-6 md:p-8 bg-white border-t border-slate-200 animate-fadeIn">
+                        <p class="font-bold text-green-600 text-lg mb-2">Respuesta Correcta: B) /27 con 30 hosts</p>
+                        <p class="text-sm text-slate-700 mb-2"><strong>Paso 1:</strong> necesitamos 2<sup>n</sup> ≥ 8 → n = 3 bits prestados (2³ = 8).</p>
+                        <p class="text-sm text-slate-700 mb-2"><strong>Paso 2:</strong> nueva máscara = /24 + 3 = <strong>/27</strong>.</p>
+                        <p class="text-sm text-slate-700 mb-2"><strong>Paso 3:</strong> quedan 32 − 27 = 5 bits de host, así que cada subred tiene 2⁵ = 32 direcciones totales, pero solo <strong>2⁵ − 2 = 30 hosts usables</strong> (se descuentan red y broadcast).</p>
+                        <p class="text-sm text-slate-700">La opción C confunde el total de direcciones (32) con los hosts usables (30); la trampa clásica es olvidar restar la dirección de red y la de broadcast.</p>
                     </div>
                 </div>
 
@@ -411,7 +602,7 @@
 
     <footer class="mt-20" style="background: linear-gradient(120deg, #0f1f33 0%, #002b5c 55%, #8c1d40 100%); color: #e2e8f0; border-top: 2px solid rgba(201,163,74,0.6);">
         <div class="container mx-auto px-6 py-8 text-center text-sm font-medium">
-            <p>&copy; 2026 Ayudantía - Redes de Computadores: Direccionamiento y Subneteo.</p>
+            <p>&copy; 2026-2 Ayudantía - Redes de Computadores: Direccionamiento IP y Subneteo.</p>
         </div>
     </footer>
 
@@ -431,74 +622,73 @@
                 return [(long >>> 24) & 255, (long >>> 16) & 255, (long >>> 8) & 255, long & 255].join('.');
             }
 
+            function classify(firstOctet) {
+                if (firstOctet <= 126) return { name: 'A', cidr: 8 };
+                if (firstOctet <= 191) return { name: 'B', cidr: 16 };
+                if (firstOctet <= 223) return { name: 'C', cidr: 24 };
+                if (firstOctet <= 239) return { name: 'D (Multicast)', cidr: null };
+                return { name: 'E (Experimental)', cidr: null };
+            }
+
             function calculateSubnet() {
                 const ipStr = ipInput.value.trim();
                 const cidr = parseInt(cidrInput.value, 10);
 
                 const ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
                 if (!ipRegex.test(ipStr) || ipStr.split('.').some(o => parseInt(o, 10) > 255) || isNaN(cidr) || cidr < 1 || cidr > 32) {
-                    errorContainer.textContent = 'Por favor, ingrese una dirección IP válida (ej: 192.168.1.10) y un CIDR entre 1 y 32.';
+                    errorContainer.textContent = 'Por favor, ingresa una dirección IP válida (ej: 192.168.1.10) y un CIDR entre 1 y 32.';
                     errorContainer.classList.remove('hidden');
                     resultsContainer.classList.add('hidden');
                     return;
                 }
-                
+
                 errorContainer.classList.add('hidden');
-                
+
                 const ipLong = ipToLong(ipStr);
                 const netmaskLong = (-1 << (32 - cidr)) >>> 0;
-                
+
                 const networkLong = (ipLong & netmaskLong) >>> 0;
                 const broadcastLong = (networkLong | (~netmaskLong >>> 0)) >>> 0;
 
                 const hostBits = 32 - cidr;
                 const totalHosts = hostBits > 1 ? Math.pow(2, hostBits) - 2 : 0;
-                
+
                 const firstHostLong = totalHosts > 0 ? networkLong + 1 : 0;
                 const lastHostLong = totalHosts > 0 ? broadcastLong - 1 : 0;
-                
-                let originalCidr = 8;
-                const firstOctet = parseInt(ipStr.split('.')[0], 10);
 
-                if (firstOctet >= 128 && firstOctet <= 191) {
-                    originalCidr = 16;
-                } else if (firstOctet >= 192 && firstOctet <= 223) {
-                    originalCidr = 24;
-                }
-                
+                const firstOctet = parseInt(ipStr.split('.')[0], 10);
+                const cls = classify(firstOctet);
+                const originalCidr = cls.cidr !== null ? cls.cidr : cidr;
+
                 const subnetBits = cidr - originalCidr;
                 const possibleSubnets = subnetBits >= 0 ? Math.pow(2, subnetBits) : 'N/A';
 
                 document.getElementById('res-ip').textContent = ipStr;
                 document.getElementById('res-cidr').textContent = `/${cidr}`;
                 document.getElementById('res-netmask').textContent = longToIp(netmaskLong);
+                document.getElementById('res-class').textContent = `Clase ${cls.name}` + (cls.cidr !== null ? ` (por defecto /${cls.cidr})` : '');
                 document.getElementById('res-network').textContent = longToIp(networkLong);
                 document.getElementById('res-broadcast').textContent = longToIp(broadcastLong);
                 document.getElementById('res-host-range').textContent = totalHosts > 0 ? `${longToIp(firstHostLong)} - ${longToIp(lastHostLong)}` : 'Ninguno (/31 o /32)';
                 document.getElementById('res-total-hosts').textContent = totalHosts;
-                document.getElementById('res-subnets').textContent = subnetBits >= 0 ? `${possibleSubnets} (basado en la clase original)` : 'N/A (Máscara menor a la clase)';
+                document.getElementById('res-subnets').textContent = subnetBits >= 0 ? `${possibleSubnets}` : 'N/A (máscara menor a la de la clase)';
 
                 resultsContainer.classList.remove('hidden');
             }
 
-            // Ejecutar al hacer clic
             calculateBtn.addEventListener('click', calculateSubnet);
-            
-            // Ejecutar al presionar "Enter" en los campos de texto
             ipInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') calculateSubnet(); });
             cidrInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') calculateSubnet(); });
-            
-            // Ejecutar la primera vez para mostrar el ejemplo por defecto
+
             calculateSubnet();
         });
 
-        // Lógica de los botones de los ejercicios
         function toggleAnswer(id, btn) {
             const el = document.getElementById(id);
             const isHidden = el.classList.contains('hidden');
             const iconShow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
             const iconHide = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 2 20 20"></path><path d="M6.71 6.71A10.61 10.61 0 0 0 2 12a10.54 10.54 0 0 0 11.29 8.05"></path><path d="M11 17a5 5 0 0 1-5-5"></path><path d="M14 14a5 5 0 0 1-5-5"></path><path d="M17.3 17.3A10.56 10.56 0 0 0 22 12a10.58 10.58 0 0 0-11-7.05"></path></svg>`;
-            
+
             if (isHidden) {
                 el.classList.remove('hidden');
                 btn.innerHTML = iconHide + ` <span>Ocultar Resolución</span>`;

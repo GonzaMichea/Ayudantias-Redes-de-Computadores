@@ -21,6 +21,7 @@ Para una mejor experiencia, puedes interactuar con los diagramas de capas, gener
 | N° | Tema principal | Contenido clave | Material web |
 | :---: | :--- | :--- | :---: |
 | **01** | **Fundamentos y Criptografía** | Tipos de redes (LAN/WAN), modelo OSI vs TCP/IP, hashes SHA-256 y firmas digitales. | [Ver Guía 1](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-01) |
+| **02** | **Direccionamiento IP y Subneteo** | Direcciones MAC vs IP, cálculo de dirección de red (AND) y broadcast, clases A-E, direcciones privadas y NAT, subneteo paso a paso. | [Ver Guía 2](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-02) |
 
 
 ---
