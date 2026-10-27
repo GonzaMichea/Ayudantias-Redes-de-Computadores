@@ -1,1129 +1,1328 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayudantía 4 — Capa de Transporte</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --navy:    #002b5c;
-            --burg:    #8c1d40;
-            --gold:    #c9a34a;
-            --ink:     #0f1f33;
-            --paper:   #f4f6fb;
-            --card-bg: rgba(255,255,255,0.92);
-            --border:  rgba(0,43,92,0.10);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayudantía 4 — Capa de Transporte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#002b5c; --navy2:#0b3f7a; --burg:#8c1d40; --gold:#c9a34a; --ink:#0f1f33;
+  --paper:#f4f6fb; --card:#ffffff; --line:#e2e8f0; --muted:#64748b; --text:#1e293b;
+  --ok:#15803d; --okbg:#ecfdf5; --warn:#c2410c; --warnbg:#fff7ed; --info:#1d4ed8; --infobg:#eff6ff;
+  --bad:#b91c1c; --badbg:#fef2f2;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15.5px;line-height:1.65;color:var(--text);
+  background:var(--paper);
+  background-image:radial-gradient(ellipse 60% 40% at 5% 5%,rgba(201,163,74,.16),transparent 60%),
+                   radial-gradient(ellipse 50% 45% at 95% 60%,rgba(140,29,64,.08),transparent 55%);}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;color:var(--ink);line-height:1.2;margin:0}
+h2{font-size:1.75rem}
+h3{font-size:1.2rem;margin:0 0 .6rem}
+h4{margin:.2rem 0 .4rem;font-size:1rem;color:var(--navy)}
+p{margin:.5rem 0}
+code,.mono{font-family:'JetBrains Mono',monospace;font-size:.88em}
+code{background:#eef2f7;padding:1px 6px;border-radius:5px;color:var(--navy)}
+a{color:var(--navy2)}
+strong{color:var(--ink)}
 
-        *, *::before, *::after { box-sizing: border-box; }
+/* Topbar */
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(100deg,var(--navy),var(--burg));
+  border-bottom:2px solid rgba(201,163,74,.6);box-shadow:0 4px 18px rgba(15,31,51,.25)}
+.topbar nav{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:10px 16px;overflow-x:auto;scrollbar-width:none}
+.topbar nav::-webkit-scrollbar{display:none}
+.brand{color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;margin-right:10px;white-space:nowrap}
+.topbar a{color:rgba(255,255,255,.85);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 11px;border-radius:99px;white-space:nowrap;border:1px solid transparent}
+.topbar a:hover{background:rgba(255,255,255,.13);border-color:rgba(201,163,74,.5);color:#fff}
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--paper);
-            background-image:
-                radial-gradient(ellipse 60% 40% at 5% 10%,  rgba(201,163,74,0.18) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 45% at 95% 85%, rgba(140,29,64,0.13) 0%, transparent 55%),
-                radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,43,92,0.04)  0%, transparent 70%);
-            min-height: 100vh;
-            color: #1e293b;
-        }
+main{max-width:1040px;margin:0 auto;padding:0 16px 40px}
 
-        h1,h2,h3,h4,h5 { font-family: 'Fraunces', serif; }
+/* Hero */
+.hero{text-align:center;padding:52px 0 18px}
+.badge{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);
+  background:rgba(0,43,92,.07);border:1px solid rgba(0,43,92,.18);padding:5px 14px;border-radius:99px;margin-bottom:16px}
+.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);background:linear-gradient(135deg,var(--navy),var(--burg));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{color:var(--muted);max-width:640px;margin:12px auto 0;font-weight:500}
 
-        /* ─── Topbar ─── */
-        .topbar {
-            background: linear-gradient(100deg, rgba(0,43,92,0.97) 0%, rgba(140,29,64,0.95) 100%);
-            border-bottom: 2px solid rgba(201,163,74,0.55);
-            box-shadow: 0 4px 24px rgba(15,31,51,0.28);
-            backdrop-filter: blur(12px);
-        }
-        .nav-link {
-            color: rgba(255,255,255,0.82);
-            padding: 0.4rem 0.9rem;
-            border-radius: 99px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 600;
-            transition: all .22s;
-            border: 1px solid transparent;
-        }
-        .nav-link:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.13);
-            border-color: rgba(201,163,74,0.5);
-        }
+/* Sections */
+section{scroll-margin-top:72px;margin:56px 0}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.sec-num{flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:var(--ink);
+  background:linear-gradient(135deg,var(--gold),#ecd08a);box-shadow:0 3px 10px rgba(201,163,74,.35)}
+.sec-intro{color:var(--muted);margin:0 0 22px;max-width:760px}
+.card{background:var(--card);border:1px solid rgba(0,43,92,.09);border-radius:18px;padding:24px;box-shadow:0 6px 24px rgba(15,31,51,.06);margin-bottom:18px}
+.card h3 .tag{font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:700;vertical-align:middle;margin-left:6px}
+.grid2,.grid3{display:grid;grid-template-columns:1fr;gap:16px}
+.grid2>*,.grid3>*{min-width:0}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}}
+.mini{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbfcfe}
+.mini .ic{font-size:1.5rem}
 
-        /* ─── Hero ─── */
-        .hero-title {
-            font-size: clamp(2.4rem,6vw,4.4rem);
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--navy) 10%, var(--burg) 90%);
-            -webkit-background-clip: text; background-clip: text;
-            color: transparent;
-            line-height: 1.1;
-        }
-        .badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: linear-gradient(135deg, rgba(0,43,92,0.08), rgba(140,29,64,0.06));
-            border: 1px solid rgba(0,43,92,0.18);
-            border-radius: 99px;
-            padding: 6px 16px;
-            font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;
-            color: var(--navy); text-transform: uppercase;
-        }
+/* Callouts */
+.call{border-radius:14px;padding:14px 16px;margin:14px 0;border-left:4px solid}
+.call p:first-child{margin-top:0}.call p:last-child{margin-bottom:0}
+.call.key{background:#fefbf0;border-color:var(--gold)}
+.call.tip{background:var(--infobg);border-color:var(--info)}
+.call.warn{background:var(--warnbg);border-color:var(--warn)}
+.call.ok{background:var(--okbg);border-color:var(--ok)}
+.call .lbl{font-weight:800;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+.call.key .lbl{color:#8a6a14}.call.tip .lbl{color:var(--info)}.call.warn .lbl{color:var(--warn)}.call.ok .lbl{color:var(--ok)}
 
-        /* ─── Section title ─── */
-        .section-title {
-            color: var(--ink);
-            border-bottom: 3px solid rgba(0,43,92,0.2);
-            padding-bottom: 1rem;
-        }
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin:10px 0}
+table.tbl{width:100%;border-collapse:collapse;font-size:.9rem;min-width:520px}
+.tbl th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-weight:700}
+.tbl th:first-child{border-top-left-radius:10px}.tbl th:last-child{border-top-right-radius:10px}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:nth-child(even) td{background:#f8fafc}
+.yes{color:var(--ok);font-weight:700}.no{color:var(--bad);font-weight:700}
 
-        /* ─── Cards ─── */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 1.25rem;
-            box-shadow: 0 8px 32px rgba(15,31,51,0.08), 0 1px 3px rgba(15,31,51,0.06);
-            transition: transform .24s, box-shadow .24s;
-        }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 40px rgba(15,31,51,0.12), 0 2px 6px rgba(15,31,51,0.08);
-        }
+/* Formula */
+.formula{background:var(--ink);color:#d7f5e1;font-family:'JetBrains Mono',monospace;font-size:.85rem;border-radius:12px;padding:14px 16px;overflow-x:auto;line-height:1.85;margin:12px 0;white-space:pre}
+.formula .c{color:#8aa0bd}
+.formula .h{color:#f3d58a}
 
-        /* ─── Step label ─── */
-        .step-num {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-            background: linear-gradient(135deg, var(--gold), #e8c870);
-            color: var(--ink); font-family:'Plus Jakarta Sans',sans-serif;
-            font-size: 1rem; font-weight: 800;
-        }
+.chip{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:99px;background:#eef2f7;color:var(--navy);border:1px solid #dbe3ee;white-space:nowrap}
+.chip.burg{background:#fbeef2;color:var(--burg);border-color:#f2cfdb}
+.chip.gold{background:#fdf6e3;color:#7a5b10;border-color:#efdca6}
 
-        /* ─── Segment field tooltip ─── */
-        .seg-field {
-            cursor: help;
-            transition: filter .18s;
-            position: relative;
-        }
-        .seg-field:hover { filter: brightness(0.86) saturate(1.2); }
-        .seg-tooltip {
-            display: none;
-            position: absolute;
-            z-index: 9999;
-            bottom: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0f1f33;
-            color: #e2e8f0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.71rem;
-            font-weight: 500;
-            line-height: 1.5;
-            padding: 10px 14px;
-            border-radius: 10px;
-            width: 230px;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-            pointer-events: none;
-            white-space: normal;
-            text-align: left;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .seg-tooltip strong { color: var(--gold); }
-        .seg-tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%; left: 50%;
-            transform: translateX(-50%);
-            border: 7px solid transparent;
-            border-top-color: #0f1f33;
-        }
-        .seg-field:hover .seg-tooltip { display: block; }
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:10px 0}
+ol.steps li{counter-increment:s;position:relative;padding:4px 0 8px 40px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:3px;width:27px;height:27px;border-radius:8px;background:var(--navy);color:#fff;font-weight:800;font-size:.82rem;display:grid;place-items:center}
+ul.clean{padding-left:1.1rem;margin:.4rem 0}
+ul.clean li{margin:.2rem 0}
 
-        /* Right-side tooltip flip */
-        .seg-field.tip-left .seg-tooltip  { left: auto; right: 0; transform: none; }
-        .seg-field.tip-left .seg-tooltip::after { left: auto; right: 20px; transform: none; }
+/* Map */
+.map a{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff;transition:transform .15s,box-shadow .15s}
+.map a:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,31,51,.08)}
+.map b{color:var(--navy);display:block}
+.map span{font-size:.85rem;color:var(--muted)}
 
-        /* ─── Segment table ─── */
-        .seg-table-wrap {
-            overflow-x: auto;
-            overflow-y: visible;
-            padding-top: 280px;
-            margin-top: -280px;
-            width: 100%;
-        }
-        .seg-table-inner {
-            min-width: 560px;
-            width: fit-content;
-            overflow: visible;
-        }
+/* Layers */
+.layers{display:flex;flex-direction:column;gap:6px;max-width:440px}
+.layer{display:flex;justify-content:space-between;gap:10px;align-items:center;border-radius:10px;padding:9px 14px;font-weight:700;font-size:.9rem;border:1px solid #dbe3ee;background:#f8fafc}
+.layer small{font-weight:500;color:var(--muted);text-align:right}
+.layer.hl{background:linear-gradient(90deg,#fff1dc,#ffd9a3);border-color:#f0a24a;box-shadow:0 4px 14px rgba(240,162,74,.25)}
 
-        /* ─── Diagrams ─── */
-        .diagram-wrap {
-            width: 100%;
-            overflow-x: auto;
-            background: linear-gradient(135deg, #f8fafc, #f0f4ff);
-            border: 1px solid rgba(0,43,92,0.1);
-            border-radius: 1rem;
-            padding: 1.5rem 1rem;
-        }
-        .diagram-wrap svg { display: block; margin: 0 auto; }
+/* Segment explorer */
+.seg-scroll{overflow-x:auto;padding-bottom:4px}
+.seg-grid{min-width:580px;border:2px solid #cbd5e1;border-radius:12px;overflow:hidden;font-family:'JetBrains Mono',monospace}
+.seg-ruler{display:flex;justify-content:space-between;font-size:.7rem;font-weight:700;color:var(--muted);background:#fff;padding:4px 10px;border-bottom:1px solid var(--line)}
+.seg-row{display:flex;border-bottom:1px solid #cbd5e1}
+.seg-row:last-child{border-bottom:none}
+.seg-cell{border:none;border-right:1px solid #cbd5e1;padding:12px 4px;font:inherit;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--navy);background:#dbeafe;transition:filter .15s,outline-color .15s;outline:3px solid transparent;outline-offset:-3px;min-height:46px}
+.seg-cell:last-child{border-right:none}
+.seg-cell:hover{filter:brightness(.93)}
+.seg-cell.sel{outline-color:var(--gold);filter:brightness(.95)}
+.seg-cell.c-num{background:#bfdbfe}
+.seg-cell.c-ctl{background:#e2e8f0;color:#334155}
+.seg-cell.c-flag{background:#f1f5f9;color:#475569;padding:6px 0}
+.seg-cell.c-key{background:var(--navy);color:#fff}
+.seg-cell.c-ack{background:#facc15;color:#713f12}
+.seg-cell.c-fin{background:var(--burg);color:#fff}
+.seg-cell.c-rst{background:#fee2e2;color:var(--bad)}
+.seg-cell.c-data{background:#fb923c;color:#fff;padding:18px}
+.seg-cell.c-opt{background:#e2e8f0;color:#475569;font-weight:600}
+.seg-cell.is-flag span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:.66rem;letter-spacing:.03em}
+.seg-panel{margin-top:12px;border:1px solid #efdca6;background:#fffcf3;border-radius:12px;padding:14px 16px;min-height:96px}
+.seg-panel-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg-panel-head strong{font-size:1.02rem;color:var(--navy)}
+.seg-panel p{margin:.35rem 0 0}
+.seg-panel-note{color:#6b5310;font-size:.9rem}
+.hint{font-size:.82rem;color:var(--muted);font-style:italic;margin:4px 0 10px}
 
-        .flag-text {
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            font-size: 0.6rem;
-            font-weight: 800;
-            letter-spacing: 0.04em;
-            padding: 3px 0;
-        }
+/* Diagrams */
+.diagram{background:linear-gradient(135deg,#f8fafc,#f0f4ff);border:1px solid rgba(0,43,92,.1);border-radius:14px;padding:14px 8px 8px}
+.diagram h4{text-align:center;margin-bottom:6px}
+.diagram svg{display:block;margin:0 auto;width:100%;max-width:520px;height:auto;font-family:'Plus Jakarta Sans',sans-serif}
+.diagram .cap{font-size:.84rem;color:var(--muted);text-align:center;margin:6px 10px 4px}
 
-        /* ─── Accordion ─── */
-        .accordion-icon { transition: transform .3s cubic-bezier(.4,0,.2,1); }
+/* Window bar */
+.winbar{display:flex;border:2px solid #cbd5e1;border-radius:10px;overflow:hidden;font-size:.72rem;font-weight:700;text-align:center;margin:10px 0 4px}
+.winbar div{flex:1;padding:8px 4px;border-right:1px solid #cbd5e1;line-height:1.3}
+.winbar div:last-child{border-right:none}
 
-        /* ─── Code block ─── */
-        .code-block {
-            background: #0f1f33;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 1rem 1.25rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-            color: #7ee8a2;
-            line-height: 1.7;
-            overflow-x: auto;
-        }
+/* Details (Q&A) */
+details.qa{border:1px solid var(--line);border-radius:12px;background:#fff;margin:10px 0;overflow:hidden}
+details.qa summary{cursor:pointer;padding:13px 16px;font-weight:700;color:var(--navy);list-style:none;display:flex;justify-content:space-between;gap:12px;background:#f8fafc}
+details.qa summary::-webkit-details-marker{display:none}
+details.qa summary::after{content:'+';font-size:1.3rem;line-height:1;color:var(--gold);flex:0 0 auto}
+details.qa[open] summary::after{content:'−'}
+details.qa .ans{padding:4px 16px 14px;border-top:1px solid var(--line)}
+details.sol{margin-top:12px}
+details.sol summary{cursor:pointer;display:inline-block;background:var(--navy);color:#fff;font-weight:700;font-size:.88rem;padding:8px 16px;border-radius:10px;list-style:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol[open] summary{background:#cbd5e1;color:var(--ink)}
+details.sol .ans{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#f8fafc}
 
-        /* ─── Animate ─── */
-        .animate-in { animation: fadeUp .4s ease-out both; }
-        @keyframes fadeUp {
-            from { opacity:0; transform:translateY(14px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
+/* Buttons / inputs */
+.btn{border:none;cursor:pointer;font:inherit;font-weight:700;font-size:.86rem;padding:9px 15px;border-radius:10px;background:var(--navy);color:#fff}
+.btn:hover{background:#001a3b}
+.btn.alt{background:#eef2f7;color:var(--navy)}
+.btn.alt:hover{background:#e2e8f0}
+.btn.warn{background:var(--warn)}.btn.bad{background:var(--bad)}.btn.ok{background:var(--ok)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+label.f{display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin:8px 0 4px}
+input.in,textarea.in{width:100%;font-family:'JetBrains Mono',monospace;font-size:.9rem;border:1px solid #cbd5e1;border-radius:10px;padding:9px 11px;background:#fff;color:var(--ink)}
+textarea.in{min-height:60px;resize:vertical}
+.out{margin-top:12px;background:var(--ink);color:#e2e8f0;border-radius:12px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:.84rem;line-height:1.8;overflow-x:auto;white-space:pre}
+.out .g{color:#86efac}.out .r{color:#fca5a5}.out .y{color:#f3d58a}
+.row3{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:620px){.row3{grid-template-columns:repeat(3,1fr)}}
 
-        /* ─── Colors ─── */
-        .text-navy { color: var(--navy); }
-        .text-burg  { color: var(--burg);  }
-        .text-gold  { color: var(--gold);  }
-        .bg-navy   { background-color: var(--navy); }
-        .bg-burg   { background-color: var(--burg);  }
-        .bg-gold   { background-color: var(--gold);  }
-        .hover\:bg-navy-dk:hover { background-color: #001a3b; }
+/* Simulator */
+.sim-chart{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;overflow-x:auto}
+.sim-chart svg{display:block;width:100%;min-width:480px;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.8rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sim-msg{margin-top:10px;font-size:.92rem}
 
-        /* ─── Window diagram ─── */
-        .win-bar {
-            display: flex;
-            height: 3rem;
-            border: 2px solid #cbd5e1;
-            border-radius: 8px;
-            overflow: hidden;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-align: center;
-        }
-        .win-bar div {
-            display: flex; align-items: center; justify-content: center;
-            padding: 4px 2px; border-right: 1px solid #cbd5e1;
-        }
-        .win-bar div:last-child { border-right: none; }
-    </style>
+/* Quiz */
+.q{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0;background:#fff}
+.q p.qt{font-weight:700;margin:0 0 8px;color:var(--ink)}
+.q .opts{display:grid;gap:7px}
+.q button.opt{text-align:left;border:1px solid #cbd5e1;background:#f8fafc;border-radius:10px;padding:9px 12px;font:inherit;font-size:.92rem;cursor:pointer;color:var(--text)}
+.q button.opt:hover:not(:disabled){border-color:var(--navy);background:#eff6ff}
+.q button.opt:disabled{cursor:default}
+.q button.opt.right{background:var(--okbg);border-color:var(--ok);color:#14532d;font-weight:700}
+.q button.opt.wrong{background:var(--badbg);border-color:var(--bad);color:#7f1d1d}
+.q .exp{margin-top:8px;font-size:.9rem;color:#334155;display:none}
+.q.done .exp{display:block}
+.score{font-weight:800;color:var(--navy)}
+
+footer{background:linear-gradient(120deg,var(--ink),var(--navy) 55%,var(--burg));border-top:2px solid rgba(201,163,74,.55);color:#cbd5e1;text-align:center;padding:26px 16px;font-size:.88rem}
+</style>
 </head>
 <body>
 
-<!-- ══════ TOPBAR ══════ -->
-<header class="topbar sticky top-0 z-50">
-    <nav class="container mx-auto px-6 py-3 flex justify-between items-center max-w-5xl">
-        <span class="text-white font-bold text-lg" style="font-family:'Fraunces',serif">Ayudantía 4</span>
-        <div class="flex gap-1 sm:gap-2">
-            <a href="#teoria"    class="nav-link">Teoría</a>
-            <a href="#diagramas" class="nav-link">Flujos</a>
-            <a href="#conceptos" class="nav-link">Conceptos</a>
-            <a href="#practica"  class="nav-link">Práctica</a>
-        </div>
-    </nav>
+<header class="topbar">
+  <nav>
+    <span class="brand">Ayudantía 4</span>
+    <a href="#mapa">Mapa</a>
+    <a href="#fundamentos">Fundamentos</a>
+    <a href="#udp">UDP</a>
+    <a href="#tcp">TCP</a>
+    <a href="#secuencias">Seq / ACK</a>
+    <a href="#cierre">Cierre</a>
+    <a href="#retransmision">Retransmisión</a>
+    <a href="#flujo">Flujo y congestión</a>
+    <a href="#certamen">Certamen</a>
+    <a href="#ejercicios">Ejercicios</a>
+    <a href="#resumen">Resumen</a>
+  </nav>
 </header>
 
-<main class="container mx-auto px-4 sm:px-6 py-14 max-w-5xl">
+<main>
 
-    <!-- ══════ HERO ══════ -->
-    <section class="text-center mb-20">
-        <div class="badge mb-5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            Redes de Computadores · USM
+<!-- ═════════ HERO ═════════ -->
+<div class="hero">
+  <div class="badge">Redes de Computadores · USM</div>
+  <h1>La Capa de Transporte</h1>
+  <p class="sub">TCP y UDP explicados paso a paso: puertos, segmentos, números de secuencia, retransmisión, control de flujo y congestión — con ejemplos resueltos y ejercicios tipo certamen.</p>
+</div>
+
+<!-- ═════════ 0. MAPA ═════════ -->
+<section id="mapa">
+  <div class="sec-head"><span class="sec-num">0</span><h2>La idea en 2 minutos</h2></div>
+  <p class="sec-intro">Antes de entrar en los detalles, conviene tener claro <em>para qué existe</em> esta capa y cuál es la diferencia de fondo entre TCP y UDP. Todo lo demás se cuelga de esto.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>¿Dónde está la capa de transporte?</h3>
+      <div class="layers">
+        <div class="layer">Aplicación <small>tu programa (navegador, chat…)</small></div>
+        <div class="layer hl">Transporte <small>canal abstracto entre <b>procesos</b></small></div>
+        <div class="layer">Internet (IP) <small>lleva paquetes entre <b>máquinas</b></small></div>
+        <div class="layer">Enlace de datos <small>transmisión de bits por el enlace</small></div>
+        <div class="layer">Física <small>tarjeta de red, cable, radio</small></div>
+      </div>
+      <p style="margin-top:12px">Le <b>presta servicios</b> a la capa de aplicación y <b>usa los servicios</b> de la capa Internet (el ruteo IP).</p>
+    </div>
+
+    <div class="card">
+      <h3>Analogía: un edificio de departamentos</h3>
+      <ul class="clean">
+        <li><b>Dirección IP</b> = la dirección del edificio (identifica la <b>máquina</b>).</li>
+        <li><b>Puerto</b> = el número de departamento (identifica el <b>proceso</b>).</li>
+        <li><b>Socket</b> = el buzón del departamento: por ahí la aplicación entrega y recibe datos.</li>
+        <li><b>UDP</b> = mandar una postal: rápida y barata, pero sin seguimiento. Puede perderse o llegar desordenada.</li>
+        <li><b>TCP</b> = envío certificado con acuse de recibo: se numera todo, se confirma cada entrega y se reenvía lo perdido.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>TCP vs UDP de un vistazo</h3>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <tr><th>Característica</th><th>UDP (RFC 768)</th><th>TCP (RFC 793 y otros)</th></tr>
+        <tr><td>Conexión</td><td class="no">No (cada datagrama es independiente)</td><td class="yes">Sí (handshake de 3 pasos)</td></tr>
+        <tr><td>Entrega garantizada</td><td class="no">No — acepta pérdidas</td><td class="yes">Sí — ACK + retransmisión</td></tr>
+        <tr><td>Orden</td><td class="no">No</td><td class="yes">Sí — números de secuencia</td></tr>
+        <tr><td>Control de flujo</td><td class="no">No</td><td class="yes">Sí — Window Size</td></tr>
+        <tr><td>Control de congestión</td><td class="no">No</td><td class="yes">Sí — Slow Start, AIMD</td></tr>
+        <tr><td>Detección de errores</td><td>Checksum (opcional en IPv4)</td><td>Checksum (obligatorio)</td></tr>
+        <tr><td>Unidad de datos</td><td>Mensajes (datagramas)</td><td>Flujo continuo de bytes (segmentos)</td></tr>
+        <tr><td>Cabecera</td><td><b>8 bytes</b></td><td><b>20 a 60 bytes</b></td></tr>
+        <tr><td>Estado ("memoria")</td><td>Ninguno (<em>stateless</em>)</td><td>Autómata de estados + buffers</td></tr>
+        <tr><td>Ejemplos</td><td>DNS, NTP, SNMP, NFS, VoIP, streaming</td><td>HTTP/HTTPS, SSH, SMTP, transferencia de archivos</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="margin:26px 0 12px">Mapa de la guía</h3>
+  <div class="grid3 map">
+    <a href="#fundamentos"><b>1 · Fundamentos</b><span>Canal abstracto, puertos, sockets, MUX/DEMUX</span></a>
+    <a href="#udp"><b>2 · UDP</b><span>Datagrama de 8 B y cálculo del checksum</span></a>
+    <a href="#tcp"><b>3 · TCP</b><span>Propiedades, segmento campo a campo y flags</span></a>
+    <a href="#secuencias"><b>4 · Seq, ACK y handshake</b><span>Cómo se numeran los bytes y se abre la conexión</span></a>
+    <a href="#cierre"><b>5 · Cierre y autómata</b><span>FIN en 4 pasos, RST, estados TCP</span></a>
+    <a href="#retransmision"><b>6 · Retransmisión</b><span>Time out, ACK duplicado, RTT, RTO y timers</span></a>
+    <a href="#flujo"><b>7 · Flujo y congestión</b><span>Ventana del receptor vs ventana de congestión</span></a>
+    <a href="#certamen"><b>8 · Preguntas de certamen</b><span>Teoría con respuestas modelo</span></a>
+    <a href="#ejercicios"><b>9 · Ejercicios resueltos</b><span>Cálculos paso a paso + autoevaluación</span></a>
+  </div>
+</section>
+
+<!-- ═════════ 1. FUNDAMENTOS ═════════ -->
+<section id="fundamentos">
+  <div class="sec-head"><span class="sec-num">1</span><h2>Fundamentos: canal abstracto y puertos</h2></div>
+  <p class="sec-intro">IP sabe llevar un paquete hasta una máquina, pero en esa máquina corren muchos programas a la vez. La capa de transporte resuelve “¿a qué programa le entrego esto?” y, según el protocolo, agrega garantías (orden, confiabilidad, flujo).</p>
+
+  <div class="card">
+    <h3>Objetivos de la capa de transporte</h3>
+    <ul class="clean">
+      <li>Establecer un <b>canal abstracto entre dos procesos</b> (no entre dos máquinas).</li>
+      <li>Ese canal puede ofrecer —o no— propiedades: ordenamiento, detección/corrección de errores (retransmisión), gestión de flujo y de colas.</li>
+      <li>UDP es el canal <b>sin propiedades</b>; TCP es el canal <b>con propiedades</b>.</li>
+    </ul>
+    <div class="grid3" style="margin-top:14px">
+      <div class="mini"><h4>Dirección IP</h4><p>Identifica la <b>máquina</b> en la red.</p></div>
+      <div class="mini"><h4>Puerto (16 bits)</h4><p>Identifica el <b>proceso</b> dentro de esa máquina. 2¹⁶ = 65 536 valores (0–65 535).</p></div>
+      <div class="mini"><h4>Socket</h4><p>La “puerta” de software que usa la aplicación: IP + puerto + protocolo.</p></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Multiplexación y demultiplexación</h3>
+      <p><b>En el emisor (MUX):</b></p>
+      <ol class="steps">
+        <li>Varias aplicaciones escriben datos en sus sockets.</li>
+        <li>Transporte le pone a cada trozo una cabecera con <b>puerto origen y destino</b>.</li>
+        <li>Todo se “mezcla” y baja a IP por la misma interfaz de red.</li>
+      </ol>
+      <p><b>En el receptor (DEMUX):</b></p>
+      <ol class="steps">
+        <li>IP entrega el segmento a transporte.</li>
+        <li>Transporte lee el <b>puerto destino</b>.</li>
+        <li>Entrega los datos al socket correcto (ej.: puerto 80 → servidor web).</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Rangos de puertos</h3>
+      <div class="tbl-wrap">
+        <table class="tbl" style="min-width:0">
+          <tr><th>Rango</th><th>Tipo</th><th>Quién lo usa</th></tr>
+          <tr><td class="mono">0 – 1023</td><td>Bien conocidos</td><td>Servidores: 22 SSH, 25 SMTP, 53 DNS, 80 HTTP, 443 HTTPS</td></tr>
+          <tr><td class="mono">1024 – 49151</td><td>Registrados</td><td>Servicios registrados (ej. 3306 MySQL)</td></tr>
+          <tr><td class="mono">49152 – 65535</td><td>Dinámicos</td><td>Clientes (los asigna el SO)</td></tr>
+        </table>
+      </div>
+      <ul class="clean">
+        <li>El <b>servidor</b> escucha en un puerto bien conocido o registrado. No puede usar uno ya registrado para otro servicio.</li>
+        <li>El <b>cliente</b> siempre usa un puerto del rango dinámico (ej.: navegador en 55001 → servidor en 80).</li>
+        <li>Al terminar una conexión TCP, los puertos quedan libres otra vez.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="call tip">
+    <span class="lbl">Ojo con este detalle</span>
+    <p>En TCP una conexión queda identificada por <b>4 valores</b>: (IP origen, puerto origen, IP destino, puerto destino). Por eso un servidor web atiende a miles de clientes “en el puerto 80” sin confundirlos: cada cliente tiene IP o puerto origen distinto. La diapositiva dice que el servidor pasa a “un puerto dinámico” al aceptar la conexión; en los sistemas actuales (sockets BSD), el socket aceptado conserva el puerto 80 y se distingue por esa 4-tupla. Para el certamen, lo importante es la idea: cada conexión tiene su propio canal.</p>
+  </div>
+
+  <div class="call key">
+    <span class="lbl">En una frase</span>
+    <p>IP lleva datos <b>de máquina a máquina</b>; transporte los lleva <b>de proceso a proceso</b> usando puertos.</p>
+  </div>
+</section>
+
+<!-- ═════════ 2. UDP ═════════ -->
+<section id="udp">
+  <div class="sec-head"><span class="sec-num">2</span><h2>UDP — el protocolo mínimo</h2></div>
+  <p class="sec-intro">UDP agrega lo mínimo sobre IP: puertos (para el DEMUX) y un checksum (para detectar errores). No hay conexión, ni orden, ni retransmisión: si algo se pierde, se perdió.</p>
+
+  <div class="card">
+    <h3>Formato del datagrama <span class="chip">cabecera = 8 bytes = 64 bits</span></h3>
+    <p class="hint">Toca cada campo para ver qué hace.</p>
+    <div id="udpExp">
+      <div class="seg-scroll"><div class="seg-grid"></div></div>
+      <div class="seg-panel"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>¿Qué es el pseudo-header IP?</h3>
+    <p>Para calcular el checksum, UDP “toma prestados” algunos campos de la cabecera IP y los pone <b>imaginariamente</b> delante del datagrama. <b>No se transmiten</b>; solo entran en la suma. Así el receptor también detecta si el datagrama llegó a la máquina o al protocolo equivocado.</p>
+    <div class="seg-scroll">
+      <div class="seg-grid" style="min-width:480px">
+        <div class="seg-ruler"><span>Bit 0</span><span>Bit 16</span><span>Bit 31</span></div>
+        <div class="seg-row"><div class="seg-cell" style="width:100%;background:#ecfccb;cursor:default">IP Fuente (32)</div></div>
+        <div class="seg-row"><div class="seg-cell" style="width:100%;background:#ecfccb;cursor:default">IP Destino (32)</div></div>
+        <div class="seg-row">
+          <div class="seg-cell" style="width:25%;background:#ecfccb;cursor:default">00000000</div>
+          <div class="seg-cell" style="width:25%;background:#ecfccb;cursor:default">Protocolo (17 = UDP)</div>
+          <div class="seg-cell" style="width:50%;background:#ecfccb;cursor:default">Largo UDP</div>
         </div>
-        <h2 class="hero-title mb-5">La Capa de Transporte</h2>
-        <p class="text-slate-500 text-base font-medium max-w-xl mx-auto">
-            TCP &amp; UDP — Multiplexación, Segmentos, Flujo, Congestión y Conexiones
-        </p>
-        <p class="text-slate-400 text-xs mt-3 italic">
-            💡 Pasa el cursor sobre cada campo del segmento para ver su descripción.
-        </p>
-    </section>
-
-    <!-- ══════════════ PARTE 1: TEORÍA ══════════════ -->
-    <section id="teoria" class="mb-24">
-        <h3 class="section-title text-3xl font-bold mb-10">Parte 1 — Análisis a Fondo de la Capa</h3>
-
-        <div class="space-y-10">
-
-            <!-- 1. Multiplexación -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-                    <span class="step-num">1</span> Multiplexación y el Canal Abstracto
-                </h3>
-                <p class="text-slate-600 leading-relaxed text-sm mb-6">
-                    La capa de transporte provee servicios a la capa de aplicación estableciendo un <strong class="text-navy">canal abstracto</strong>. Su tarea fundamental es la <strong class="text-burg">Multiplexación y Demultiplexación (MUX/DEMUX)</strong>. Las aplicaciones transmiten datos al sistema mediante <em>Sockets</em>; la capa de transporte mezcla (MUX) los datos de distintas apps para enviarlos por la red IP y, al llegar al destino, los separa (DEMUX) entregándolos al socket correcto según el número de puerto.
-                </p>
-                <div class="grid md:grid-cols-3 gap-4">
-                    <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
-                        <div class="text-2xl mb-2">🌐</div>
-                        <h4 class="font-bold text-navy mb-1 text-sm">Dirección IP</h4>
-                        <p class="text-xs text-slate-600">Identifica la <strong>máquina destino</strong> dentro de la red.</p>
-                    </div>
-                    <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
-                        <div class="text-2xl mb-2">🔌</div>
-                        <h4 class="font-bold text-burg mb-1 text-sm">Puerto (16 bits)</h4>
-                        <p class="text-xs text-slate-600">Identifica la <strong>aplicación o proceso</strong> específico en esa máquina.</p>
-                    </div>
-                    <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5">
-                        <div class="text-2xl mb-2">🧩</div>
-                        <h4 class="font-bold text-gold mb-1 text-sm">Socket</h4>
-                        <p class="text-xs text-slate-600">Interfaz de software <strong>[IP + Puerto + Protocolo]</strong> usada por la aplicación.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. UDP -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-                    <span class="step-num">2</span> UDP y el Formato del Datagrama
-                </h3>
-                <p class="text-slate-600 mb-6 text-sm leading-relaxed">
-                    UDP (User Datagram Protocol) es <strong>sin conexión</strong>, rápido y liviano. Sin gestión de errores ni reordenamiento, acepta pérdidas. Su cabecera mide exactamente <strong class="text-navy">8 Bytes (64 bits)</strong>.
-                </p>
-
-                <h4 class="font-bold text-navy mb-1 text-sm">Formato del Datagrama UDP</h4>
-                <p class="text-xs text-slate-400 mb-4 italic">💡 Pasa el cursor sobre cada campo.</p>
-
-                <div class="seg-table-wrap">
-                    <div class="seg-table-inner font-mono border-2 border-slate-300 rounded-xl shadow-inner">
-                        <!-- Ruler -->
-                        <div class="flex justify-between text-xs text-slate-500 bg-white border-b border-slate-200 px-4 py-1.5 font-bold rounded-t-xl">
-                            <span>Bit 0</span><span>Bit 16</span><span>Bit 31</span>
-                        </div>
-                        <!-- Row 1 -->
-                        <div class="flex border-b border-slate-300">
-                            <div class="seg-field w-1/2 p-3.5 border-r border-slate-300 bg-blue-100 text-sm font-bold text-navy text-center">
-                                Puerto Fuente (16 bits)
-                                <div class="seg-tooltip">
-                                    <strong>Puerto Fuente</strong><br>
-                                    Número de puerto del proceso que <em>envía</em> (0–65535). Permite al receptor responder al remitente correcto. Es <em>opcional</em> en UDP (puede ser 0 si no se necesita respuesta).
-                                </div>
-                            </div>
-                            <div class="seg-field w-1/2 p-3.5 bg-blue-100 text-sm font-bold text-navy text-center">
-                                Puerto Destino (16 bits)
-                                <div class="seg-tooltip">
-                                    <strong>Puerto Destino</strong><br>
-                                    Puerto de la aplicación receptora. El SO lo usa para DEMUX y entregar el datagrama al socket correcto (ej. 53 = DNS, 67 = DHCP).
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Row 2 -->
-                        <div class="flex border-b border-slate-300">
-                            <div class="seg-field w-1/2 p-3.5 border-r border-slate-300 bg-blue-200 text-sm font-bold text-navy text-center">
-                                Largo Total (16 bits)
-                                <div class="seg-tooltip">
-                                    <strong>Largo Total (Length)</strong><br>
-                                    Tamaño completo en bytes: cabecera (8 B) + datos. Mínimo = 8 (solo header). Máximo teórico = 65 535 B. El receptor usa este valor para saber cuántos bytes leer.
-                                </div>
-                            </div>
-                            <div class="seg-field tip-left w-1/2 p-3.5 bg-blue-200 text-sm font-bold text-navy text-center">
-                                Checksum (16 bits)
-                                <div class="seg-tooltip">
-                                    <strong>Checksum</strong><br>
-                                    Suma en complemento a 1 de bloques de 16 bits + pseudo-header IP (IP src, IP dst, protocolo, largo). Resultado ≠ 0xFFFF → error de transmisión. Opcional en IPv4, <em>obligatorio</em> en IPv6.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Data -->
-                        <div class="bg-orange-400 p-5 text-sm text-white font-bold tracking-wider text-center">
-                            DATOS DE APLICACIÓN (variable)
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-5 mt-6">
-                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                        <h4 class="font-bold text-burg mb-2 text-sm">¿Cuándo usar UDP?</h4>
-                        <ul class="space-y-1.5 text-xs text-slate-600">
-                            <li class="flex gap-2"><span class="text-green-500 font-bold">▸</span> Streaming de audio/video (pérdidas tolerables)</li>
-                            <li class="flex gap-2"><span class="text-green-500 font-bold">▸</span> Juegos online en tiempo real (latencia crítica)</li>
-                            <li class="flex gap-2"><span class="text-green-500 font-bold">▸</span> DNS, DHCP (mensajes pequeños y rápidos)</li>
-                            <li class="flex gap-2"><span class="text-green-500 font-bold">▸</span> Cuando la app implementa su propio control de errores</li>
-                        </ul>
-                    </div>
-                    <div class="rounded-xl border-l-4 border-red-400 bg-red-50 p-5">
-                        <h4 class="font-bold text-red-700 mb-2 text-sm">Cálculo del Checksum</h4>
-                        <p class="text-xs text-slate-700 mb-2">UDP suma todos los bloques de 16 bits del mensaje <strong>más un Pseudo-Header IP</strong> (IP Fuente, IP Destino, Protocolo, Largo).</p>
-                        <p class="text-xs text-slate-700">La suma se calcula en 32 bits y luego se aplica el <strong>complemento a 1</strong>. Resultado ≠ 0 en el receptor → error de transmisión.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. TCP -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-                    <span class="step-num">3</span> TCP y el Formato del Segmento
-                </h3>
-                <p class="text-slate-600 mb-6 text-sm leading-relaxed">
-                    TCP (Transmission Control Protocol) es orientado a conexión y confiable. Gestiona ordenamiento, retransmisión de errores y flujo continuo de bytes mediante buffers de emisión y recepción.
-                </p>
-
-                <h4 class="font-bold text-navy mb-1 text-sm">Formato del Segmento TCP (cabecera base 20 bytes)</h4>
-                <p class="text-xs text-slate-400 mb-4 italic">💡 Pasa el cursor sobre cada campo.</p>
-
-                <div class="seg-table-wrap">
-                    <div class="seg-table-inner font-mono border-2 border-slate-300 rounded-xl shadow-inner">
-                        <!-- Ruler -->
-                        <div class="flex justify-between text-xs text-slate-500 bg-white border-b border-slate-200 px-4 py-1.5 font-bold rounded-t-xl">
-                            <span>Bit 0</span><span>Bit 15 | Bit 16</span><span>Bit 31</span>
-                        </div>
-                        <!-- Ports -->
-                        <div class="flex border-b border-slate-300">
-                            <div class="seg-field w-1/2 p-3 border-r border-slate-300 bg-blue-100 text-sm font-bold text-navy text-center">
-                                Source Port (16)
-                                <div class="seg-tooltip">
-                                    <strong>Puerto Origen</strong><br>
-                                    Puerto del proceso emisor. Junto con la IP de origen identifica el socket local. El receptor lo usa para enviar la respuesta al proceso correcto.
-                                </div>
-                            </div>
-                            <div class="seg-field tip-left w-1/2 p-3 bg-blue-100 text-sm font-bold text-navy text-center">
-                                Destination Port (16)
-                                <div class="seg-tooltip">
-                                    <strong>Puerto Destino</strong><br>
-                                    Puerto del proceso receptor. El SO lo usa para DEMUX: entrega el segmento al socket que escucha en ese puerto (ej. 80 = HTTP, 443 = HTTPS, 22 = SSH).
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Seq -->
-                        <div class="seg-field border-b border-slate-300 p-3 bg-blue-200 text-sm font-bold text-navy text-center">
-                            Sequence Number (32)
-                            <div class="seg-tooltip">
-                                <strong>Número de Secuencia</strong><br>
-                                Número del <em>primer byte</em> de datos en este segmento. Permite reordenar segmentos desordenados y detectar duplicados. En un SYN contiene el ISN (Initial Sequence Number) aleatorio.
-                            </div>
-                        </div>
-                        <!-- Ack -->
-                        <div class="seg-field border-b border-slate-300 p-3 bg-blue-300 text-sm font-bold text-navy text-center">
-                            Acknowledgment Number (32)
-                            <div class="seg-tooltip">
-                                <strong>Número de Acuse de Recibo</strong><br>
-                                Válido solo si ACK = 1. Indica el <em>próximo byte</em> que el receptor espera. Confirma implícitamente todos los bytes anteriores. Ej: ACK=5001 → "recibí hasta el 5000, envía desde el 5001".
-                            </div>
-                        </div>
-                        <!-- Flags row -->
-                        <div class="flex border-b border-slate-300 bg-slate-100 text-xs font-bold" style="min-height:4.5rem">
-                            <div class="seg-field w-[13%] flex items-center justify-center border-r border-slate-300 p-1 text-center leading-tight text-slate-700">
-                                Data<br>Offset<br><span class="text-[9px] text-slate-400">(4 bits)</span>
-                                <div class="seg-tooltip">
-                                    <strong>Data Offset (HLEN)</strong><br>
-                                    Tamaño de la cabecera en palabras de 32 bits. Mínimo=5 (20 bytes). Indica dónde comienzan los datos de aplicación.
-                                </div>
-                            </div>
-                            <div class="seg-field w-[9%] flex items-center justify-center border-r border-slate-300 p-1 text-center leading-tight text-slate-500 text-[9px]">
-                                Rsv<br>000
-                                <div class="seg-tooltip">
-                                    <strong>Reservado</strong><br>
-                                    3 bits reservados para uso futuro. Siempre deben ser 0.
-                                </div>
-                            </div>
-                            <!-- Flags -->
-                            <div class="w-[28%] flex border-r border-slate-300 divide-x divide-slate-300">
-                                <div class="seg-field flex-1 flex items-center justify-center"><span class="flag-text text-slate-600">NS</span>
-                                    <div class="seg-tooltip"><strong>NS</strong><br>Nonce Sum: protección experimental contra manipulación de bits de congestión por nodos intermedios.</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center"><span class="flag-text text-slate-600">CWR</span>
-                                    <div class="seg-tooltip"><strong>CWR</strong><br>Congestion Window Reduced: el emisor ya redujo su ventana de congestión tras recibir un ECE.</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center"><span class="flag-text text-slate-600">ECE</span>
-                                    <div class="seg-tooltip"><strong>ECE</strong><br>ECN-Echo: informa al emisor que hay congestión en la red (Explicit Congestion Notification).</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center"><span class="flag-text text-slate-600">URG</span>
-                                    <div class="seg-tooltip"><strong>URG (Urgent)</strong><br>Indica que el campo Urgent Pointer es válido; hay datos urgentes a procesar inmediatamente.</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center bg-yellow-400">
-                                    <span class="flag-text text-yellow-900">ACK</span>
-                                    <div class="seg-tooltip"><strong>ACK (Acknowledgment)</strong><br>Si=1, el campo Ack Number es válido. Activo en casi todos los segmentos TCP salvo el SYN inicial.</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center"><span class="flag-text text-slate-600">PSH</span>
-                                    <div class="seg-tooltip"><strong>PSH (Push)</strong><br>Ordena vaciar el buffer inmediatamente y entregar datos a la app sin esperar. Útil en Telnet, SSH.</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center text-red-600"><span class="flag-text">RST</span>
-                                    <div class="seg-tooltip"><strong>RST (Reset)</strong><br>Termina la conexión de forma abrupta, sin handshake. Usado ante errores graves o conexiones inválidas.</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center bg-navy text-white">
-                                    <span class="flag-text">SYN</span>
-                                    <div class="seg-tooltip tip-left"><strong>SYN (Synchronize)</strong><br>Solicita establecer conexión y sincronizar los ISN. Solo activo en el 1.º y 2.º paquete del 3-Way Handshake. Consumir un SYN incrementa el Seq en 1.</div>
-                                </div>
-                                <div class="seg-field flex-1 flex items-center justify-center bg-burg text-white">
-                                    <span class="flag-text">FIN</span>
-                                    <div class="seg-tooltip tip-left"><strong>FIN (Finish)</strong><br>El emisor no tiene más datos en este sentido. Inicia cierre ordenado (4-way). Consumir un FIN también incrementa el Seq en 1.</div>
-                                </div>
-                            </div>
-                            <!-- Window -->
-                            <div class="seg-field tip-left w-[50%] flex items-center justify-center text-sm text-slate-700">
-                                Window Size (16)
-                                <div class="seg-tooltip">
-                                    <strong>Window Size (Ventana Deslizante)</strong><br>
-                                    Espacio libre en el buffer del <em>receptor</em> en bytes. El emisor no puede tener más bytes sin confirmar que este valor. Si Window=0, el emisor se bloquea (Persistence Timer). Es el mecanismo de Control de Flujo.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Checksum + Urgent -->
-                        <div class="flex border-b border-slate-300 bg-blue-100">
-                            <div class="seg-field w-1/2 p-3 border-r border-slate-300 text-sm font-bold text-navy text-center">
-                                Checksum (16)
-                                <div class="seg-tooltip">
-                                    <strong>Checksum</strong><br>
-                                    Cubre pseudo-header IP + cabecera TCP + datos. <strong>Obligatorio</strong> en TCP. Detecta errores de transmisión por corrupción de bits.
-                                </div>
-                            </div>
-                            <div class="seg-field tip-left w-1/2 p-3 text-sm font-bold text-navy text-center">
-                                Urgent Pointer (16)
-                                <div class="seg-tooltip">
-                                    <strong>Urgent Pointer</strong><br>
-                                    Válido solo si URG=1. Offset desde el Seq donde terminan los datos urgentes (out-of-band).
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Options -->
-                        <div class="seg-field border-b border-slate-300 bg-slate-200 p-2 text-xs text-slate-600 text-center">
-                            Options (si Data Offset &gt; 5, relleno con ceros hasta múltiplo de 32 bits)
-                            <div class="seg-tooltip">
-                                <strong>Opciones (Options)</strong><br>
-                                MSS (Maximum Segment Size), Window Scale (hasta 1 GB), SACK (Selective ACK), Timestamps (para medir RTT con precisión).
-                            </div>
-                        </div>
-                        <!-- Data -->
-                        <div class="bg-orange-400 p-5 text-sm text-white font-bold tracking-wider text-center">
-                            Application Data (variable)
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Flags summary -->
-                <div class="mt-6 grid sm:grid-cols-2 gap-3">
-                    <div class="flex gap-2 items-start text-sm">
-                        <span class="font-mono bg-navy text-white px-2 py-0.5 rounded text-xs">SYN</span>
-                        <span class="text-slate-600 text-xs">Sincronización de números de secuencia en apertura de conexión.</span>
-                    </div>
-                    <div class="flex gap-2 items-start text-sm">
-                        <span class="font-mono bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded text-xs">ACK</span>
-                        <span class="text-slate-600 text-xs">El campo Acknowledgement es válido y confirma recepción acumulada.</span>
-                    </div>
-                    <div class="flex gap-2 items-start text-sm">
-                        <span class="font-mono bg-burg text-white px-2 py-0.5 rounded text-xs">FIN</span>
-                        <span class="text-slate-600 text-xs">No hay más datos — cierre ordenado de la conexión.</span>
-                    </div>
-                    <div class="flex gap-2 items-start text-sm">
-                        <span class="font-mono bg-red-600 text-white px-2 py-0.5 rounded text-xs">RST</span>
-                        <span class="text-slate-600 text-xs">Resetea la conexión abruptamente (Terminación Unilateral).</span>
-                    </div>
-                    <div class="flex gap-2 items-start text-sm">
-                        <span class="font-mono bg-slate-700 text-white px-2 py-0.5 rounded text-xs">PSH</span>
-                        <span class="text-slate-600 text-xs">Limpia el buffer y entrega los datos a la app inmediatamente.</span>
-                    </div>
-                    <div class="flex gap-2 items-start text-sm">
-                        <span class="font-mono bg-slate-400 text-white px-2 py-0.5 rounded text-xs">URG</span>
-                        <span class="text-slate-600 text-xs">Urgent Pointer es válido; hay datos fuera-de-banda urgentes.</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ══════════════ PARTE 2: DIAGRAMAS ══════════════ -->
-    <section id="diagramas" class="mb-24">
-        <h3 class="section-title text-3xl font-bold mb-10">Parte 2 — Máquina de Estados y Transmisión</h3>
-        <p class="text-slate-500 mb-10 max-w-3xl text-sm">Flujos de conexión TCP. Nota cómo TCP mantiene la "memoria" del estado en cada paso gracias a su Autómata Finito.</p>
-
-        <div class="space-y-10">
-
-            <!-- A. 3-Way Handshake -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-navy mb-8 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-                    <span class="step-num">A</span> Apertura (3-Way Handshake) y Terminación (4 Pasos)
-                </h3>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Handshake -->
-                    <div class="diagram-wrap">
-                        <h4 class="font-bold text-navy text-center mb-4 text-sm">3-Way Handshake</h4>
-                        <svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg" width="100%" preserveAspectRatio="xMidYMid meet" style="max-width:380px;font-family:'Plus Jakarta Sans',sans-serif">
-                            <defs>
-                                <marker id="mA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#002b5c"/>
-                                </marker>
-                                <marker id="mB" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#8c1d40"/>
-                                </marker>
-                            </defs>
-                            <!-- Lifelines -->
-                            <line x1="80"  y1="52" x2="80"  y2="298" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
-                            <line x1="300" y1="52" x2="300" y2="298" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
-                            <!-- Headers -->
-                            <rect x="14"  y="14" width="132" height="30" rx="8" fill="#002b5c"/>
-                            <text x="80"  y="33" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Host A (Cliente)</text>
-                            <rect x="234" y="14" width="132" height="30" rx="8" fill="#002b5c"/>
-                            <text x="300" y="33" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Host B (Servidor)</text>
-
-                            <!-- State: CLOSED -->
-                            <rect x="44"  y="56" width="72" height="18" rx="5" fill="#e2e8f0" stroke="#94a3b8"/>
-                            <text x="80"  y="68" text-anchor="middle" fill="#475569" font-size="8" font-weight="700">CLOSED</text>
-                            <!-- State: LISTEN -->
-                            <rect x="264" y="56" width="72" height="18" rx="5" fill="#e2e8f0" stroke="#94a3b8"/>
-                            <text x="300" y="68" text-anchor="middle" fill="#475569" font-size="8" font-weight="700">LISTEN</text>
-
-                            <!-- SYN → -->
-                            <line x1="80" y1="108" x2="292" y2="138" stroke="#002b5c" stroke-width="2.5" marker-end="url(#mA)"/>
-                            <rect x="152" y="98" width="80" height="22" rx="5" fill="#fff" stroke="#93c5fd" stroke-width="1.2"/>
-                            <text x="192" y="113" text-anchor="middle" fill="#002b5c" font-size="10" font-weight="700">SYN</text>
-                            <text x="80"  y="100" text-anchor="middle" fill="#64748b" font-size="8">Seq=3000</text>
-
-                            <!-- State: SYN_SENT -->
-                            <rect x="36"  y="118" width="88" height="18" rx="5" fill="#dbeafe" stroke="#93c5fd"/>
-                            <text x="80"  y="130" text-anchor="middle" fill="#1e40af" font-size="7.5" font-weight="700">SYN_SENT</text>
-                            <!-- State: SYN_RCVD -->
-                            <rect x="260" y="144" width="80" height="18" rx="5" fill="#f3e8ff" stroke="#c084fc"/>
-                            <text x="300" y="156" text-anchor="middle" fill="#6b21a8" font-size="7.5" font-weight="700">SYN_RCVD</text>
-
-                            <!-- ← SYN+ACK -->
-                            <line x1="300" y1="172" x2="88" y2="202" stroke="#8c1d40" stroke-width="2.5" marker-end="url(#mB)"/>
-                            <rect x="148" y="162" width="94" height="22" rx="5" fill="#fff" stroke="#fca5a5" stroke-width="1.2"/>
-                            <text x="195" y="177" text-anchor="middle" fill="#8c1d40" font-size="10" font-weight="700">SYN + ACK</text>
-                            <text x="300" y="158" text-anchor="middle" fill="#8c1d40" font-size="8">Seq=7000  Ack=3001</text>
-
-                            <!-- ACK → -->
-                            <line x1="80" y1="230" x2="292" y2="256" stroke="#002b5c" stroke-width="2.5" marker-end="url(#mA)"/>
-                            <rect x="163" y="220" width="55" height="22" rx="5" fill="#fff" stroke="#93c5fd" stroke-width="1.2"/>
-                            <text x="190" y="235" text-anchor="middle" fill="#002b5c" font-size="10" font-weight="700">ACK</text>
-                            <text x="80" y="218" text-anchor="middle" fill="#64748b" font-size="8">Seq=3001  Ack=7001</text>
-
-                            <!-- State: ESTABLISHED -->
-                            <rect x="30"  y="260" width="100" height="18" rx="5" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="80"  y="272" text-anchor="middle" fill="#166534" font-size="7.5" font-weight="700">ESTABLISHED</text>
-                            <rect x="250" y="260" width="100" height="18" rx="5" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="300" y="272" text-anchor="middle" fill="#166534" font-size="7.5" font-weight="700">ESTABLISHED</text>
-
-                            <text x="190" y="302" text-anchor="middle" fill="#64748b" font-size="8" font-style="italic">Sincroniza secuencias — SYN/FIN consumen 1 seq</text>
-                        </svg>
-                    </div>
-
-                    <!-- Terminación -->
-                    <div class="diagram-wrap">
-                        <h4 class="font-bold text-burg text-center mb-4 text-sm">Terminación Concertada (4 pasos)</h4>
-                        <svg viewBox="0 0 380 420" xmlns="http://www.w3.org/2000/svg" width="100%" preserveAspectRatio="xMidYMid meet" style="max-width:380px;font-family:'Plus Jakarta Sans',sans-serif">
-                            <defs>
-                                <marker id="mC" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#8c1d40"/>
-                                </marker>
-                                <marker id="mG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#64748b"/>
-                                </marker>
-                            </defs>
-                            <line x1="80"  y1="52" x2="80"  y2="405" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
-                            <line x1="300" y1="52" x2="300" y2="405" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
-                            <rect x="30"  y="14" width="100" height="30" rx="8" fill="#002b5c"/>
-                            <text x="80"  y="33" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Host A</text>
-                            <rect x="250" y="14" width="100" height="30" rx="8" fill="#002b5c"/>
-                            <text x="300" y="33" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Host B</text>
-
-                            <!-- ESTABLISHED -->
-                            <rect x="28"  y="56" width="104" height="18" rx="5" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="80"  y="68" text-anchor="middle" fill="#166534" font-size="7.5" font-weight="700">ESTABLISHED</text>
-                            <rect x="248" y="56" width="104" height="18" rx="5" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="300" y="68" text-anchor="middle" fill="#166534" font-size="7.5" font-weight="700">ESTABLISHED</text>
-
-                            <!-- FIN → -->
-                            <line x1="80" y1="110" x2="292" y2="138" stroke="#8c1d40" stroke-width="2.5" marker-end="url(#mC)"/>
-                            <rect x="146" y="100" width="108" height="22" rx="5" fill="#8c1d40"/>
-                            <text x="200" y="115" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">FIN (Seq=4200)</text>
-                            <rect x="30"  y="116" width="100" height="18" rx="5" fill="#fed7aa" stroke="#fb923c"/>
-                            <text x="80"  y="128" text-anchor="middle" fill="#7c2d12" font-size="7.5" font-weight="700">FIN_WAIT_1</text>
-
-                            <!-- ← ACK -->
-                            <line x1="300" y1="152" x2="88" y2="172" stroke="#64748b" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#mG)"/>
-                            <rect x="168" y="142" width="80" height="22" rx="5" fill="#fff" stroke="#cbd5e1" stroke-width="1.2"/>
-                            <text x="208" y="157" text-anchor="middle" fill="#475569" font-size="10" font-weight="700">ACK=4201</text>
-                            <rect x="248" y="148" width="104" height="18" rx="5" fill="#fed7aa" stroke="#fb923c"/>
-                            <text x="300" y="160" text-anchor="middle" fill="#7c2d12" font-size="7.5" font-weight="700">CLOSE_WAIT</text>
-                            <rect x="30"  y="175" width="100" height="18" rx="5" fill="#fed7aa" stroke="#fb923c"/>
-                            <text x="80"  y="187" text-anchor="middle" fill="#7c2d12" font-size="7.5" font-weight="700">FIN_WAIT_2</text>
-
-                            <!-- ← FIN -->
-                            <line x1="300" y1="250" x2="88" y2="278" stroke="#8c1d40" stroke-width="2.5" marker-end="url(#mC)"/>
-                            <rect x="146" y="240" width="108" height="22" rx="5" fill="#8c1d40"/>
-                            <text x="200" y="255" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">FIN (Seq=9100)</text>
-                            <rect x="248" y="258" width="104" height="18" rx="5" fill="#fed7aa" stroke="#fb923c"/>
-                            <text x="300" y="270" text-anchor="middle" fill="#7c2d12" font-size="7.5" font-weight="700">LAST_ACK</text>
-
-                            <!-- ACK → -->
-                            <line x1="80" y1="296" x2="292" y2="318" stroke="#64748b" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#mG)"/>
-                            <rect x="168" y="286" width="80" height="22" rx="5" fill="#fff" stroke="#cbd5e1" stroke-width="1.2"/>
-                            <text x="208" y="301" text-anchor="middle" fill="#475569" font-size="10" font-weight="700">ACK=9101</text>
-
-                            <!-- TIME_WAIT -->
-                            <rect x="8"   y="303" width="144" height="28" rx="8" fill="#1e293b"/>
-                            <text x="80"  y="316" text-anchor="middle" fill="#fbbf24" font-size="8.5" font-weight="700">TIME_WAIT (2×MSL)</text>
-                            <text x="80"  y="328" text-anchor="middle" fill="#94a3b8" font-size="7">evita FIN duplicado tardío</text>
-
-                            <!-- CLOSED -->
-                            <rect x="30"  y="382" width="100" height="18" rx="5" fill="#e2e8f0" stroke="#94a3b8"/>
-                            <text x="80"  y="394" text-anchor="middle" fill="#475569" font-size="7.5" font-weight="700">CLOSED</text>
-                            <rect x="248" y="326" width="104" height="18" rx="5" fill="#e2e8f0" stroke="#94a3b8"/>
-                            <text x="300" y="338" text-anchor="middle" fill="#475569" font-size="7.5" font-weight="700">CLOSED</text>
-
-                            <text x="190" y="410" text-anchor="middle" fill="#64748b" font-size="8" font-style="italic">Ambos lados cierran su flujo de forma independiente</text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- B. Piggybacking, Time Out y Retransmisión -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-navy mb-8 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-                    <span class="step-num">B</span> Piggybacking, Time Out y Retransmisión
-                </h3>
-
-                <div class="grid md:grid-cols-2 gap-6">
-
-                    <!-- Time Out -->
-                    <div class="diagram-wrap">
-                        <h4 class="font-bold text-navy text-center mb-5 text-sm">Time Out — Segmento Perdido</h4>
-                        <svg viewBox="0 0 360 440" xmlns="http://www.w3.org/2000/svg" width="100%" preserveAspectRatio="xMidYMid meet" style="max-width:360px;font-family:'Plus Jakarta Sans',sans-serif">
-                            <defs>
-                                <marker id="mData" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#c9a34a"/>
-                                </marker>
-                                <marker id="mAck" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#64748b"/>
-                                </marker>
-                                <marker id="mRetry" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#f97316"/>
-                                </marker>
-                            </defs>
-                            <!-- Headers -->
-                            <rect x="20"  y="14" width="88" height="26" rx="7" fill="#dbeafe" stroke="#93c5fd"/>
-                            <text x="64"  y="31" text-anchor="middle" fill="#1e3a8a" font-size="10" font-weight="700">Host A</text>
-                            <rect x="252" y="14" width="88" height="26" rx="7" fill="#dbeafe" stroke="#93c5fd"/>
-                            <text x="296" y="31" text-anchor="middle" fill="#1e3a8a" font-size="10" font-weight="700">Host B</text>
-
-                            <!-- Lifelines -->
-                            <line x1="64"  y1="40" x2="64"  y2="430" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
-                            <line x1="296" y1="40" x2="296" y2="430" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
-
-                            <!-- Seg 1: Seq=4000 OK -->
-                            <text x="10" y="74" fill="#64748b" font-size="8.5" font-weight="600">Seq=4000</text>
-                            <line x1="64" y1="78" x2="288" y2="96" stroke="#c9a34a" stroke-width="2.4" marker-end="url(#mData)"/>
-                            <rect x="140" y="70" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="83" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <rect x="26"  y="83" width="28" height="16" rx="4" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="40"  y="94" text-anchor="middle" fill="#166534" font-size="8" font-weight="700">ok</text>
-                            <!-- ACK=4200 -->
-                            <text x="305" y="108" fill="#64748b" font-size="8" font-weight="600">ACK=4200</text>
-                            <line x1="296" y1="106" x2="70"  y2="118" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mAck)"/>
-                            <rect x="144" y="100" width="68" height="18" rx="4" fill="#fff" stroke="#cbd5e1"/>
-                            <text x="178" y="113" text-anchor="middle" fill="#475569" font-size="9" font-weight="600">ACK=4200</text>
-
-                            <!-- Seg 2: Seq=4200 OK -->
-                            <text x="10" y="140" fill="#64748b" font-size="8.5" font-weight="600">Seq=4200</text>
-                            <line x1="64" y1="144" x2="288" y2="162" stroke="#c9a34a" stroke-width="2.4" marker-end="url(#mData)"/>
-                            <rect x="140" y="136" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="149" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <rect x="26"  y="149" width="28" height="16" rx="4" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="40"  y="160" text-anchor="middle" fill="#166534" font-size="8" font-weight="700">ok</text>
-                            <!-- ACK=4400 -->
-                            <text x="305" y="174" fill="#64748b" font-size="8" font-weight="600">ACK=4400</text>
-                            <line x1="296" y1="172" x2="70"  y2="184" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mAck)"/>
-                            <rect x="144" y="166" width="68" height="18" rx="4" fill="#fff" stroke="#cbd5e1"/>
-                            <text x="178" y="179" text-anchor="middle" fill="#475569" font-size="9" font-weight="600">ACK=4400</text>
-
-                            <!-- Seg 3: Seq=4400 LOST -->
-                            <text x="10" y="206" fill="#64748b" font-size="8.5" font-weight="600">Seq=4400</text>
-                            <line x1="64" y1="210" x2="252" y2="228" stroke="#c9a34a" stroke-width="2.4" marker-end="url(#mData)"/>
-                            <rect x="140" y="202" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="215" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <!-- X mark -->
-                            <circle cx="262" cy="228" r="10" fill="#f97316" stroke="#ea580c"/>
-                            <text x="262" y="233" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">✕</text>
-
-                            <!-- TimeOut label -->
-                            <rect x="52"  y="244" width="96" height="24" rx="8" fill="#f97316" stroke="#ea580c"/>
-                            <text x="100" y="260" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">⏱ Time Out</text>
-
-                            <!-- Retransmission arrow -->
-                            <path d="M148 256 C 130 268, 120 282, 130 306" fill="none" stroke="#f97316" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#mRetry)"/>
-                            <text x="100" y="295" text-anchor="middle" fill="#c2410c" font-size="8.5" font-style="italic" font-weight="700">Retransmisión</text>
-
-                            <!-- Seg 3 retransmitted -->
-                            <text x="10" y="316" fill="#f97316" font-size="8.5" font-weight="700">Seq=4400</text>
-                            <line x1="64" y1="320" x2="288" y2="338" stroke="#f97316" stroke-width="2.8" marker-end="url(#mRetry)"/>
-                            <rect x="140" y="312" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="325" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <rect x="26"  y="325" width="28" height="16" rx="4" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="40"  y="336" text-anchor="middle" fill="#166534" font-size="8" font-weight="700">ok</text>
-                            <!-- Final ACK -->
-                            <text x="305" y="360" fill="#64748b" font-size="8" font-weight="600">ACK=4600</text>
-                            <line x1="296" y1="358" x2="70"  y2="372" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mAck)"/>
-                            <rect x="144" y="352" width="68" height="18" rx="4" fill="#fff" stroke="#cbd5e1"/>
-                            <text x="178" y="365" text-anchor="middle" fill="#475569" font-size="9" font-weight="600">ACK=4600</text>
-
-                            <text x="180" y="420" text-anchor="middle" fill="#64748b" font-size="8" font-style="italic">ACK no llega → RTO vence → retransmisión</text>
-                        </svg>
-                    </div>
-
-                    <!-- Error Emisor -->
-                    <div class="diagram-wrap">
-                        <h4 class="font-bold text-burg text-center mb-5 text-sm">Error Emisor — ACK Corrupto</h4>
-                        <svg viewBox="0 0 360 460" xmlns="http://www.w3.org/2000/svg" width="100%" preserveAspectRatio="xMidYMid meet" style="max-width:360px;font-family:'Plus Jakarta Sans',sans-serif">
-                            <defs>
-                                <marker id="mData2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#c9a34a"/>
-                                </marker>
-                                <marker id="mAck2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#64748b"/>
-                                </marker>
-                                <marker id="mRetry2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
-                                    <path d="M0,0 L9,4.5 L0,9 z" fill="#f97316"/>
-                                </marker>
-                            </defs>
-                            <!-- Headers -->
-                            <rect x="20"  y="14" width="88" height="26" rx="7" fill="#dbeafe" stroke="#93c5fd"/>
-                            <text x="64"  y="31" text-anchor="middle" fill="#1e3a8a" font-size="10" font-weight="700">Host A</text>
-                            <rect x="252" y="14" width="88" height="26" rx="7" fill="#dbeafe" stroke="#93c5fd"/>
-                            <text x="296" y="31" text-anchor="middle" fill="#1e3a8a" font-size="10" font-weight="700">Host B</text>
-                            <!-- Lifelines -->
-                            <line x1="64"  y1="40" x2="64"  y2="450" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
-                            <line x1="296" y1="40" x2="296" y2="450" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
-
-                            <!-- Seg 1: Seq=4000 OK -->
-                            <text x="10" y="74" fill="#64748b" font-size="8.5" font-weight="600">Seq=4000</text>
-                            <line x1="64" y1="78" x2="288" y2="96" stroke="#c9a34a" stroke-width="2.4" marker-end="url(#mData2)"/>
-                            <rect x="140" y="70" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="83" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <rect x="26"  y="83" width="28" height="16" rx="4" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="40"  y="94" text-anchor="middle" fill="#166534" font-size="8" font-weight="700">ok</text>
-                            <!-- ACK=4200 — CORRUPTED -->
-                            <text x="305" y="110" fill="#f97316" font-size="8" font-weight="700">ACK=4200 ✕</text>
-                            <line x1="296" y1="108" x2="70"  y2="122" stroke="#f97316" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mAck2)"/>
-                            <rect x="140" y="102" width="68" height="18" rx="4" fill="#fff" stroke="#fca5a5"/>
-                            <text x="174" y="115" text-anchor="middle" fill="#dc2626" font-size="9" font-weight="600">ACK=4200</text>
-                            <!-- Corrupted mark on ACK -->
-                            <circle cx="286" cy="110" r="9" fill="#f97316" stroke="#ea580c"/>
-                            <text x="286" y="115" text-anchor="middle" fill="#fff" font-size="11" font-weight="900">✕</text>
-
-                            <!-- Seg 2: Seq=4200 OK -->
-                            <text x="10" y="148" fill="#64748b" font-size="8.5" font-weight="600">Seq=4200</text>
-                            <line x1="64" y1="152" x2="288" y2="170" stroke="#c9a34a" stroke-width="2.4" marker-end="url(#mData2)"/>
-                            <rect x="140" y="144" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="157" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <rect x="26"  y="157" width="28" height="16" rx="4" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="40"  y="168" text-anchor="middle" fill="#166534" font-size="8" font-weight="700">ok</text>
-                            <!-- ACK=4400 (acumulativo) -->
-                            <text x="305" y="184" fill="#64748b" font-size="8" font-weight="600">ACK=4400</text>
-                            <line x1="296" y1="182" x2="70"  y2="196" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mAck2)"/>
-                            <rect x="144" y="176" width="68" height="18" rx="4" fill="#fff" stroke="#cbd5e1"/>
-                            <text x="178" y="189" text-anchor="middle" fill="#475569" font-size="9" font-weight="600">ACK=4400</text>
-
-                            <!-- NOK label: Host A detecta que ACK4200 fue corrupto -->
-                            <rect x="26"  y="208" width="76" height="22" rx="7" fill="#f97316" stroke="#ea580c"/>
-                            <text x="64"  y="223" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">NOK</text>
-                            <text x="64"  y="240" text-anchor="middle" fill="#c2410c" font-size="8" font-style="italic">retransmite</text>
-
-                            <!-- Retransmission arrow indicator -->
-                            <path d="M100 218 C 118 228, 126 248, 128 270" fill="none" stroke="#f97316" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#mRetry2)"/>
-                            <rect x="136" y="210" width="72" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="172" y="223" text-anchor="middle" fill="#9a3412" font-size="9" font-weight="600">Seq=4200</text>
-
-                            <!-- Retransmitted Seg 2 -->
-                            <text x="10" y="285" fill="#f97316" font-size="8.5" font-weight="700">Seq=4200</text>
-                            <line x1="64" y1="290" x2="288" y2="308" stroke="#f97316" stroke-width="2.8" marker-end="url(#mRetry2)"/>
-                            <rect x="140" y="282" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="295" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <rect x="26"  y="295" width="28" height="16" rx="4" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="40"  y="306" text-anchor="middle" fill="#166534" font-size="8" font-weight="700">ok</text>
-
-                            <!-- Seg 3: Seq=4400 -->
-                            <text x="10" y="334" fill="#64748b" font-size="8.5" font-weight="600">Seq=4400</text>
-                            <line x1="64" y1="338" x2="288" y2="356" stroke="#c9a34a" stroke-width="2.4" marker-end="url(#mData2)"/>
-                            <rect x="140" y="330" width="74" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
-                            <text x="177" y="343" text-anchor="middle" fill="#92400e" font-size="9" font-weight="700">200 Bytes</text>
-                            <rect x="26"  y="343" width="28" height="16" rx="4" fill="#dcfce7" stroke="#86efac"/>
-                            <text x="40"  y="354" text-anchor="middle" fill="#166534" font-size="8" font-weight="700">ok</text>
-                            <!-- Final ACK=4600 -->
-                            <text x="305" y="376" fill="#64748b" font-size="8" font-weight="600">ACK=4600</text>
-                            <line x1="296" y1="374" x2="70"  y2="390" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mAck2)"/>
-                            <rect x="144" y="368" width="68" height="18" rx="4" fill="#fff" stroke="#cbd5e1"/>
-                            <text x="178" y="381" text-anchor="middle" fill="#475569" font-size="9" font-weight="600">ACK=4600</text>
-
-                            <text x="180" y="440" text-anchor="middle" fill="#64748b" font-size="8" font-style="italic">ACK corrupto → emisor detecta NOK → retransmite</text>
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- RTO Cálculo -->
-                <div class="mt-8 rounded-2xl p-6 text-white" style="background:linear-gradient(135deg,#0f1f33,#1e293b)">
-                    <h4 class="font-bold mb-3" style="color:#c9a34a;font-size:1rem">Cálculo Dinámico del Time Out (RTO)</h4>
-                    <p class="text-sm text-slate-300 mb-4">Si el RTO es muy corto genera retransmisiones innecesarias; si es muy largo reacciona lento. TCP usa un promedio exponencial ponderado (EWMA):</p>
-                    <div class="code-block mb-4">
-RTT_estimado = α × RTT_medido  +  (1 − α) × RTT_anterior<br>
-RTO          = RTT_estimado    +  4 × Desviación_RTT
-                    </div>
-                    <p class="text-sm text-slate-300"><strong class="text-yellow-400">Algoritmo de Karn:</strong> Ante una retransmisión, TCP <em>duplica el RTO</em> (Exponential Backoff) para no saturar la red. Las muestras de RTT de paquetes retransmitidos son descartadas y no contaminan el estimado.</p>
-                </div>
-            </div>
-
-            <!-- C. 4 Timers -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-navy mb-8 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-                    <span class="step-num">C</span> Los 4 Timers Claves de TCP
-                </h3>
-                <div class="grid sm:grid-cols-2 gap-4">
-                    <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xl">⏱</span>
-                            <h4 class="font-bold text-navy text-sm">1. Retransmission Time Out (RTO)</h4>
-                        </div>
-                        <p class="text-xs text-slate-600">Calculado dinámicamente según el RTT. Determina cuánto espera el emisor por un ACK antes de asumir pérdida y retransmitir.</p>
-                    </div>
-                    <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xl">🔄</span>
-                            <h4 class="font-bold text-burg text-sm">2. Persistence Timer</h4>
-                        </div>
-                        <p class="text-xs text-slate-600">Evita el "deadlock" cuando Window=0. Envía periódicamente 1 byte de prueba por si se perdió un ACK de actualización de ventana.</p>
-                    </div>
-                    <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xl">💓</span>
-                            <h4 class="font-bold text-gold text-sm">3. Keep-Alive Timer</h4>
-                        </div>
-                        <p class="text-xs text-slate-600">Verifica si el otro extremo sigue activo tras un largo periodo de inactividad, enviando paquetes de prueba preventivos.</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xl">⏳</span>
-                            <h4 class="font-bold text-slate-700 text-sm">4. Time-Wait / Closing (2MSL)</h4>
-                        </div>
-                        <p class="text-xs text-slate-600">Al terminar la conexión, el iniciador del cierre espera 2×MSL (doble del tiempo de vida máximo) por si el último ACK se pierde y llega un FIN duplicado tardío.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- D. Control de Flujo vs Congestión -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-navy mb-8 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-                    <span class="step-num">D</span> Control de Flujo vs Control de Congestión
-                </h3>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h4 class="font-bold text-navy mb-1 text-sm">Control de Flujo</h4>
-                        <p class="text-xs text-slate-400 mb-3 font-semibold">🛡️ Protege al Receptor</p>
-                        <p class="text-sm text-slate-600 mb-4">Usa la <strong>Ventana Deslizante (Window Size)</strong>. El emisor solo envía lo que indica la ventana del receptor. Si <code class="bg-slate-100 px-1 rounded text-xs">Window = 0</code>, el emisor se bloquea totalmente.</p>
-                        <div class="win-bar mb-2">
-                            <div class="w-1/4 bg-green-200 text-green-900">Env.<br>Conf.</div>
-                            <div class="w-1/4 bg-orange-200 text-orange-900">Env.<br>Sin ACK</div>
-                            <div class="w-1/4 bg-blue-200 text-blue-900">No env.<br>Disponible</div>
-                            <div class="w-1/4 bg-red-200 text-red-900">Fuera<br>Ventana</div>
-                        </div>
-                        <p class="text-[10px] text-slate-400 text-center italic">Buffer del emisor con ventana deslizante.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-burg mb-1 text-sm">Control de Congestión</h4>
-                        <p class="text-xs text-slate-400 mb-3 font-semibold">🌐 Protege la Red</p>
-                        <p class="text-sm text-slate-600 mb-4">Protege a los routers de colapsar. Actúa sobre la ventana interna del emisor <strong>(cwnd)</strong>.</p>
-                        <div class="space-y-3">
-                            <div class="rounded-xl border-l-4 border-blue-500 bg-blue-50 p-4">
-                                <p class="font-bold text-blue-800 text-xs mb-1">Slow Start</p>
-                                <p class="text-xs text-slate-600">Empieza con 1 MSS y crece exponencialmente por RTT. Al alcanzar <em>ssthresh</em>, cambia a AIMD.</p>
-                            </div>
-                            <div class="rounded-xl border-l-4 border-purple-500 bg-purple-50 p-4">
-                                <p class="font-bold text-purple-800 text-xs mb-1">AIMD</p>
-                                <p class="text-xs text-slate-600">+1 MSS por RTT exitoso (Aditivo); ÷2 ante pérdida detectada (Multiplicativo).</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ══════════════ PARTE 3: CONCEPTOS ══════════════ -->
-    <section id="conceptos" class="mb-24">
-        <h3 class="section-title text-3xl font-bold mb-10">Parte 3 — Preguntas Tipo Certamen</h3>
-
-        <div class="card p-8">
-            <p class="text-slate-500 mb-8 text-sm">Preguntas clásicas de evaluaciones pasadas. Haz clic para revelar la justificación completa.</p>
-            <div class="space-y-3">
-
-                <!-- Q1 -->
-                <div class="border border-slate-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAccordion('q1',this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-                        <span>1. ¿Cuál es la diferencia entre un protocolo con conexión y uno sin conexión?</span>
-                        <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div id="q1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-                        Un protocolo <strong>con conexión</strong> (TCP) establece un canal lógico previo mediante un Handshake de 3 pasos y mantiene memoria del estado (secuencias, ventanas, buffers). Un protocolo <strong>sin conexión</strong> (UDP) envía datagramas de inmediato sin verificar si el receptor está listo, sin garantizar entrega ni orden.
-                    </div>
-                </div>
-
-                <!-- Q2 -->
-                <div class="border border-slate-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAccordion('q2',this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-                        <span>2. ¿Por qué se dice que el Checksum de UDP/TCP es matemáticamente débil?</span>
-                        <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div id="q2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-                        Porque se basa en una simple suma en complemento a 1 de palabras de 16 bits. Si ocurren múltiples errores que se compensan matemáticamente, o si bloques de 16 bits se permutan entre sí, la suma final dará el mismo resultado y el error no será detectado.
-                    </div>
-                </div>
-
-                <!-- Q3 -->
-                <div class="border border-slate-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAccordion('q3',this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-                        <span>3. ¿Por qué se dice que TCP tiene "memoria"?</span>
-                        <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div id="q3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-                        TCP mantiene un <strong>autómata de estados</strong> (LISTEN, ESTABLISHED, FIN_WAIT, etc.). Además almacena los números de secuencia y ACKs actuales, y mantiene <strong>buffers</strong> para datos enviados no confirmados y recibidos no procesados. Toda esta información de estado constituye su "memoria" de la conexión, a diferencia de UDP que es completamente <em>stateless</em>.
-                    </div>
-                </div>
-
-                <!-- Q4 -->
-                <div class="border border-slate-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAccordion('q4',this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-                        <span>4. Explicar el funcionamiento del campo WINDOW SIZE en TCP.</span>
-                        <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div id="q4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-                        <code class="bg-slate-100 px-1 rounded text-xs font-mono">Window Size</code> es la clave del <strong>Control de Flujo</strong>. Indica la memoria libre en bytes en el buffer del receptor. El emisor limita su envío a esa cantidad de bytes no confirmados. Si llega <code class="bg-slate-100 px-1 rounded text-xs font-mono">Window = 0</code>, el emisor se bloquea y se activa el <em>Persistence Timer</em> hasta que el receptor libere espacio, evitando su saturación.
-                    </div>
-                </div>
-
-                <!-- Q5 -->
-                <div class="border border-slate-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAccordion('q5',this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-                        <span>5. ¿Qué otros protocolos de transporte existen además de TCP y UDP?</span>
-                        <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div id="q5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-                        <strong>SCTP</strong> (Stream Control Transmission Protocol): confiable y orientado a conexión como TCP, pero basado en mensajes y con multi-homing. <strong>DCCP</strong> (Datagram Congestion Control Protocol): sin confiabilidad como UDP, pero con control de congestión avanzado similar a TCP. Útil para multimedia en tiempo real.
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- ══════════════ PARTE 4: PRÁCTICA ══════════════ -->
-    <section id="practica" class="mb-24">
-        <h3 class="section-title text-3xl font-bold mb-10">Parte 4 — Ejercitación Práctica y Casos</h3>
-
-        <div class="card p-8">
-            <span class="inline-flex items-center gap-1.5 bg-blue-50 text-navy border border-blue-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">
-                🧪 Caso Práctico: Diseño de Protocolo
-            </span>
-            <h3 class="text-xl font-bold text-slate-800 mb-3">Diseño de un Chat usando UDP</h3>
-            <p class="text-slate-600 text-sm mb-5 leading-relaxed">Pedro y Jorge están programando una aplicación de chat de texto. Para lograr la máxima velocidad y reducir el <em>overhead</em> de la red, deciden utilizar <strong>UDP</strong> como protocolo.</p>
-
-            <div class="border-l-4 border-navy pl-5 py-2 mb-6 space-y-2.5">
-                <p class="text-slate-700 text-sm font-semibold">Pregunta A: ¿Es UDP una buena elección para una app de chat de texto? Justifica.</p>
-                <p class="text-slate-700 text-sm font-semibold">Pregunta B: ¿Qué servicios ofrece UDP y cuáles NO ofrece que serían necesarios para un chat?</p>
-                <p class="text-slate-700 text-sm font-semibold">Pregunta C: Si por obligación del profesor deben usar UDP, ¿qué tendrían que programar manualmente?</p>
-            </div>
-
-            <div class="flex justify-end border-t border-slate-100 pt-5">
-                <button onclick="toggleAnswer('prac1',this)" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <span>Mostrar Resolución</span>
-                </button>
-            </div>
-
-            <div id="prac1" class="hidden mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl animate-in">
-                <h4 class="font-bold text-navy mb-5 border-b border-slate-200 pb-3">Resolución del Caso</h4>
-                <div class="space-y-6 text-sm text-slate-700">
-                    <div>
-                        <p class="font-bold text-burg mb-2">Respuesta A: No es la mejor elección.</p>
-                        <p class="leading-relaxed">Un chat de texto requiere <strong>confiabilidad absoluta y orden de entrega</strong>. UDP no garantiza ninguna de estas propiedades: los mensajes pueden llegar desordenados ("¿Cómo hola?" antes que "hola"), perderse silenciosamente, o duplicarse. TCP es la elección natural para este caso de uso.</p>
-                    </div>
-                    <div>
-                        <p class="font-bold text-gold mb-3">Respuesta B: Servicios de UDP vs. lo que necesita un chat.</p>
-                        <div class="grid md:grid-cols-2 gap-3">
-                            <div class="rounded-xl border border-green-200 bg-green-50 p-4">
-                                <p class="font-bold text-green-800 text-xs mb-2">✅ UDP SÍ ofrece:</p>
-                                <ul class="space-y-1 text-xs text-green-900">
-                                    <li class="flex gap-1.5"><span>▸</span> MUX / DEMUX mediante puertos</li>
-                                    <li class="flex gap-1.5"><span>▸</span> Detección básica de errores (Checksum)</li>
-                                    <li class="flex gap-1.5"><span>▸</span> Baja latencia, sin overhead de conexión</li>
-                                </ul>
-                            </div>
-                            <div class="rounded-xl border border-red-200 bg-red-50 p-4">
-                                <p class="font-bold text-red-800 text-xs mb-2">❌ UDP NO ofrece (y el chat necesita):</p>
-                                <ul class="space-y-1 text-xs text-red-900">
-                                    <li class="flex gap-1.5"><span>▸</span> Entrega garantizada (confiabilidad)</li>
-                                    <li class="flex gap-1.5"><span>▸</span> Orden de entrega de mensajes</li>
-                                    <li class="flex gap-1.5"><span>▸</span> Control de flujo (no saturar al receptor)</li>
-                                    <li class="flex gap-1.5"><span>▸</span> Control de congestión (no saturar la red)</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="font-bold text-navy mb-2">Respuesta C: Replicar TCP en la Capa de Aplicación.</p>
-                        <p class="leading-relaxed">Tendrían que programar <em>a mano</em> todo lo que TCP hace: agregar <strong>números de secuencia</strong> a cada mensaje, implementar un sistema de <strong>ACKs</strong> propios con timers (RTO) para retransmitir mensajes perdidos, y gestionar <strong>buffers</strong> para no saturar al receptor. Es decir, estarían reimplementando TCP sobre UDP en la capa de aplicación.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Cálculo del checksum paso a paso</h3>
+    <div class="grid2">
+      <div>
+        <h4>Emisor</h4>
+        <ol class="steps">
+          <li>Pon el campo checksum en 0 y corta todo (pseudo-header + cabecera + datos) en <b>palabras de 16 bits</b>.</li>
+          <li>Súmalas en un acumulador de <b>32 bits</b>.</li>
+          <li>Separa el resultado en dos mitades: W1 (16 bits altos) y W2 (16 bits bajos).</li>
+          <li>Si W1 ≠ 0, suma el acarreo: <code>W2 = W2 + W1</code>.</li>
+          <li>Invierte todos los bits: <code>checksum = NOT(W2)</code>.</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Receptor</h4>
+        <ol class="steps">
+          <li>Mismo algoritmo, pero el acumulador <b>parte con el checksum recibido</b>.</li>
+          <li>Suma todas las palabras, dobla el acarreo y aplica NOT.</li>
+          <li>Si el resultado es <b>0</b> → correcto. Si no → error de transmisión (se descarta).</li>
+        </ol>
+        <div class="call tip"><p>¿Por qué funciona? Sumar un número con su complemento a 1 da <code>FFFF</code>, y <code>NOT(FFFF) = 0000</code>.</p></div>
+      </div>
+    </div>
+
+    <h4 style="margin-top:14px">Ejemplo resuelto</h4>
+    <p>Supón que al cortar en palabras de 16 bits obtienes: <code>8A3C</code>, <code>9F12</code>, <code>0F0F</code>.</p>
+    <div class="formula"><span class="c">// 1) suma en 32 bits</span>
+8A3C + 9F12 = 1294E
+1294E + 0F0F = <span class="h">0001 385D</span>
+<span class="c">// 2) W1 = 0001, W2 = 385D → hay acarreo</span>
+W2 = 385D + 0001 = <span class="h">385E</span>
+<span class="c">// 3) complemento a 1</span>
+checksum = NOT(385E) = <span class="h">C7A1</span>
+
+<span class="c">// Verificación en el receptor: parte con C7A1</span>
+C7A1 + 1385D = 1FFFE → FFFE + 0001 = FFFF → NOT(FFFF) = <span class="h">0000 (correcto)</span></div>
+
+    <h4 style="margin-top:18px">Calculadora para practicar</h4>
+    <p class="hint">Escribe palabras hex de 16 bits separadas por espacios. Deja vacío el checksum para calcularlo (emisor) o escribe uno para verificarlo (receptor).</p>
+    <div class="grid2">
+      <div><label class="f" for="ckWords">Palabras de 16 bits (hex)</label><textarea id="ckWords" class="in">8A3C 9F12 0F0F</textarea></div>
+      <div><label class="f" for="ckRecv">Checksum recibido (opcional)</label><input id="ckRecv" class="in" placeholder="ej: C7A1">
+        <div class="btns"><button class="btn" id="ckBtn" type="button">Calcular</button></div></div>
+    </div>
+    <div class="out" id="ckOut">Presiona “Calcular”.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>¿Por qué elegir UDP?</h3>
+      <ul class="clean">
+        <li><b>Más liviano:</b> menos procesamiento y sin establecer conexión.</li>
+        <li><b>Menos ancho de banda:</b> cabecera de 8 B (vs 20 B mínimo en TCP).</li>
+        <li>La aplicación <b>no necesita</b> retransmisiones (un dato viejo ya no sirve).</li>
+        <li>La aplicación quiere implementar <b>su propio</b> control de errores y flujo.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Aplicaciones típicas</h3>
+      <p><b>Clásicas:</b> DNS, NFS, SNMP, NTP — mensajes cortos tipo pregunta/respuesta.</p>
+      <p><b>Multimedia:</b> streaming de audio/video, VoIP (SIP), videoconferencia — prefieren perder un trozo antes que esperar su retransmisión.</p>
+    </div>
+  </div>
+
+  <div class="call key"><span class="lbl">En una frase</span><p>UDP = puertos + checksum + nada más. Rápido, pero la aplicación asume el riesgo.</p></div>
+</section>
+
+<!-- ═════════ 3. TCP ═════════ -->
+<section id="tcp">
+  <div class="sec-head"><span class="sec-num">3</span><h2>TCP — el protocolo confiable</h2></div>
+  <p class="sec-intro">TCP construye un canal confiable encima de IP, que no lo es. Para eso numera cada byte, confirma lo recibido, retransmite lo perdido y regula la velocidad.</p>
+
+  <div class="card">
+    <h3>Propiedades de TCP</h3>
+    <div class="grid3">
+      <div class="mini"><h4>Confiable</h4><p>Todo llega, sin errores y en orden (ACK + retransmisión).</p></div>
+      <div class="mini"><h4>Con conexión</h4><p>Handshake de 3 pasos antes de enviar datos.</p></div>
+      <div class="mini"><h4>↔Punto a punto y bidireccional</h4><p>Un emisor y un receptor (cliente/servidor); datos en ambos sentidos a la vez.</p></div>
+      <div class="mini"><h4>Flujo continuo de bytes</h4><p>La app escribe lo que quiera; TCP lo corta en segmentos (máximo MSS).</p></div>
+      <div class="mini"><h4>Pipeline con buffers</h4><p>Buffers de emisión y recepción; puede haber varios segmentos “en vuelo”.</p></div>
+      <div class="mini"><h4>Ventana deslizante</h4><p>Mecanismo para el control de flujo (no saturar al receptor).</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Formato del segmento <span class="chip">cabecera mínima 20 B · máxima 60 B</span></h3>
+    <p class="hint">Toca cada campo (también cada flag) para ver qué hace.</p>
+    <div id="tcpExp">
+      <div class="seg-scroll"><div class="seg-grid"></div></div>
+      <div class="seg-panel"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Los flags más importantes</h3>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <tr><th>Flag</th><th>Significado</th><th>Cuándo lo ves</th></tr>
+        <tr><td><span class="chip">SYN</span></td><td>Sincronizar números de secuencia</td><td>Paso 1 y 2 del handshake. <b>Consume 1</b> número de secuencia.</td></tr>
+        <tr><td><span class="chip gold">ACK</span></td><td>El campo Acknowledgement es válido</td><td>En todos los segmentos excepto el primer SYN.</td></tr>
+        <tr><td><span class="chip burg">FIN</span></td><td>No tengo más datos que enviar</td><td>Cierre ordenado. <b>Consume 1</b> número de secuencia.</td></tr>
+        <tr><td><span class="chip burg">RST</span></td><td>Resetea (aborta) la conexión</td><td>Puerto cerrado, error grave: terminación unilateral.</td></tr>
+        <tr><td><span class="chip">PSH</span></td><td>Entregar ya los datos a la aplicación</td><td>Apps interactivas (SSH, Telnet).</td></tr>
+        <tr><td><span class="chip">URG</span></td><td>El Urgent Pointer es válido</td><td>Datos urgentes (hoy casi no se usa).</td></tr>
+        <tr><td><span class="chip">ECE · CWR · NS</span></td><td>Notificación explícita de congestión (ECN)</td><td>Cuando un router marca congestión.</td></tr>
+      </table>
+    </div>
+    <div class="call warn"><span class="lbl">Error típico</span><p>No confundas el <b>flag ACK</b> (1 bit: “el campo es válido”) con el <b>número de ACK</b> (32 bits: “el próximo byte que espero”).</p></div>
+  </div>
+</section>
+
+<!-- ═════════ 4. SECUENCIAS ═════════ -->
+<section id="secuencias">
+  <div class="sec-head"><span class="sec-num">4</span><h2>Números de secuencia, ACK y handshake</h2></div>
+  <p class="sec-intro">Esta es la parte que más se pregunta con números. Si dominas estas 4 reglas, puedes completar cualquier diagrama de certamen.</p>
+
+  <div class="card" style="border:2px solid var(--gold)">
+    <h3>Las 4 reglas de oro</h3>
+    <div class="grid2">
+      <div class="mini"><h4>1. Seq cuenta bytes, no segmentos</h4><p><code>Seq</code> = número del <b>primer byte</b> de datos que lleva el segmento.</p></div>
+      <div class="mini"><h4>2. El siguiente Seq</h4><p><code>Seq siguiente = Seq + bytes de datos</code><br>(+1 extra si el segmento lleva SYN o FIN).</p></div>
+      <div class="mini"><h4>3. ACK = lo que espero</h4><p><code>Ack</code> = <b>próximo byte esperado</b> = último byte recibido en orden + 1.</p></div>
+      <div class="mini"><h4>4. ACK acumulativo</h4><p><code>Ack = N</code> confirma <b>todo</b> hasta N−1. Un ACK puede confirmar varios segmentos.</p></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="diagram"><h4>Numeración de cada byte</h4><div id="dSeq"></div>
+      <p class="cap">El tercer segmento lleva los bytes 4400 a 4599, así que el receptor espera el 4600.</p></div>
+    <div class="diagram"><h4>Apertura: 3-way handshake</h4><div id="dHand"></div>
+      <p class="cap">SYN consume 1: por eso el Ack del servidor es 3001, no 3000.</p></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3>El handshake, explicado</h3>
+    <ol class="steps">
+      <li><b>Cliente → Servidor: SYN</b> (Seq = 3000, sin datos). Informa su número de secuencia inicial (ISN). El servidor estaba en <code>LISTEN</code>.</li>
+      <li><b>Servidor → Cliente: SYN + ACK</b> (Seq = 7000, Ack = 3001). Confirma el SYN (+1), informa su propio ISN y reserva el buffer de recepción.</li>
+      <li><b>Cliente → Servidor: ACK</b> (Seq = 3001, Ack = 7001). Confirma el SYN del servidor. <b>Este segmento ya puede llevar datos</b> (aquí 200 B).</li>
+    </ol>
+    <p>Al abrir se inicializan: los números de secuencia, los buffers y el control de flujo (tamaño de ventana). El <b>cliente</b> abre activamente; el <b>servidor</b> espera (<code>LISTEN</code>).</p>
+    <div class="call tip"><span class="lbl">¿Por qué 3 pasos y no 2?</span><p>Cada lado tiene su propio número de secuencia, y <b>cada uno debe ser confirmado</b>. Con 2 pasos el servidor nunca sabría si el cliente recibió su ISN. Además, el ISN se elige al azar para que segmentos viejos de una conexión anterior no se confundan con los de la nueva.</p></div>
+  </div>
+
+  <div class="grid2">
+    <div class="diagram"><h4>Piggybacking</h4><div id="dPiggy"></div>
+      <p class="cap">Mandar un segmento solo para un ACK desperdicia ancho de banda: el ACK viaja “a caballito” dentro de un segmento con datos.</p></div>
+    <div class="diagram"><h4>ACK diferido</h4><div id="dDelay"></div>
+      <p class="cap">El receptor espera un poco y confirma dos segmentos con un solo ACK (es acumulativo). Ahorra ancho de banda.</p></div>
+  </div>
+</section>
+
+<!-- ═════════ 5. CIERRE ═════════ -->
+<section id="cierre">
+  <div class="sec-head"><span class="sec-num">5</span><h2>Cierre de la conexión y autómata TCP</h2></div>
+  <p class="sec-intro">Como la conexión es bidireccional, <b>cada sentido se cierra por separado</b>: por eso el cierre ordenado tiene 4 pasos (FIN, ACK, FIN, ACK).</p>
+
+  <div class="grid2">
+    <div class="diagram"><h4>Terminación concertada (4 pasos)</h4><div id="dClose"></div>
+      <p class="cap">A ya terminó, pero B todavía puede enviar datos (“medio cierre”). Ack final = 12200 + 500 + 1 (FIN) = 12701.</p></div>
+    <div class="card" style="margin:0">
+      <h3>Paso a paso</h3>
+      <ol class="steps">
+        <li><b>A envía FIN</b> (puede ir con datos). El FIN consume 1 número de secuencia: 4200 + 100 + 1 = 4301. A pasa a <code>FIN_WAIT_1</code>.</li>
+        <li><b>B confirma</b> (Ack = 4301) y pasa a <code>CLOSE_WAIT</code>. A pasa a <code>FIN_WAIT_2</code>. B <b>termina de enviar lo que le falta</b>.</li>
+        <li><b>B envía su FIN</b> y pasa a <code>LAST_ACK</code>.</li>
+        <li><b>A confirma</b> (Ack = 12701), espera en <code>TIME_WAIT</code> y luego cierra. B recibe el ACK y cierra.</li>
+      </ol>
+      <div class="call tip"><span class="lbl">¿Para qué sirve TIME_WAIT (2·MSL)?</span><p>Si el último ACK se pierde, B reenviará su FIN; A debe seguir “vivo” para volver a confirmarlo. Además deja morir los segmentos viejos de esta conexión (MSL = vida máxima de un segmento en la red).</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3>Terminación unilateral (RST)</h3>
+    <p>RST corta la conexión <b>de inmediato</b>, sin handshake: se descartan los buffers y los datos pendientes.</p>
+    <div class="grid2">
+      <div class="diagram"><h4>Caso 1: conexión a un puerto cerrado</h4><div id="dRst1"></div></div>
+      <div class="diagram"><h4>Caso 2: aborto en plena transferencia</h4><div id="dRst2"></div></div>
+    </div>
+    <p class="hint" style="margin-top:8px">En el caso 1 la diapositiva muestra Ack = 4000; según el RFC 793 el RST confirma el SYN, que consume 1, por lo que el valor estándar es 4001.</p>
+  </div>
+
+  <div class="card">
+    <h3>El autómata de estados (la “memoria” de TCP)</h3>
+    <p>TCP es un <b>autómata finito</b>: en cada momento la conexión está en un estado, y los segmentos recibidos (o las llamadas de la app) la hacen cambiar. Los dos caminos normales son:</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <tr><th>Quién</th><th>Recorrido típico de estados</th></tr>
+        <tr><td><b>Cliente</b><br><small>(abre y cierra activamente)</small></td><td class="mono">CLOSED → SYN_SENT → ESTABLISHED → FIN_WAIT_1 → FIN_WAIT_2 → TIME_WAIT → CLOSED</td></tr>
+        <tr><td><b>Servidor</b><br><small>(abre y cierra pasivamente)</small></td><td class="mono">CLOSED → LISTEN → SYN_RCVD → ESTABLISHED → CLOSE_WAIT → LAST_ACK → CLOSED</td></tr>
+      </table>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <tr><th>Estado</th><th>Qué significa</th></tr>
+        <tr><td class="mono">LISTEN</td><td>Servidor esperando un SYN.</td></tr>
+        <tr><td class="mono">SYN_SENT</td><td>Cliente envió SYN, espera SYN+ACK.</td></tr>
+        <tr><td class="mono">SYN_RCVD</td><td>Servidor recibió SYN y respondió SYN+ACK; espera el ACK final.</td></tr>
+        <tr><td class="mono">ESTABLISHED</td><td>Conexión abierta: transferencia de datos.</td></tr>
+        <tr><td class="mono">FIN_WAIT_1 / 2</td><td>Envié FIN; espero su ACK (1) y luego el FIN del otro (2).</td></tr>
+        <tr><td class="mono">CLOSE_WAIT</td><td>El otro ya cerró su sentido; yo aún puedo enviar.</td></tr>
+        <tr><td class="mono">LAST_ACK</td><td>Envié mi FIN; espero el último ACK.</td></tr>
+        <tr><td class="mono">CLOSING</td><td>Cierre simultáneo: ambos enviaron FIN a la vez.</td></tr>
+        <tr><td class="mono">TIME_WAIT</td><td>Espera 2·MSL antes de liberar todo.</td></tr>
+      </table>
+    </div>
+    <p class="hint">También existe la <b>apertura simultánea</b>: ambos envían SYN a la vez (SYN_SENT → SYN_RCVD → ESTABLISHED).</p>
+  </div>
+</section>
+
+<!-- ═════════ 6. RETRANSMISIÓN ═════════ -->
+<section id="retransmision">
+  <div class="sec-head"><span class="sec-num">6</span><h2>Retransmisión: cómo TCP recupera lo perdido</h2></div>
+  <p class="sec-intro">TCP detecta una pérdida de dos maneras: <b>(a)</b> pasa demasiado tiempo sin ACK (time out), o <b>(b)</b> llega un ACK repetido (el receptor sigue pidiendo el mismo byte).</p>
+
+  <div class="grid2">
+    <div class="diagram"><h4>(a) Se pierde el ACK → Time Out</h4><div id="dTimeout"></div>
+      <p class="cap">A no sabe si se perdió el dato o el ACK: cuando vence el RTO, retransmite. B detecta el duplicado (ya tiene esos bytes), lo descarta y vuelve a confirmar.</p></div>
+    <div class="diagram"><h4>(b) Se pierde un segmento → ACK duplicado</h4><div id="dDup"></div>
+      <p class="cap">B recibe 4400 fuera de orden y vuelve a pedir 4200. A ve el ACK repetido (NOK) y retransmite 4200. Como B guardó 4400, el ACK salta a 4600.</p></div>
+  </div>
+  <div class="call tip"><span class="lbl">Dato extra</span><p>En TCP real (<em>Fast Retransmit</em>, RFC 5681) se retransmite al recibir <b>3 ACK duplicados</b>, para no reaccionar ante un simple desorden. La diapositiva lo ilustra con uno solo para simplificar.</p></div>
+
+  <div class="card">
+    <h3>¿Cuánto esperar antes de retransmitir? RTT y RTO</h3>
+    <p>El <b>RTT</b> (Round Trip Time) es el tiempo que tarda un segmento en ir y su ACK en volver. El <b>RTO</b> (time out) debe ser algo mayor que el RTT:</p>
+    <div class="grid2">
+      <div class="call warn" style="margin:0"><p><b>RTO muy chico</b> → retransmisiones innecesarias (el ACK venía en camino).</p></div>
+      <div class="call warn" style="margin:0"><p><b>RTO muy grande</b> → reacción lenta ante pérdidas reales.</p></div>
+    </div>
+    <p style="margin-top:12px">Como el RTT cambia todo el tiempo, se estima <b>dinámicamente</b> con un promedio móvil exponencial (EWMA):</p>
+    <div class="formula"><span class="c">// medición</span>
+RTT_medido = t_recepción_ACK − t_envío_segmento
+
+<span class="c">// RTT suavizado (α = 1/8)</span>
+RTT = α · RTT_medido + (1 − α) · RTT_anterior
+
+<span class="c">// desviación promedio (β = 1/4)</span>
+D   = β · |RTT_medido − RTT_anterior| + (1 − β) · D_anterior
+
+<span class="c">// time out (δ = 4; RTT inicial alto, ~3 s)</span>
+<span class="h">RTO = RTT + 4 · D</span></div>
+    <div class="call key"><span class="lbl">Algoritmo de Karn</span><p>Cada vez que ocurre un time out, <b>se duplica el RTO</b> (<em>exponential backoff</em>). Además, el RTT de un segmento retransmitido no se usa para la estimación, porque no se sabe a cuál de los envíos corresponde el ACK.</p></div>
+
+    <h4 style="margin-top:16px">Calculadora de RTO</h4>
+    <div class="row3">
+      <div><label class="f" for="rPrev">RTT anterior (ms)</label><input id="rPrev" class="in" type="number" value="100"></div>
+      <div><label class="f" for="rDev">D anterior (ms)</label><input id="rDev" class="in" type="number" value="20"></div>
+      <div><label class="f" for="rMeas">RTT medido (ms)</label><input id="rMeas" class="in" type="number" value="140"></div>
+    </div>
+    <div class="out" id="rOut"></div>
+  </div>
+
+  <div class="card">
+    <h3>Los 4 timers de TCP</h3>
+    <div class="grid2">
+      <div class="mini"><h4>1. Retransmission Time Out (RTO)</h4><p>Cuánto espera el emisor un ACK antes de retransmitir. Se calcula con la fórmula de arriba.</p></div>
+      <div class="mini"><h4>2. Persistence Timer</h4><p>Evita quedar trabados con <b>Window = 0</b> si se pierde el ACK que reabría la ventana. Al expirar se envía una sonda de <b>1 byte</b>. Parte en RTT, se duplica en cada intento, máximo 60 s.</p></div>
+      <div class="mini"><h4>3. Keep-Alive Timer</h4><p>Tras mucho tiempo sin tráfico, verifica que el otro lado siga vivo.</p></div>
+      <div class="mini"><h4>4. Closing Timer (TIME_WAIT)</h4><p>Quien inicia el cierre espera 2·MSL antes de liberar la conexión.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 7. FLUJO Y CONGESTIÓN ═════════ -->
+<section id="flujo">
+  <div class="sec-head"><span class="sec-num">7</span><h2>Control de flujo vs control de congestión</h2></div>
+  <p class="sec-intro">Los dos “frenan” al emisor, pero protegen cosas distintas. Esta es una de las preguntas favoritas de certamen.</p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <tr><th></th><th>Control de flujo</th><th>Control de congestión</th></tr>
+      <tr><td><b>Protege a…</b></td><td>El <b>receptor</b> (que no se desborde su buffer)</td><td>La <b>red</b> (que no colapsen las colas de los routers)</td></tr>
+      <tr><td><b>Quién fija el límite</b></td><td>El receptor, explícitamente (campo Window Size)</td><td>El emisor, deduciéndolo (pérdidas, time outs)</td></tr>
+      <tr><td><b>Variable</b></td><td>Ventana anunciada (rwnd)</td><td>Ventana de congestión (cwnd)</td></tr>
+      <tr><td><b>Mecanismo</b></td><td>Ventana deslizante + Persistence Timer</td><td>Slow Start, AIMD, cautela tras time out</td></tr>
+    </table>
+  </div>
+  <div class="call key"><span class="lbl">Cómo se combinan</span><p>El emisor puede tener sin confirmar a lo más el <b>mínimo</b> de ambas: <code>LastByteSent − LastByteAcked ≤ min(rwnd, cwnd)</code>. Y el rendimiento aproximado es <code>ventana / RTT</code>.</p></div>
+
+  <div class="card">
+    <h3>Control de flujo — el receptor</h3>
+    <p>El receptor tiene un buffer: TCP lo llena con lo que llega, la aplicación lo vacía al leer. El espacio libre es la ventana que anuncia en cada segmento:</p>
+    <div class="formula"><span class="h">Window = BufferSize − (LastByteReceived − LastByteRead)</span>
+<span class="c">//                    └──── bytes que aún esperan ser leídos ────┘</span></div>
+    <h3 style="margin-top:16px">Control de flujo — el emisor</h3>
+    <p>El buffer del emisor se divide en 4 zonas; la ventana “se desliza” a la derecha cada vez que llega un ACK:</p>
+    <div class="winbar">
+      <div style="background:#dcfce7;color:#14532d">Enviado y<br>confirmado</div>
+      <div style="background:#ffedd5;color:#7c2d12">Enviado sin<br>ACK</div>
+      <div style="background:#dbeafe;color:#1e3a8a">No enviado<br>pero usable</div>
+      <div style="background:#fee2e2;color:#7f1d1d">Fuera de<br>la ventana</div>
+    </div>
+    <p class="hint" style="text-align:center">La ventana = zonas naranja + azul. Lo naranja no se puede borrar (podría haber que retransmitirlo).</p>
+  </div>
+
+  <div class="grid2">
+    <div class="diagram"><h4>Ejemplo (buffer del receptor = 4 KB)</h4><div id="dFlow"></div></div>
+    <div class="card" style="margin:0">
+      <h3>Lectura del ejemplo</h3>
+      <ol class="steps">
+        <li>A envía 2 KB (Seq = 0). Buffer de B: 2/4 KB → <code>Ack = 2048, Win = 2048</code>.</li>
+        <li>La app de A escribe 3 KB, pero solo caben 2 KB: envía 2 KB (Seq = 2048). Buffer lleno → <code>Win = 0</code>.</li>
+        <li>A queda <b>bloqueado</b> con 1 KB pendiente (y arranca el Persistence Timer).</li>
+        <li>La app de B lee 2 KB → B anuncia <code>Win = 2048</code>.</li>
+        <li>A envía el 1 KB que faltaba (Seq = 4096).</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3>Control de congestión — la red</h3>
+    <p>Un router tiene <b>colas finitas</b>: si le llega más de lo que puede despachar, descarta paquetes. Hay dos enfoques:</p>
+    <ul class="clean">
+      <li><b>Asistido por la red:</b> el router avisa (bit <b>ECN</b>) o informa el ancho de banda disponible (<b>RSVP</b>).</li>
+      <li><b>Extremo a extremo</b> (lo que hace TCP): el emisor <b>deduce</b> la congestión observando pérdidas y time outs.</li>
+    </ul>
+    <div class="grid3" style="margin-top:12px">
+      <div class="mini"><h4>Slow Start</h4><p>Parte con <code>cwnd = 2·MSS</code> y la <b>duplica</b> cada RTT (crecimiento exponencial) hasta el umbral <em>ssthresh</em>.</p></div>
+      <div class="mini"><h4>AIMD</h4><p>Sobre el umbral: <b>+1 MSS</b> por RTT sin pérdidas; ante una pérdida, <b>cwnd ÷ 2</b>.</p></div>
+      <div class="mini"><h4>Cautela tras time out</h4><p>Un time out indica congestión grave: <code>cwnd = 1·MSS</code> y se vuelve a Slow Start.</p></div>
+    </div>
+
+    <h4 style="margin-top:18px">Simulador de la ventana de congestión</h4>
+    <p class="hint">Avanza RTT a RTT y provoca pérdidas para ver cómo reacciona TCP (MSS = 1 unidad, ssthresh inicial = 16).</p>
+    <div class="btns">
+      <button class="btn ok" id="sOk" type="button">RTT sin pérdidas</button>
+      <button class="btn warn" id="sLoss" type="button">Pérdida (ACK duplicados)</button>
+      <button class="btn bad" id="sTo" type="button">Time out</button>
+      <button class="btn alt" id="sReset" type="button">↺ Reiniciar</button>
+    </div>
+    <div class="sim-chart"><svg id="simSvg" viewBox="0 0 640 240"></svg></div>
+    <div class="legend">
+      <span><i style="background:#3b82f6"></i>Slow Start</span>
+      <span><i style="background:#8b5cf6"></i>AIMD (+1)</span>
+      <span><i style="background:#f97316"></i>Pérdida (÷2)</span>
+      <span><i style="background:#dc2626"></i>Time out (→1)</span>
+      <span><i style="background:#c9a34a;height:3px"></i>ssthresh</span>
+    </div>
+    <div class="sim-msg" id="simMsg"></div>
+  </div>
+</section>
+
+<!-- ═════════ OTROS PROTOCOLOS ═════════ -->
+<section id="otros">
+  <div class="card">
+    <h3>Otros protocolos de transporte</h3>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <tr><th></th><th>SCTP (RFC 4960)</th><th>DCCP (RFC 4340)</th></tr>
+        <tr><td><b>Se parece a…</b></td><td>TCP: con conexión, confiable, control de flujo y de congestión</td><td>UDP: sin orden, sin confiabilidad, sin control de flujo</td></tr>
+        <tr><td><b>Pero además…</b></td><td>Basado en <b>mensajes</b> (como UDP), <b>multi-stream</b>; mensajes totalmente, parcialmente o no ordenados</td><td>Manejo de conexión, numeración de datagramas, distintos tipos de ACK y <b>control de congestión</b> (similar a TCP)</td></tr>
+        <tr><td><b>Útil para…</b></td><td>Señalización telefónica, apps que necesitan varios flujos independientes</td><td>Multimedia en tiempo real que no quiere saturar la red</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 8. CERTAMEN ═════════ -->
+<section id="certamen">
+  <div class="sec-head"><span class="sec-num">8</span><h2>Preguntas tipo certamen</h2></div>
+  <p class="sec-intro">Intenta responder en voz alta (o por escrito) antes de abrir cada respuesta.</p>
+
+  <details class="qa"><summary>1. ¿Cuál es la diferencia entre un protocolo con conexión y uno sin conexión?</summary>
+    <div class="ans"><p>Uno <b>con conexión</b> (TCP) establece un canal lógico antes de enviar datos (handshake de 3 pasos) y mantiene estado durante toda la comunicación: números de secuencia, ventanas, buffers. Uno <b>sin conexión</b> (UDP) envía cada datagrama de inmediato, de forma independiente, sin verificar que el receptor esté listo y sin garantizar entrega ni orden.</p></div></details>
+
+  <details class="qa"><summary>2. ¿Por qué se dice que el checksum de UDP/TCP es débil?</summary>
+    <div class="ans"><p>Porque es una simple suma en complemento a 1 de palabras de 16 bits. Si dos errores se compensan (un bit sube en una palabra y baja en otra) o si se <b>intercambian</b> dos palabras de 16 bits, la suma queda igual y el error no se detecta. Además solo detecta: no corrige.</p></div></details>
+
+  <details class="qa"><summary>3. ¿Por qué se dice que TCP tiene “memoria”?</summary>
+    <div class="ans"><p>Porque es un autómata de estados (LISTEN, ESTABLISHED, FIN_WAIT…) y guarda información de cada conexión: números de secuencia y ACK actuales, tamaño de ventana, estimación del RTT y buffers con datos enviados sin confirmar y recibidos sin leer. UDP, en cambio, no guarda nada entre un datagrama y otro (<em>stateless</em>).</p></div></details>
+
+  <details class="qa"><summary>4. Explique el funcionamiento del campo Window Size.</summary>
+    <div class="ans"><p>Es la base del <b>control de flujo</b>. En cada segmento el receptor anuncia cuántos bytes libres tiene en su buffer (<code>BufferSize − (LastByteReceived − LastByteRead)</code>). El emisor no puede tener más bytes sin confirmar que ese valor. Si recibe <code>Window = 0</code> se bloquea y activa el Persistence Timer, que envía sondas de 1 byte hasta que el receptor anuncie espacio, evitando un bloqueo eterno si se pierde el ACK que reabría la ventana.</p></div></details>
+
+  <details class="qa"><summary>5. ¿Por qué SYN y FIN consumen un número de secuencia si no llevan datos?</summary>
+    <div class="ans"><p>Porque deben ser <b>confirmados de forma confiable</b>, igual que los datos. Si no ocuparan un número, el ACK que los confirma sería idéntico a un ACK anterior y no habría forma de saber si el SYN/FIN llegó. Al consumir 1, el ACK sube en 1 y confirma inequívocamente su recepción.</p></div></details>
+
+  <details class="qa"><summary>6. ¿Qué diferencia hay entre control de flujo y control de congestión?</summary>
+    <div class="ans"><p>El control de flujo protege al <b>receptor</b>: el límite lo anuncia él mismo con Window Size. El control de congestión protege a la <b>red</b>: el emisor ajusta su ventana de congestión (cwnd) según las pérdidas y time outs que observa (Slow Start, AIMD). El emisor respeta el menor de los dos límites.</p></div></details>
+
+  <details class="qa"><summary>7. ¿Qué pasa si el RTO es muy pequeño o muy grande? ¿Cómo lo resuelve TCP?</summary>
+    <div class="ans"><p>Muy pequeño: retransmisiones innecesarias que además cargan la red. Muy grande: reacción lenta ante pérdidas reales. TCP estima el RTT dinámicamente con un promedio móvil exponencial (α = 1/8) y su desviación (β = 1/4), y fija <code>RTO = RTT + 4·D</code>. Ante un time out aplica Karn: duplica el RTO.</p></div></details>
+
+  <details class="qa"><summary>8. ¿Para qué sirve el estado TIME_WAIT?</summary>
+    <div class="ans"><p>Quien inicia el cierre espera 2·MSL después de enviar el último ACK. Si ese ACK se pierde, el otro lado reenviará su FIN y hay que poder confirmarlo de nuevo. También evita que segmentos retrasados de esta conexión se mezclen con una nueva conexión que use los mismos puertos.</p></div></details>
+
+  <details class="qa"><summary>9. ¿Para qué se usa un pseudo-header IP en el checksum?</summary>
+    <div class="ans"><p>Para verificar, además del contenido, que el segmento llegó a la <b>máquina y protocolo correctos</b> (IP origen, IP destino, protocolo y largo). Si IP entregara un datagrama a otra máquina por error, el checksum fallaría. El pseudo-header no se transmite; solo se usa en el cálculo.</p></div></details>
+
+  <details class="qa"><summary>10. ¿Qué es el piggybacking y qué ventaja tiene?</summary>
+    <div class="ans"><p>Es incluir el ACK dentro de un segmento que de todas formas lleva datos en sentido contrario, en vez de mandar un segmento solo para confirmar. Ahorra segmentos y ancho de banda (cada segmento vacío cuesta al menos 40 B de cabeceras TCP + IP).</p></div></details>
+
+  <details class="qa"><summary>11. ¿Qué otros protocolos de transporte existen además de TCP y UDP?</summary>
+    <div class="ans"><p><b>SCTP</b>: confiable y con conexión como TCP, pero basado en mensajes y con múltiples streams. <b>DCCP</b>: no confiable como UDP, pero con manejo de conexión y control de congestión similar a TCP; pensado para multimedia en tiempo real.</p></div></details>
+</section>
+
+<!-- ═════════ 9. EJERCICIOS ═════════ -->
+<section id="ejercicios">
+  <div class="sec-head"><span class="sec-num">9</span><h2>Ejercicios resueltos</h2></div>
+  <p class="sec-intro">Resuelve cada uno en papel antes de mirar la solución. Están ordenados de lo más directo a lo más integrador.</p>
+
+  <div class="card">
+    <h3>E1 · Completar Seq y Ack del handshake <span class="chip">Seq/ACK</span></h3>
+    <p>El cliente A abre una conexión con ISN = 3000 y el servidor B responde con ISN = 7000. Luego A envía 200 B junto con el ACK del handshake, B responde con 300 B y luego con otros 100 B, y A confirma todo con un ACK sin datos. Completa Seq y Ack de cada segmento. ¿Cuál es el Ack final de A?</p>
+    <details class="sol"><summary>Ver solución</summary><div class="ans">
+      <div class="tbl-wrap"><table class="tbl">
+        <tr><th>#</th><th>Sentido</th><th>Segmento</th><th>Seq</th><th>Ack</th><th>Razón</th></tr>
+        <tr><td>1</td><td>A → B</td><td>SYN</td><td>3000</td><td>—</td><td>ISN de A</td></tr>
+        <tr><td>2</td><td>B → A</td><td>SYN+ACK</td><td>7000</td><td>3001</td><td>SYN consume 1</td></tr>
+        <tr><td>3</td><td>A → B</td><td>ACK + 200 B</td><td>3001</td><td>7001</td><td>SYN de B consume 1</td></tr>
+        <tr><td>4</td><td>B → A</td><td>ACK + 300 B</td><td>7001</td><td>3201</td><td>3001 + 200</td></tr>
+        <tr><td>5</td><td>B → A</td><td>ACK + 100 B</td><td>7301</td><td>3201</td><td>7001 + 300; A no envió nada nuevo</td></tr>
+        <tr><td>6</td><td>A → B</td><td>ACK</td><td>3201</td><td><b>7401</b></td><td>7301 + 100</td></tr>
+      </table></div>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>E2 · Segmento perdido y ACK acumulativo <span class="chip">Retransmisión</span></h3>
+    <p>A envía tres segmentos seguidos: Seq = 1000 (300 B), Seq = 1300 (400 B) y Seq = 1700 (200 B). El segundo se pierde. B guarda los segmentos que llegan fuera de orden.</p>
+    <ol class="clean"><li>¿Qué Ack envía B al recibir el primero?</li><li>¿Y al recibir el tercero?</li><li>¿Qué retransmite A?</li><li>¿Qué Ack envía B tras la retransmisión?</li></ol>
+    <details class="sol"><summary>Ver solución</summary><div class="ans">
+      <ol class="clean">
+        <li><b>Ack = 1300</b> (recibió bytes 1000–1299).</li>
+        <li><b>Ack = 1300 otra vez</b> (ACK duplicado): falta el byte 1300. Guarda 1700–1899 en el buffer.</li>
+        <li>Al ver el ACK duplicado (o al vencer el RTO), A retransmite <b>Seq = 1300 (400 B)</b>.</li>
+        <li><b>Ack = 1900</b>: con el hueco lleno, confirma de una vez todo hasta 1899 (acumulativo). No hay que reenviar el tercer segmento.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>E3 · Cálculo del RTO <span class="chip">RTT/RTO</span></h3>
+    <p>Con α = 1/8, β = 1/4 y δ = 4: el RTT anterior es 100 ms, la desviación anterior es 20 ms y se mide un RTT de 140 ms. Calcula el nuevo RTT, D y RTO. Si luego ocurre un time out, ¿cuál es el nuevo RTO?</p>
+    <details class="sol"><summary>Ver solución</summary><div class="ans">
+      <div class="formula" style="margin:0">RTT = 1/8 · 140 + 7/8 · 100 = 17,5 + 87,5 = <span class="h">105 ms</span>
+D   = 1/4 · |140 − 100| + 3/4 · 20 = 10 + 15 = <span class="h">25 ms</span>
+RTO = 105 + 4 · 25 = <span class="h">205 ms</span>
+
+Time out → Karn duplica: RTO = <span class="h">410 ms</span></div>
+      <p>Puedes comprobarlo con la calculadora de la sección 6.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>E4 · Checksum a mano <span class="chip">UDP</span></h3>
+    <p>Calcula el checksum de las palabras <code>A1B2</code>, <code>C3D4</code>, <code>1234</code> y verifica el resultado como lo haría el receptor.</p>
+    <details class="sol"><summary>Ver solución</summary><div class="ans">
+      <div class="formula" style="margin:0">A1B2 + C3D4 = 16586
+16586 + 1234 = <span class="h">0001 77BA</span>
+W2 = 77BA + 0001 = 77BB
+checksum = NOT(77BB) = <span class="h">8844</span>
+<span class="c">// 77BB = 0111 0111 1011 1011 → 1000 1000 0100 0100 = 8844</span>
+
+Receptor: 8844 + 177BA = 1FFFE → FFFF → NOT = <span class="h">0000 (correcto)</span></div>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>E5 · Ventana de recepción <span class="chip">Control de flujo</span></h3>
+    <p>El buffer de recepción de B mide 8000 B. B ha recibido hasta el byte 6000 (LastByteReceived) y su aplicación ha leído hasta el 2500 (LastByteRead).</p>
+    <ol class="clean"><li>¿Qué Window anuncia B?</li><li>Si A tiene 1500 B enviados sin confirmar, ¿cuánto más puede enviar?</li><li>¿Qué pasa si la app de B deja de leer?</li></ol>
+    <details class="sol"><summary>Ver solución</summary><div class="ans">
+      <ol class="clean">
+        <li>Bytes en el buffer = 6000 − 2500 = 3500 → <b>Window = 8000 − 3500 = 4500 B</b>.</li>
+        <li>4500 − 1500 = <b>3000 B</b> más.</li>
+        <li>El buffer se llena, B anuncia <b>Window = 0</b>, A se bloquea y usa el <b>Persistence Timer</b> para enviar sondas de 1 byte hasta que B vuelva a tener espacio.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>E6 · Evolución de cwnd <span class="chip">Congestión</span></h3>
+    <p>MSS = 1 KB, cwnd inicial = 2 MSS, ssthresh = 16 MSS. Hay ACK duplicados (pérdida) al final del RTT 8 y un time out al final del RTT 11. Escribe cwnd en cada RTT del 1 al 15. ¿Cuál es el rendimiento aproximado en el RTT 8 si RTT = 100 ms?</p>
+    <details class="sol"><summary>Ver solución</summary><div class="ans">
+      <div class="tbl-wrap"><table class="tbl">
+        <tr><th>RTT</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
+        <tr><th>cwnd</th><td>2</td><td>4</td><td>8</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>10</td><td>11</td><td>12</td><td>1</td><td>2</td><td>4</td><td>6</td></tr>
+      </table></div>
+      <ul class="clean">
+        <li>RTT 1–4: Slow Start (se duplica) hasta llegar a ssthresh = 16.</li>
+        <li>RTT 5–8: AIMD, +1 por RTT.</li>
+        <li>Pérdida en 8: ssthresh = 20/2 = 10 y cwnd = 10; sigue +1.</li>
+        <li>Time out en 11: ssthresh = 12/2 = 6 y cwnd = 1; Slow Start de nuevo (1, 2, 4) y se tope en 6, desde donde vuelve a AIMD.</li>
+        <li>Rendimiento en RTT 8: 20 KB / 0,1 s = <b>200 KB/s</b>.</li>
+      </ul>
+      <p class="hint">Reprodúcelo en el simulador de la sección 7.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>E7 · Caso de diseño: un chat sobre UDP <span class="chip">Integrador</span></h3>
+    <p>Pedro y Jorge programan un chat de texto. Para lograr la máxima velocidad y reducir el <em>overhead</em>, deciden usar <b>UDP</b>.</p>
+    <ol class="clean">
+      <li>¿Es UDP una buena elección para un chat de texto? Justifica.</li>
+      <li>¿Qué servicios ofrece UDP y cuáles no ofrece que el chat necesitaría?</li>
+      <li>Si el profesor los obliga a usar UDP, ¿qué tendrían que programar ellos?</li>
+    </ol>
+    <details class="sol"><summary>Ver solución</summary><div class="ans">
+      <p><b>A. No es la mejor elección.</b> Un chat necesita que <b>todos</b> los mensajes lleguen y <b>en orden</b>. Con UDP un mensaje puede perderse en silencio, duplicarse o llegar desordenado (“¿cómo estás?” antes que “hola”). Además, el ahorro de overhead es irrelevante para mensajes de texto tan pequeños y poco frecuentes. TCP es la elección natural.</p>
+      <div class="grid2">
+        <div class="call ok" style="margin:0"><span class="lbl">UDP sí ofrece</span><ul class="clean"><li>MUX/DEMUX con puertos</li><li>Detección de errores (checksum)</li><li>Baja latencia, sin conexión</li></ul></div>
+        <div class="call warn" style="margin:0"><span class="lbl">UDP no ofrece (y el chat necesita)</span><ul class="clean"><li>Entrega garantizada</li><li>Orden de los mensajes</li><li>Control de flujo</li><li>Control de congestión</li></ul></div>
+      </div>
+      <p style="margin-top:10px"><b>C. Reimplementar lo esencial de TCP en la capa de aplicación:</b> números de secuencia en cada mensaje, ACK propios, un timer para retransmitir lo no confirmado, detección de duplicados y un buffer para reordenar. En la práctica estarían escribiendo “un TCP casero” sobre UDP.</p>
+    </div></details>
+  </div>
+</section>
+
+<!-- ═════════ AUTOEVALUACIÓN ═════════ -->
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Autoevaluación rápida</h2></div>
+  <p class="sec-intro">8 preguntas de selección múltiple. Puntaje: <span class="score" id="qScore">0 / 8</span></p>
+  <div id="quizBox"></div>
+  <div class="btns"><button class="btn alt" id="qReset" type="button">↺ Reintentar</button></div>
+</section>
+
+<!-- ═════════ RESUMEN ═════════ -->
+<section id="resumen">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Resumen para el certamen</h2></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Fórmulas clave</h3>
+      <div class="formula" style="font-size:.8rem">Seq siguiente  = Seq + datos (+1 si SYN/FIN)
+Ack            = último byte en orden + 1
+Cabecera TCP   = Data Offset × 4 B   (5 → 20 B)
+Cabecera UDP   = 8 B
+
+Window = Buffer − (LastRcvd − LastRead)
+LastSent − LastAcked ≤ min(rwnd, cwnd)
+Rendimiento ≈ ventana / RTT
+
+RTT = 1/8·RTTmed + 7/8·RTTant
+D   = 1/4·|RTTmed − RTTant| + 3/4·Dant
+RTO = RTT + 4·D      (time out → ×2)
+
+checksum = NOT(suma 16 bits con acarreo)
+receptor OK ⇔ resultado = 0</div>
+    </div>
+    <div class="card">
+      <h3>Errores comunes</h3>
+      <ul class="clean">
+        <li>Creer que Seq cuenta <b>segmentos</b>: cuenta <b>bytes</b>.</li>
+        <li>Olvidar que <b>SYN y FIN consumen 1</b> número de secuencia.</li>
+        <li>Poner como Ack el último byte recibido: es el <b>siguiente</b> que se espera.</li>
+        <li>Confundir flag ACK con número de ACK.</li>
+        <li>Mezclar control de flujo (receptor, Window) con congestión (red, cwnd).</li>
+        <li>Decir que el checksum <b>corrige</b> errores: solo los detecta.</li>
+        <li>Decir que UDP no tiene puertos o checksum: sí los tiene.</li>
+        <li>Pensar que el cierre es de 3 pasos: son <b>4</b> (cada sentido cierra por separado).</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
 </main>
 
-<footer style="background:linear-gradient(120deg,#0f1f33,#002b5c 55%,#8c1d40); border-top:2px solid rgba(201,163,74,0.55)">
-    <div class="container mx-auto px-6 py-8 text-center">
-        <p class="text-slate-300 text-sm font-medium">© 2026 Ayudantía USM — Redes de Computadores · Capa de Transporte</p>
-    </div>
-</footer>
+<footer>Ayudantía 4 · Redes de Computadores · Capa de Transporte — basada en las diapositivas de X. Bonnaire (UTFSM)</footer>
 
 <script>
-    function toggleAnswer(id, btn) {
-        const el = document.getElementById(id);
-        const hidden = el.classList.contains('hidden');
-        el.classList.toggle('hidden', !hidden);
-        if (hidden) {
-            btn.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 2 20 20"/><path d="M6.71 6.71A10.61 10.61 0 0 0 2 12a10.54 10.54 0 0 0 11.29 8.05"/><path d="M11 17a5 5 0 0 1-5-5"/></svg><span>Ocultar Resolución</span>`;
-            btn.className = btn.className.replace('bg-navy hover:bg-navy-dk text-white','bg-slate-200 hover:bg-slate-300 text-slate-700');
-        } else {
-            btn.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span>Mostrar Resolución</span>`;
-            btn.className = btn.className.replace('bg-slate-200 hover:bg-slate-300 text-slate-700','bg-navy hover:bg-navy-dk text-white');
-        }
-    }
+/* ═════════ Explorador de campos ═════════ */
+const UDP_FIELDS = {
+  sp:  {s:'Puerto Fuente (16)', n:'Puerto Fuente', b:'16 bits', d:'Identifica el socket del proceso que envía, para que el receptor sepa adónde responder. Puede ser un puerto dinámico (cliente) o registrado.', o:'En IPv4 es opcional: si no se espera respuesta puede ir en 0.'},
+  dp:  {s:'Puerto Destino (16)', n:'Puerto Destino', b:'16 bits', d:'Identifica el socket de destino. Un proceso debe estar escuchando en ese puerto; el receptor lo usa para hacer DEMUX.', o:'Ej.: 53 = DNS, 123 = NTP, 161 = SNMP.', c:'c-num'},
+  len: {s:'Largo total (16)', n:'Largo (total)', b:'16 bits', d:'Tamaño total del datagrama en bytes: cabecera (8 B) + datos.', o:'Mínimo 8 (solo cabecera). Máximo 65 535 B (≈ 64 KB), porque 2¹⁶ − 1 = 65 535.', c:'c-num'},
+  cks: {s:'Checksum (16)', n:'Checksum', b:'16 bits', d:'Detecta errores de transmisión. Se calcula sobre pseudo-header IP + cabecera UDP + datos, con suma en complemento a 1.', o:'Solo detecta, no corrige. Opcional en IPv4 (0 = no calculado), obligatorio en IPv6.'},
+  data:{s:'DATOS (variable)', n:'Datos de la aplicación', b:'variable', d:'El mensaje de la aplicación, tal cual. Un envío de la app = un datagrama.', o:'UDP respeta los límites de cada mensaje; TCP, en cambio, es un flujo de bytes sin límites.', c:'c-data'}
+};
+const UDP_ROWS = [[['sp',50],['dp',50]],[['len',50],['cks',50]],[['data',100]]];
 
-    function toggleAccordion(id, btn) {
-        const el = document.getElementById(id);
-        const icon = btn.querySelector('.accordion-icon');
-        const hidden = el.classList.contains('hidden');
-        el.classList.toggle('hidden', !hidden);
-        if (icon) icon.style.transform = hidden ? 'rotate(180deg)' : 'rotate(0deg)';
-        btn.classList.toggle('bg-slate-100', hidden);
+const TCP_FIELDS = {
+  sp:  {s:'Source Port (16)', n:'Puerto Fuente', b:'16 bits', d:'Identifica la aplicación (socket) del lado que emite los datos. En el cliente suele ser un puerto dinámico.', o:'Ej.: un navegador usando el puerto 55001.'},
+  dp:  {s:'Destination Port (16)', n:'Puerto Destino', b:'16 bits', d:'Identifica el socket donde escucha el receptor. Puede ser bien conocido, registrado o dinámico.', o:'80 = HTTP, 443 = HTTPS, 22 = SSH, 25 = SMTP.'},
+  seq: {s:'Sequence Number (32)', n:'Número de Secuencia', b:'32 bits', d:'Número del PRIMER byte de datos que lleva este segmento. TCP numera cada byte del flujo, no cada segmento. Sirve para detectar pérdidas y reordenar.', o:'Vuelve a 0 después de 2³² bytes (≈ 4 GB). En el SYN lleva el ISN (número inicial, elegido al azar).', c:'c-num'},
+  ack: {s:'Acknowledgment Number (32)', n:'Número de Acuse (ACK)', b:'32 bits', d:'PRÓXIMO byte que el receptor espera. Es acumulativo: Ack = N significa “recibí todo hasta N − 1”.', o:'Solo es válido si el flag ACK = 1. Ej.: Ack = 5001 → “tengo hasta el 5000, mándame desde el 5001”.', c:'c-num'},
+  off: {s:'Offset (4)', n:'Data Offset (largo de cabecera)', b:'4 bits', d:'Tamaño de la cabecera en palabras de 32 bits (4 bytes). Indica dónde empiezan los datos.', o:'Valor 5 → 20 B (sin opciones). Máximo 15 → 60 B (hasta 40 B de opciones).', c:'c-ctl'},
+  rsv: {s:'Rsv', n:'Reservado', b:'3 bits', d:'Reservado para uso futuro. Siempre en 0.', c:'c-ctl'},
+  NS:  {s:'NS', n:'Flag NS (Nonce Sum)', b:'1 bit', d:'Protección experimental para que nodos intermedios no oculten las marcas de congestión (ECN).', c:'c-flag'},
+  CWR: {s:'CWR', n:'Flag CWR (Congestion Window Reduced)', b:'1 bit', d:'El emisor avisa que ya redujo su ventana de congestión después de recibir un ECE.', c:'c-flag'},
+  ECE: {s:'ECE', n:'Flag ECE (ECN-Echo)', b:'1 bit', d:'El receptor avisa al emisor que un router marcó congestión en la red (Explicit Congestion Notification).', c:'c-flag'},
+  URG: {s:'URG', n:'Flag URG (Urgent)', b:'1 bit', d:'Indica que el campo Urgent Pointer es válido: hay datos urgentes.', c:'c-flag'},
+  ACK: {s:'ACK', n:'Flag ACK', b:'1 bit', d:'Indica que el campo Acknowledgment Number es válido.', o:'Está en 1 en todos los segmentos salvo el primer SYN de la conexión.', c:'c-ack'},
+  PSH: {s:'PSH', n:'Flag PSH (Push)', b:'1 bit', d:'Pide entregar de inmediato los datos del buffer a la aplicación receptora, sin esperar a juntar más.', o:'Útil en aplicaciones interactivas como SSH o Telnet.', c:'c-flag'},
+  RST: {s:'RST', n:'Flag RST (Reset)', b:'1 bit', d:'Aborta la conexión de inmediato, sin handshake de cierre (terminación unilateral).', o:'Ej.: respuesta a un SYN dirigido a un puerto donde nadie escucha.', c:'c-rst'},
+  SYN: {s:'SYN', n:'Flag SYN (Synchronize)', b:'1 bit', d:'Solicita abrir la conexión y sincronizar los números de secuencia. Va en el 1.º y 2.º segmento del handshake.', o:'Consume 1 número de secuencia aunque no lleve datos.', c:'c-key'},
+  FIN: {s:'FIN', n:'Flag FIN (Finish)', b:'1 bit', d:'El emisor no tiene más datos en este sentido. Inicia el cierre ordenado.', o:'También consume 1 número de secuencia.', c:'c-fin'},
+  win: {s:'Window Size (16)', n:'Window Size (ventana)', b:'16 bits', d:'Bytes libres en el buffer de recepción de quien envía este segmento. El otro lado no puede tener más bytes sin confirmar que este valor: es el control de flujo.', o:'Hasta 65 535 B; con la opción Window Scale se multiplica por 2ᴺ. Win = 0 bloquea al emisor.', c:'c-ctl'},
+  cks: {s:'Checksum (16)', n:'Checksum', b:'16 bits', d:'Igual que en UDP: pseudo-header IP + cabecera + datos, suma en complemento a 1.', o:'En TCP es obligatorio.'},
+  urg: {s:'Urgent Pointer (16)', n:'Urgent Pointer', b:'16 bits', d:'Válido solo con URG = 1. Indica (como desplazamiento desde el Seq) dónde terminan los datos urgentes, que se entregan de inmediato a la aplicación.', o:'Su interpretación depende de la aplicación; hoy casi no se usa.'},
+  opt: {s:'Options (si Data Offset > 5, rellenas con ceros hasta múltiplo de 32 bits)', n:'Opciones', b:'0 – 40 bytes', d:'Formato Tipo – Largo – Valor. Se negocian principalmente en el SYN.', o:'Tipo 0 = fin de opciones · 1 = NOP · 2 = MSS (tamaño máximo de segmento) · 3 = Window Scale (ventana × 2ᴺ).', c:'c-opt'},
+  data:{s:'Application Data (variable)', n:'Datos de la aplicación', b:'variable', d:'Un trozo del flujo de bytes de la aplicación. Puede ir vacío (un ACK puro o un SYN no llevan datos).', c:'c-data'}
+};
+const TCP_ROWS = [
+  [['sp',50],['dp',50]], [['seq',100]], [['ack',100]],
+  [['off',12.5],['rsv',9.375],['NS',3.125],['CWR',3.125],['ECE',3.125],['URG',3.125],['ACK',3.125],['PSH',3.125],['RST',3.125],['SYN',3.125],['FIN',3.125],['win',50]],
+  [['cks',50],['urg',50]], [['opt',100]], [['data',100]]
+];
+
+function buildExplorer(rootId, fields, rows, ruler){
+  const root = document.getElementById(rootId);
+  const grid = root.querySelector('.seg-grid');
+  const panel = root.querySelector('.seg-panel');
+  let html = '<div class="seg-ruler">' + ruler.map(r => '<span>' + r + '</span>').join('') + '</div>';
+  rows.forEach(row => {
+    html += '<div class="seg-row">';
+    row.forEach(([k, w]) => {
+      const f = fields[k];
+      const flag = w < 4;
+      html += '<button type="button" class="seg-cell ' + (f.c || '') + (flag ? ' is-flag' : '') + '" style="width:' + w + '%" data-k="' + k + '" title="' + f.n + '"><span>' + f.s + '</span></button>';
+    });
+    html += '</div>';
+  });
+  grid.innerHTML = html;
+  function show(k){
+    const f = fields[k];
+    grid.querySelectorAll('.seg-cell').forEach(b => b.classList.toggle('sel', b.dataset.k === k));
+    panel.innerHTML = '<div class="seg-panel-head"><strong>' + f.n + '</strong><span class="chip">' + f.b + '</span></div><p>' + f.d + '</p>' + (f.o ? '<p class="seg-panel-note">' + f.o + '</p>' : '');
+  }
+  grid.addEventListener('click', e => { const b = e.target.closest('.seg-cell'); if (b) show(b.dataset.k); });
+  show(rows[0][0][0]);
+}
+buildExplorer('udpExp', UDP_FIELDS, UDP_ROWS, ['Bit 0', 'Bit 16', 'Bit 31']);
+buildExplorer('tcpExp', TCP_FIELDS, TCP_ROWS, ['Bit 0', 'Bit 15 | 16', 'Bit 31']);
+
+/* ═════════ Diagramas de secuencia ═════════ */
+const SD_COL = {data:'#002b5c', ack:'#64748b', ctrl:'#8c1d40', retx:'#ea580c', rst:'#dc2626'};
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const tw = (s, fs) => String(s).length * fs * 0.6 + 14;
+
+function stateCol(name){
+  if (name === 'ESTABLISHED') return ['#dcfce7','#86efac','#166534'];
+  if (name === 'CLOSED' || name === 'LISTEN') return ['#e2e8f0','#94a3b8','#334155'];
+  if (name === 'TIME_WAIT') return ['#1e293b','#1e293b','#fbbf24'];
+  if (name.startsWith('SYN')) return ['#e0e7ff','#a5b4fc','#3730a3'];
+  return ['#ffedd5','#fdba74','#7c2d12'];
+}
+
+function seqDiagram(id, cfg){
+  const W = 500, xA = 130, xB = 370, slope = 26;
+  let y = 58;
+  const p = [];
+  const markers = Object.entries(SD_COL).map(([k, c]) =>
+    '<marker id="' + id + '-' + k + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="' + c + '"/></marker>').join('');
+  cfg.events.forEach(ev => {
+    if (ev.t === 'state'){
+      [['a', xA], ['b', xB]].forEach(([k, x]) => {
+        if (!ev[k]) return;
+        const [bg, bd, fg] = stateCol(ev[k]);
+        const w = tw(ev[k], 9);
+        p.push('<rect x="' + (x - w/2) + '" y="' + y + '" width="' + w + '" height="19" rx="9.5" fill="' + bg + '" stroke="' + bd + '"/>' +
+               '<text x="' + x + '" y="' + (y + 13) + '" text-anchor="middle" font-size="9" font-weight="800" fill="' + fg + '">' + esc(ev[k]) + '</text>');
+      });
+      y += 28; return;
     }
+    if (ev.t === 'mark'){
+      const x = ev.side === 'A' ? xA : xB;
+      const pal = {warn:['#ea580c','#fff'], ok:['#15803d','#fff'], info:['#dbeafe','#1e3a8a'], stop:['#dc2626','#fff'], dark:['#1e293b','#fbbf24']}[ev.kind || 'info'];
+      const w = tw(ev.text, 10);
+      p.push('<rect x="' + (x - w/2) + '" y="' + y + '" width="' + w + '" height="22" rx="7" fill="' + pal[0] + '"/>' +
+             '<text x="' + x + '" y="' + (y + 15) + '" text-anchor="middle" font-size="10" font-weight="700" fill="' + pal[1] + '">' + esc(ev.text) + '</text>');
+      y += 30; return;
+    }
+    if (ev.t === 'note'){
+      p.push('<text x="' + W/2 + '" y="' + (y + 12) + '" text-anchor="middle" font-size="10" font-style="italic" fill="#64748b">' + esc(ev.text) + '</text>');
+      y += 24; return;
+    }
+    // mensaje
+    const ab = ev.dir === 'AB';
+    const kind = ev.kind || 'data';
+    const col = SD_COL[kind];
+    const x1 = ab ? xA : xB, x2 = ab ? xB : xA;
+    const y1 = y + 6, y2 = y1 + slope;
+    let ex = x2, ey = y2;
+    if (ev.lost){ ex = x1 + (x2 - x1) * 0.68; ey = y1 + (y2 - y1) * 0.68; }
+    const dash = (kind === 'ack') ? ' stroke-dasharray="6 4"' : '';
+    p.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + ex + '" y2="' + ey + '" stroke="' + col + '" stroke-width="2.2"' + dash + (ev.lost ? '' : ' marker-end="url(#' + id + '-' + kind + ')"') + '/>');
+    if (ev.lost){
+      p.push('<circle cx="' + ex + '" cy="' + ey + '" r="9" fill="#ef4444"/><text x="' + ex + '" y="' + (ey + 4) + '" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">×</text>');
+    }
+    if (ev.label){
+      const mx = (x1 + (ab ? ex - 10 : ex + 10)) / 2, my = (y1 + ey) / 2;
+      const w = tw(ev.label, 10);
+      p.push('<rect x="' + (mx - w/2) + '" y="' + (my - 10) + '" width="' + w + '" height="19" rx="5" fill="#fff" stroke="' + col + '" stroke-width="1.1"/>' +
+             '<text x="' + mx + '" y="' + (my + 4) + '" text-anchor="middle" font-size="10" font-weight="700" fill="' + col + '">' + esc(ev.label) + '</text>');
+    }
+    if (ev.info){
+      p.push(ab ? '<text x="' + (xA - 10) + '" y="' + (y1 + 4) + '" text-anchor="end" font-size="10" font-weight="600" fill="#334155">' + esc(ev.info) + '</text>'
+                : '<text x="' + (xB + 10) + '" y="' + (y1 + 4) + '" text-anchor="start" font-size="10" font-weight="600" fill="#334155">' + esc(ev.info) + '</text>');
+    }
+    if (ev.recv && !ev.lost){
+      p.push(ab ? '<text x="' + (xB + 10) + '" y="' + (y2 + 4) + '" text-anchor="start" font-size="9.5" font-style="italic" fill="' + (ev.recvCol || '#15803d') + '">' + esc(ev.recv) + '</text>'
+                : '<text x="' + (xA - 10) + '" y="' + (y2 + 4) + '" text-anchor="end" font-size="9.5" font-style="italic" fill="' + (ev.recvCol || '#15803d') + '">' + esc(ev.recv) + '</text>');
+    }
+    y += ev.h || 46;
+  });
+  const H = y + 10;
+  const head = (x, name) => '<rect x="' + (x - 48) + '" y="10" width="96" height="28" rx="8" fill="#002b5c"/><text x="' + x + '" y="29" text-anchor="middle" font-size="11.5" font-weight="700" fill="#fff">' + esc(name) + '</text>';
+  const life = x => '<line x1="' + x + '" y1="40" x2="' + x + '" y2="' + (H - 6) + '" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4"/>';
+  document.getElementById(id).innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img"><defs>' + markers + '</defs>' +
+    life(xA) + life(xB) + head(xA, cfg.a || 'Host A') + head(xB, cfg.b || 'Host B') + p.join('') + '</svg>';
+}
+
+seqDiagram('dSeq', {events:[
+  {t:'msg', dir:'AB', label:'200 bytes', info:'Seq=4000', recv:'next=4200'},
+  {t:'msg', dir:'AB', label:'200 bytes', info:'Seq=4200', recv:'next=4400'},
+  {t:'msg', dir:'AB', label:'200 bytes', info:'Seq=4400', recv:'next=4600'},
+  {t:'note', text:'Bytes 4400 a 4599 → próximo esperado: 4600'}
+]});
+
+seqDiagram('dHand', {a:'Cliente', b:'Servidor', events:[
+  {t:'state', a:'CLOSED', b:'LISTEN'},
+  {t:'msg', dir:'AB', kind:'ctrl', label:'SYN', info:'Seq=3000'},
+  {t:'state', a:'SYN_SENT', b:'SYN_RCVD'},
+  {t:'msg', dir:'BA', kind:'ctrl', label:'SYN + ACK', info:'Seq=7000, Ack=3001'},
+  {t:'state', a:'ESTABLISHED'},
+  {t:'msg', dir:'AB', label:'ACK + 200 B', info:'Seq=3001, Ack=7001'},
+  {t:'state', b:'ESTABLISHED'},
+  {t:'msg', dir:'BA', label:'ACK + 300 B', info:'Seq=7001, Ack=3201'},
+  {t:'msg', dir:'BA', label:'ACK + 100 B', info:'Seq=7301, Ack=3201'}
+]});
+
+seqDiagram('dPiggy', {events:[
+  {t:'msg', dir:'AB', label:'ACK + 200 B', info:'Seq=4000, Ack=11200'},
+  {t:'msg', dir:'BA', kind:'ctrl', label:'ACK + 100 B', info:'Seq=11200, Ack=4200'},
+  {t:'msg', dir:'AB', label:'ACK + 200 B', info:'Seq=4200, Ack=11300'},
+  {t:'msg', dir:'BA', kind:'ctrl', label:'ACK + 100 B', info:'Seq=11300, Ack=4400'},
+  {t:'note', text:'Cada segmento lleva datos + el ACK del otro sentido'}
+]});
+
+seqDiagram('dDelay', {events:[
+  {t:'msg', dir:'AB', label:'1000 B', info:'Seq=4000', h:36},
+  {t:'msg', dir:'AB', label:'1000 B', info:'Seq=5000'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=6000'},
+  {t:'msg', dir:'AB', label:'1000 B', info:'Seq=6000', h:36},
+  {t:'msg', dir:'AB', label:'1000 B', info:'Seq=7000'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=8000'},
+  {t:'note', text:'Un ACK confirma 2 segmentos'}
+]});
+
+seqDiagram('dClose', {events:[
+  {t:'state', a:'ESTABLISHED', b:'ESTABLISHED'},
+  {t:'msg', dir:'AB', kind:'ctrl', label:'ACK + FIN + 100 B', info:'Seq=4200, Ack=11200'},
+  {t:'state', a:'FIN_WAIT_1', b:'CLOSE_WAIT'},
+  {t:'msg', dir:'BA', label:'ACK + 500 B', info:'Seq=11200, Ack=4301'},
+  {t:'state', a:'FIN_WAIT_2'},
+  {t:'msg', dir:'BA', label:'ACK + 500 B', info:'Seq=11700, Ack=4301'},
+  {t:'msg', dir:'BA', kind:'ctrl', label:'ACK + FIN + 500 B', info:'Seq=12200, Ack=4301'},
+  {t:'state', a:'TIME_WAIT', b:'LAST_ACK'},
+  {t:'msg', dir:'AB', kind:'ack', label:'ACK', info:'Seq=4301, Ack=12701'},
+  {t:'state', b:'CLOSED'},
+  {t:'mark', side:'A', kind:'dark', text:'espera 2·MSL'},
+  {t:'state', a:'CLOSED'}
+]});
+
+seqDiagram('dRst1', {events:[
+  {t:'msg', dir:'AB', kind:'ctrl', label:'SYN', info:'Seq=4000', recv:'puerto cerrado', recvCol:'#b91c1c'},
+  {t:'msg', dir:'BA', kind:'rst', label:'ACK + RST', info:'Seq=0, Ack=4001'},
+  {t:'note', text:'Nadie escucha en ese puerto → rechazo inmediato'}
+]});
+
+seqDiagram('dRst2', {events:[
+  {t:'msg', dir:'AB', label:'ACK + 200 B', info:'Seq=2200, Ack=7300'},
+  {t:'msg', dir:'BA', kind:'rst', label:'RST', info:'Seq=7300'},
+  {t:'note', text:'Conexión abortada: se descartan los buffers'}
+]});
+
+seqDiagram('dTimeout', {events:[
+  {t:'msg', dir:'AB', label:'ACK + 200 B', info:'Seq=4000, Ack=1100'},
+  {t:'mark', side:'A', kind:'info', text:'arranca el RTO'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=4200', lost:true},
+  {t:'mark', side:'A', kind:'warn', text:'vence el RTO'},
+  {t:'msg', dir:'AB', kind:'retx', label:'ACK + 200 B', info:'Seq=4000, Ack=1100', recv:'duplicado → descarta', recvCol:'#c2410c'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=4200'},
+  {t:'msg', dir:'AB', label:'ACK + 200 B', info:'Seq=4200, Ack=1100'}
+]});
+
+seqDiagram('dDup', {events:[
+  {t:'msg', dir:'AB', label:'200 B', info:'Seq=4000'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=4200'},
+  {t:'msg', dir:'AB', label:'200 B', info:'Seq=4200', lost:true},
+  {t:'msg', dir:'AB', label:'200 B', info:'Seq=4400', recv:'fuera de orden: lo guarda', recvCol:'#c2410c'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=4200 (repetido)'},
+  {t:'mark', side:'A', kind:'warn', text:'NOK: ACK duplicado'},
+  {t:'msg', dir:'AB', kind:'retx', label:'200 B', info:'Seq=4200', recv:'hueco lleno'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=4600'},
+  {t:'mark', side:'A', kind:'ok', text:'ok'}
+]});
+
+seqDiagram('dFlow', {events:[
+  {t:'msg', dir:'AB', label:'2 KB', info:'Seq=0', recv:'buffer 2/4 KB'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=2048, Win=2048'},
+  {t:'msg', dir:'AB', label:'2 KB', info:'Seq=2048', recv:'buffer 4/4 KB', recvCol:'#b91c1c'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=4096, Win=0'},
+  {t:'mark', side:'A', kind:'stop', text:'emisor bloqueado'},
+  {t:'mark', side:'B', kind:'ok', text:'app lee 2 KB'},
+  {t:'msg', dir:'BA', kind:'ack', label:'ACK', info:'Ack=4096, Win=2048'},
+  {t:'msg', dir:'AB', label:'1 KB', info:'Seq=4096', recv:'buffer 3/4 KB'}
+]});
+
+/* ═════════ Calculadora de checksum ═════════ */
+const hex4 = n => n.toString(16).toUpperCase().padStart(4, '0');
+function runChecksum(){
+  const out = document.getElementById('ckOut');
+  const toks = document.getElementById('ckWords').value.split(/[\s,;]+/).filter(Boolean);
+  const recvRaw = document.getElementById('ckRecv').value.trim();
+  const ok = t => /^(0x)?[0-9a-f]{1,4}$/i.test(t);
+  if (!toks.length || !toks.every(ok)){ out.innerHTML = '<span class="r">Escribe palabras hex de hasta 4 dígitos (ej: 8A3C 9F12).</span>'; return; }
+  if (recvRaw && !ok(recvRaw)){ out.innerHTML = '<span class="r">El checksum recibido debe ser hex de hasta 4 dígitos.</span>'; return; }
+  const words = toks.map(t => parseInt(t.replace(/^0x/i, ''), 16));
+  const recv = recvRaw ? parseInt(recvRaw.replace(/^0x/i, ''), 16) : null;
+  let lines = [];
+  let sum = 0;
+  if (recv !== null){ sum = recv; lines.push('<span class="y">Modo receptor</span>: el acumulador parte con ' + hex4(recv)); }
+  else lines.push('<span class="y">Modo emisor</span>: el acumulador parte en 0000');
+  words.forEach(w => { const prev = sum; sum += w; lines.push(prev.toString(16).toUpperCase() + ' + ' + hex4(w) + ' = ' + sum.toString(16).toUpperCase()); });
+  lines.push('Suma 32 bits = ' + sum.toString(16).toUpperCase().padStart(8, '0'));
+  let s = sum;
+  while (s > 0xFFFF){
+    const w1 = s >>> 16, w2 = s & 0xFFFF;
+    lines.push('W1 = ' + hex4(w1) + ', W2 = ' + hex4(w2) + ' → W2 + W1 = ' + (w1 + w2).toString(16).toUpperCase());
+    s = w1 + w2;
+  }
+  const res = (~s) & 0xFFFF;
+  lines.push('NOT(' + hex4(s) + ') = <span class="g">' + hex4(res) + '</span>');
+  if (recv === null) lines.push('→ checksum a enviar: <span class="g">' + hex4(res) + '</span>');
+  else lines.push(res === 0 ? '<span class="g">→ Resultado 0000: datagrama correcto</span>' : '<span class="r">→ Resultado ≠ 0: error de transmisión</span>');
+  out.innerHTML = lines.join('\n');
+}
+document.getElementById('ckBtn').addEventListener('click', runChecksum);
+runChecksum();
+
+/* ═════════ Calculadora RTO ═════════ */
+function runRTO(){
+  const prev = parseFloat(document.getElementById('rPrev').value);
+  const dev = parseFloat(document.getElementById('rDev').value);
+  const meas = parseFloat(document.getElementById('rMeas').value);
+  const out = document.getElementById('rOut');
+  if ([prev, dev, meas].some(v => isNaN(v) || v < 0)){ out.innerHTML = '<span class="r">Ingresa valores numéricos ≥ 0.</span>'; return; }
+  const f = v => (Math.round(v * 100) / 100).toString().replace('.', ',');
+  const rtt = meas / 8 + prev * 7 / 8;
+  const d = Math.abs(meas - prev) / 4 + dev * 3 / 4;
+  const rto = rtt + 4 * d;
+  out.innerHTML =
+    'RTT = 1/8·' + f(meas) + ' + 7/8·' + f(prev) + ' = <span class="g">' + f(rtt) + ' ms</span>\n' +
+    'D   = 1/4·|' + f(meas) + ' − ' + f(prev) + '| + 3/4·' + f(dev) + ' = <span class="g">' + f(d) + ' ms</span>\n' +
+    'RTO = ' + f(rtt) + ' + 4·' + f(d) + ' = <span class="y">' + f(rto) + ' ms</span>\n' +
+    'Si hay time out (Karn) → RTO = <span class="y">' + f(rto * 2) + ' ms</span>';
+}
+['rPrev', 'rDev', 'rMeas'].forEach(id => document.getElementById(id).addEventListener('input', runRTO));
+runRTO();
+
+/* ═════════ Simulador cwnd ═════════ */
+let hist;
+const PH_COL = {ini:'#3b82f6', ss:'#3b82f6', ca:'#8b5cf6', loss:'#f97316', to:'#dc2626'};
+function simReset(){ hist = [{c:2, s:16, ev:'ini'}]; simDraw(); }
+function simStep(type){
+  const last = hist[hist.length - 1];
+  let c = last.c, s = last.s, ev;
+  if (type === 'ok'){
+    if (c < s){ c = Math.min(c * 2, s); ev = 'ss'; } else { c = c + 1; ev = 'ca'; }
+  } else if (type === 'loss'){
+    s = Math.max(Math.floor(c / 2), 2); c = s; ev = 'loss';
+  } else {
+    s = Math.max(Math.floor(c / 2), 2); c = 1; ev = 'to';
+  }
+  hist.push({c, s, ev});
+  if (hist.length > 26) hist.shift();
+  simDraw();
+}
+function simDraw(){
+  const svg = document.getElementById('simSvg');
+  const W = 640, H = 240, L = 36, R = 10, T = 14, B = 28;
+  const maxV = Math.max(20, ...hist.map(h => Math.max(h.c, h.s))) + 2;
+  const n = hist.length, slot = (W - L - R) / Math.max(n, 12);
+  const yv = v => T + (H - T - B) * (1 - v / maxV);
+  let g = '';
+  for (let v = 0; v <= maxV; v += (maxV > 30 ? 10 : 5)){
+    g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + yv(v) + '" y2="' + yv(v) + '" stroke="#eef2f7"/><text x="' + (L - 6) + '" y="' + (yv(v) + 4) + '" text-anchor="end" font-size="10" fill="#94a3b8">' + v + '</text>';
+  }
+  hist.forEach((h, i) => {
+    const x = L + i * slot + slot * 0.15, w = slot * 0.7;
+    g += '<rect x="' + x + '" y="' + yv(h.c) + '" width="' + w + '" height="' + (yv(0) - yv(h.c)) + '" rx="3" fill="' + PH_COL[h.ev] + '"/>';
+    g += '<text x="' + (x + w / 2) + '" y="' + (yv(h.c) - 4) + '" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">' + h.c + '</text>';
+    g += '<text x="' + (x + w / 2) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="9.5" fill="#94a3b8">' + (i + 1) + '</text>';
+  });
+  const pts = hist.map((h, i) => (L + i * slot + slot / 2) + ',' + yv(h.s)).join(' ');
+  g += '<polyline points="' + pts + '" fill="none" stroke="#c9a34a" stroke-width="2.5" stroke-dasharray="6 4"/>';
+  g += '<text x="' + (W - R) + '" y="' + (H - 0) + '" text-anchor="end" font-size="9.5" fill="#94a3b8">RTT →</text>';
+  g += '<text x="4" y="10" font-size="9.5" fill="#94a3b8">cwnd (MSS)</text>';
+  svg.innerHTML = g;
+  const last = hist[hist.length - 1];
+  const msgs = {
+    ini: 'Inicio: cwnd = 2 MSS (Slow Start) y ssthresh = 16.',
+    ss: 'Slow Start: cwnd se <b>duplica</b> cada RTT (sin pasar de ssthresh).',
+    ca: 'AIMD (incremento aditivo): sobre el umbral, cwnd crece <b>+1 MSS</b> por RTT.',
+    loss: 'Pérdida detectada por ACK duplicados: decremento multiplicativo, <b>cwnd ÷ 2</b> y ssthresh = cwnd.',
+    to: 'Time out = congestión grave: ssthresh = cwnd/2 y <b>cwnd vuelve a 1 MSS</b> (Slow Start otra vez).'
+  };
+  document.getElementById('simMsg').innerHTML = '<b>cwnd = ' + last.c + '</b>, ssthresh = ' + last.s + '. ' + msgs[last.ev];
+}
+document.getElementById('sOk').addEventListener('click', () => simStep('ok'));
+document.getElementById('sLoss').addEventListener('click', () => simStep('loss'));
+document.getElementById('sTo').addEventListener('click', () => simStep('to'));
+document.getElementById('sReset').addEventListener('click', simReset);
+simReset();
+
+/* ═════════ Quiz ═════════ */
+const QUIZ = [
+  {q:'¿Qué identifica un número de puerto?', o:['La máquina en la red','El proceso o aplicación dentro de la máquina','La tarjeta de red','El router de salida'], a:1, e:'La IP identifica la máquina; el puerto identifica el proceso (socket) dentro de ella.'},
+  {q:'¿Cuánto mide la cabecera UDP?', o:['8 bytes','20 bytes','60 bytes','Es variable'], a:0, e:'4 campos de 16 bits = 64 bits = 8 bytes.'},
+  {q:'A envía un segmento con Seq = 5000 y 300 bytes de datos. Si llega bien, ¿qué Ack responde B?', o:['5299','5300','5301','5000'], a:1, e:'Ack = próximo byte esperado = 5000 + 300 = 5300.'},
+  {q:'El servidor recibe un SYN con Seq = 100 (sin datos). ¿Qué Ack pone en su SYN+ACK?', o:['100','101','0','Depende del Window'], a:1, e:'El SYN consume un número de secuencia: Ack = 101.'},
+  {q:'El emisor recibe Window = 0. ¿Qué hace?', o:['Retransmite todo lo pendiente','Cierra la conexión con FIN','Se bloquea y usa el Persistence Timer','Duplica su cwnd'], a:2, e:'Deja de enviar y manda sondas de 1 byte periódicamente hasta que el receptor anuncie espacio.'},
+  {q:'El control de congestión protege principalmente a…', o:['El receptor','La red (los routers)','La aplicación emisora','El checksum'], a:1, e:'El control de flujo protege al receptor; el de congestión, a la red.'},
+  {q:'¿Quién pasa por el estado TIME_WAIT?', o:['Quien inicia el cierre','Quien cierra pasivamente','Ambos lados','El servidor siempre'], a:0, e:'El que envía el primer FIN termina en TIME_WAIT (2·MSL) tras mandar el último ACK.'},
+  {q:'¿Qué ocurre si el RTO es demasiado pequeño?', o:['Reacción lenta ante pérdidas','Retransmisiones innecesarias','La ventana se cierra','Se pierde el handshake'], a:1, e:'Se retransmite antes de que el ACK alcance a llegar, desperdiciando ancho de banda.'}
+];
+let score = 0;
+function buildQuiz(){
+  score = 0;
+  document.getElementById('qScore').textContent = '0 / ' + QUIZ.length;
+  const box = document.getElementById('quizBox');
+  box.innerHTML = QUIZ.map((it, i) =>
+    '<div class="q" data-i="' + i + '"><p class="qt">' + (i + 1) + '. ' + esc(it.q) + '</p><div class="opts">' +
+    it.o.map((op, j) => '<button type="button" class="opt" data-j="' + j + '">' + esc(op) + '</button>').join('') +
+    '</div><div class="exp">' + esc(it.e) + '</div></div>').join('');
+}
+document.getElementById('quizBox').addEventListener('click', e => {
+  const b = e.target.closest('button.opt'); if (!b) return;
+  const qd = b.closest('.q'); if (qd.classList.contains('done')) return;
+  const it = QUIZ[+qd.dataset.i], j = +b.dataset.j;
+  qd.classList.add('done');
+  qd.querySelectorAll('button.opt').forEach(x => { x.disabled = true; if (+x.dataset.j === it.a) x.classList.add('right'); });
+  if (j === it.a) score++; else b.classList.add('wrong');
+  document.getElementById('qScore').textContent = score + ' / ' + QUIZ.length;
+});
+document.getElementById('qReset').addEventListener('click', buildQuiz);
+buildQuiz();
 </script>
 </body>
 </html>

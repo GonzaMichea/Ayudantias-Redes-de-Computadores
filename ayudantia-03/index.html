@@ -39,10 +39,7 @@
             backdrop-filter: blur(10px);
         }
 
-        .brand-title {
-            color: #ffffff;
-            font-weight: 800;
-        }
+        .brand-title { color: #ffffff; font-weight: 800; }
 
         .nav-link {
             color: #f1f5f9;
@@ -51,7 +48,6 @@
             transition: all 0.25s ease;
             border: 1px solid transparent;
         }
-
         .nav-link:hover {
             color: #ffffff;
             background: rgba(255, 255, 255, 0.12);
@@ -65,11 +61,7 @@
             background-clip: text;
             color: transparent;
         }
-
-        .hero-subtitle {
-            color: #334155;
-            font-weight: 500;
-        }
+        .hero-subtitle { color: #334155; font-weight: 500; }
 
         .section-title {
             border-bottom-width: 3px;
@@ -77,44 +69,92 @@
             border-color: rgba(0, 43, 92, 0.28);
         }
 
-        .bg-white.p-8.rounded-xl.shadow-lg, .card-hover {
-            background: rgba(255, 255, 255, 0.9);
+        .card {
+            background: rgba(255, 255, 255, 0.92);
             border: 1px solid rgba(0, 43, 92, 0.09);
             box-shadow: 0 16px 30px rgba(15, 31, 51, 0.1);
+            border-radius: 0.75rem;
+            padding: 2rem;
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
-
-        .bg-white.p-8.rounded-xl.shadow-lg:hover, .card-hover:hover {
+        .card:hover {
             transform: translateY(-3px);
             box-shadow: 0 22px 36px rgba(15, 31, 51, 0.16);
         }
+        @media (max-width: 640px) { .card { padding: 1.25rem; } }
 
-        /* Utilidades de Color USM */
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--usm-navy);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            gap: 0.5rem;
+        }
+
         .text-usm-navy { color: var(--usm-navy); }
         .text-usm-burgundy { color: var(--usm-burgundy); }
         .text-usm-gold { color: var(--usm-gold); }
-        
         .bg-usm-navy { background-color: var(--usm-navy); }
         .hover\:bg-usm-navy-dark:hover { background-color: #001a3b; }
-        
         .bg-usm-burgundy { background-color: var(--usm-burgundy); }
         .bg-usm-gold { background-color: var(--usm-gold); }
-
+        .bg-usm-ink { background-color: var(--usm-ink); }
         .border-usm-navy { border-color: var(--usm-navy); }
         .border-usm-burgundy { border-color: var(--usm-burgundy); }
         .border-usm-gold { border-color: var(--usm-gold); }
 
-        .ring-usm-navy { --tw-ring-color: var(--usm-navy); }
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.55rem;
+            border-radius: 9999px;
+            margin-right: 0.25rem;
+        }
+        .tag-port { background: #fff3e0; color: #b45309; border: 1px solid #fbbf24; }
+        .tag-rfc { background: #e0ebf7; color: var(--usm-navy); border: 1px solid #93b4dc; }
+
+        .terminal {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 0.78rem;
+            line-height: 1.55;
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .terminal .c { color: #7dd3fc; }
+        .terminal .s { color: #fcd34d; }
+        .terminal .m { color: #94a3b8; }
+
+        .grid > *, .flex > * { min-width: 0; }
+        .data-table { width: 100%; font-size: 0.85rem; border-collapse: collapse; }
+        .data-table th { background: #f1f5f9; color: var(--usm-navy); text-align: left; padding: 0.5rem 0.75rem; font-weight: 700; }
+        .data-table td { padding: 0.5rem 0.75rem; border-top: 1px solid #e2e8f0; vertical-align: top; }
+
+        .step-num {
+            flex-shrink: 0;
+            width: 1.6rem; height: 1.6rem;
+            border-radius: 9999px;
+            background: var(--usm-navy);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+        }
 
         .animate-fadeIn { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
         .accordion-icon { transition: transform 0.3s ease; }
 
-        /* Estilos para el diagrama de encapsulación */
         .encapsulation-box {
             display: flex;
             flex-direction: column;
@@ -125,32 +165,25 @@
             border-radius: 0.25rem;
             padding: 0.75rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            position: relative;
         }
-        
-        .encapsulation-label {
-            font-size: 0.7rem;
-            opacity: 0.8;
-            margin-top: 0.25rem;
-            font-weight: normal;
-        }
+        .encapsulation-label { font-size: 0.7rem; opacity: 0.85; margin-top: 0.25rem; font-weight: normal; }
     </style>
 </head>
 <body class="text-slate-800">
 
     <header class="topbar sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
             <h1 class="text-xl brand-title">Ayudantía</h1>
-            <div class="space-x-2 sm:space-x-4">
-                <a href="#teoria" class="nav-link font-medium transition-colors text-xs sm:text-base">Teoría</a>
-                <a href="#conceptos" class="nav-link font-medium transition-colors text-xs sm:text-base">Conceptos</a>
-                <a href="#practica" class="nav-link font-medium transition-colors text-xs sm:text-base">Práctica</a>
+            <div class="space-x-1 sm:space-x-4">
+                <a href="#teoria" class="nav-link font-medium text-xs sm:text-base">Teoría</a>
+                <a href="#conceptos" class="nav-link font-medium text-xs sm:text-base">Conceptos</a>
+                <a href="#practica" class="nav-link font-medium text-xs sm:text-base">Práctica</a>
             </div>
         </nav>
     </header>
 
-    <main class="container mx-auto px-6 py-12 max-w-5xl">
-        
+    <main class="container mx-auto px-4 sm:px-6 py-12 max-w-5xl">
+
         <section id="intro" class="text-center mb-16">
             <h2 class="hero-title font-bold mb-4">Redes de Computadores</h2>
             <p class="text-lg hero-subtitle max-w-3xl mx-auto flex items-center justify-center gap-3">
@@ -160,182 +193,518 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- PARTE 1: TEORÍA DETALLADA                  -->
+        <!-- PARTE 1: TEORÍA                            -->
         <!-- ========================================== -->
         <section id="teoria" class="mb-20">
             <h3 class="section-title text-3xl font-bold mb-8 pb-4">Parte 1: Conceptos Fundamentales</h3>
 
             <div class="space-y-10">
-                
-                <!-- 1. Protocolos y Encapsulación -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
-                        <span class="text-usm-gold">1.</span> Protocolos de Aplicación y Encapsulación
-                    </h3>
-                    
-                    <div class="mb-6">
-                        <h4 class="font-bold text-usm-navy mb-2">¿Qué es un Protocolo de Aplicación?</h4>
-                        <p class="text-slate-700 leading-relaxed text-sm">
-                            Un <strong>Protocolo de Aplicación</strong> es un conjunto estructurado de reglas que determinan cómo las aplicaciones en diferentes computadores se comunican entre sí. Define:
-                        </p>
-                        <ul class="list-disc pl-5 mt-2 space-y-1 text-sm text-slate-600">
-                            <li><strong>El tipo de mensajes</strong> que se intercambian (ej. Peticiones/Requests y Respuestas/Responses).</li>
-                            <li><strong>La sintaxis</strong> de esos mensajes (qué campos tienen y cómo están organizados).</li>
-                            <li><strong>La semántica</strong> (el significado de la información en esos campos).</li>
-                            <li><strong>Las reglas</strong> para saber cuándo y cómo enviar los mensajes.</li>
-                        </ul>
+
+                <!-- 1. Capa de aplicación y protocolos -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">1.</span> La Capa de Aplicación y sus Protocolos</h3>
+
+                    <p class="text-sm text-slate-700 mb-4">
+                        La capa de aplicación provee una forma de <strong>comunicar aplicaciones entre sí</strong> (y, por lo tanto, a los usuarios) implementando <strong>protocolos de alto nivel</strong>:
+                    </p>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="data-table">
+                            <thead><tr><th>Servicio</th><th>Protocolos</th></tr></thead>
+                            <tbody>
+                                <tr><td>Web</td><td>HTTP, HTTPS</td></tr>
+                                <tr><td>Acceso remoto (Remote login)</td><td>TELNET, SSH</td></tr>
+                                <tr><td>Transferencia de archivos</td><td>FTP, SCP</td></tr>
+                                <tr><td>Correo electrónico</td><td>SMTP, ESMTP, IMAP, POP3</td></tr>
+                                <tr><td>Peer to Peer</td><td>BitTorrent, Gnutella</td></tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
-                        <h4 class="font-bold text-usm-navy mb-4">El Flujo de Bits en la Encapsulación</h4>
-                        <p class="text-sm text-slate-600 mb-4">
-                            Cuando envías un mensaje (ej. un email), este no viaja mágicamente por el cable. Tiene que descender por las capas de red, sufriendo un proceso llamado <strong>encapsulación</strong>, donde cada capa envuelve al mensaje con un encabezado (Header) nuevo.
-                        </p>
-                        
-                        <!-- Diagrama visual de encapsulación -->
-                        <div class="flex flex-col md:flex-row gap-1 text-sm text-center my-6">
-                            <div class="encapsulation-box bg-slate-500 w-full md:w-1/5" title="Capa de Enlace">
-                                Data Link Header
-                                <span class="encapsulation-label">Añade dir. MAC (Trama)</span>
-                            </div>
-                            <div class="encapsulation-box bg-blue-600 w-full md:w-1/5" title="Capa de Red">
-                                IP Header
-                                <span class="encapsulation-label">Añade dir. IP (Paquete)</span>
-                            </div>
-                            <div class="encapsulation-box bg-usm-gold w-full md:w-1/5" title="Capa de Transporte">
-                                Transport Header
-                                <span class="encapsulation-label">Añade Puerto TCP/UDP (Segmento)</span>
-                            </div>
-                            <div class="encapsulation-box bg-usm-navy w-full md:w-2/5" title="Capa de Aplicación">
-                                Application Data
-                                <span class="encapsulation-label">El mensaje original (HTTP, SMTP, etc.)</span>
-                            </div>
-                        </div>
-
-                        <p class="text-sm text-slate-700 bg-white p-4 rounded border-l-4 border-usm-navy">
-                            <strong>Del mensaje a los bits:</strong> Una vez que el mensaje original tiene todos estos encabezados (MAC + IP + Puerto + Datos), la tarjeta de red (Capa Física) toma este "paquete" gigante de ceros y unos y lo convierte en <strong>señales eléctricas, pulsos de luz o radiofrecuencias (Wi-Fi)</strong> para enviarlo por el medio físico. Al llegar al destino, ocurre el proceso inverso (Desencapsulación).
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 2. Sockets, Puertos e IANA -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
-                        <span class="text-usm-gold">2.</span> Puertos, Sockets y la IANA
-                    </h3>
-                    
-                    <div class="grid md:grid-cols-2 gap-6 mb-6">
-                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
-                            <h4 class="font-bold text-usm-burgundy mb-2">¿Qué es la IANA?</h4>
-                            <p class="text-sm text-slate-600 mb-3">
-                                La <strong>IANA (Internet Assigned Numbers Authority)</strong> es la entidad global encargada de coordinar los identificadores únicos en Internet, como las direcciones IP y, muy importante, los <strong>números de puerto</strong>. Los clasifica así:
-                            </p>
-                            <ul class="text-sm space-y-1 font-mono text-slate-700">
-                                <li><span class="font-bold text-usm-navy">0 - 1023:</span> Puertos Conocidos (Requieren permisos de root. Ej: 80, 443).</li>
-                                <li><span class="font-bold text-usm-navy">1024 - 49151:</span> Puertos Registrados (Para software específico).</li>
-                                <li><span class="font-bold text-usm-navy">49152 - 65535:</span> Puertos Dinámicos (Usados temporalmente por clientes).</li>
+                    <h4 class="font-bold text-usm-navy mb-2">¿Qué es un Protocolo de Aplicación?</h4>
+                    <p class="text-sm text-slate-700 mb-3">
+                        En general, un protocolo es <em>un conjunto de reglas que gobiernan el intercambio o la transmisión de datos entre dispositivos</em>. Concretamente, un protocolo de nivel aplicación es el conjunto de reglas para que una aplicación y un servidor (o dos o más aplicaciones) puedan:
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <p class="font-bold text-usm-burgundy mb-2">Controlar la comunicación</p>
+                            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                                <li>Iniciar una comunicación.</li>
+                                <li>Intercambiar datos sin problemas de formato (sintaxis y semántica comunes).</li>
+                                <li>Terminar una comunicación.</li>
                             </ul>
                         </div>
-
-                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
-                            <h4 class="font-bold text-usm-navy mb-2">Socket vs Puerto</h4>
-                            <p class="text-sm text-slate-600 mb-3">Es común confundirlos, pero son cosas distintas:</p>
-                            <ul class="text-sm space-y-3 text-slate-700">
-                                <li><strong>El Puerto:</strong> Es solo un <em>identificador lógico</em> numérico (como el número de un departamento en un edificio). Sirve para que el Sistema Operativo sepa a qué programa entregar el mensaje.</li>
-                                <li><strong>El Socket:</strong> Es la <em>estructura de software (interfaz de programación)</em> completa que un programa usa para conectarse a la red. Se define por la combinación de: <strong>[Dirección IP + Puerto + Protocolo de Transporte (TCP/UDP)]</strong>. Es la "puerta física" real de comunicación abierta por el programa.</li>
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <p class="font-bold text-usm-burgundy mb-2">Definir el servicio</p>
+                            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                                <li>Los servicios entregados por el servidor.</li>
+                                <li>La forma de pedir esos servicios (datos, parámetros).</li>
+                                <li>La forma de las posibles respuestas, <strong>incluyendo los errores</strong>.</li>
                             </ul>
                         </div>
                     </div>
+                    <p class="text-sm text-slate-700 bg-white p-4 rounded border-l-4 border-usm-navy">
+                        <strong>Analogía de la clase:</strong> una conversación humana también sigue un protocolo. Se abre con un saludo ("Hola" / "Hola"), se hace una petición y se recibe una respuesta ("¿Qué hora es?" / "Son las 15:47") y se cierra ("Gracias" / "Hasta luego"). Los protocolos de red formalizan exactamente esas tres fases.
+                    </p>
                 </div>
 
-                <!-- 3. Protocolos de Conexión Remota -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
-                        <span class="text-usm-gold">3.</span> Conexiones Remotas: TELNET vs SSH
-                    </h3>
-                    
-                    <p class="text-slate-700 mb-6 text-sm">
-                        En la capa de aplicación existen protocolos específicos para administrar computadores y servidores de forma remota a través de una terminal o consola de comandos.
+                <!-- 2. Encapsulación -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">2.</span> Encapsulación y Flujo de Bits</h3>
+                    <p class="text-sm text-slate-700 mb-4">
+                        Los protocolos actúan como <strong>muñecas rusas</strong>: el mensaje de aplicación desciende por las capas y cada una lo envuelve con su propio encabezado (header). En destino ocurre el proceso inverso (<strong>desencapsulación</strong>): cada capa quita su encabezado y entrega el resto a la capa superior.
                     </p>
 
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div class="border-l-4 border-red-500 pl-4">
-                            <h4 class="font-bold text-red-700 mb-2">TELNET (Puerto 23)</h4>
-                            <p class="text-sm text-slate-600 mb-2">
-                                Es uno de los protocolos más antiguos de Internet. Permite conectar la terminal de tu computador a la de un servidor remoto.
-                            </p>
-                            <p class="text-sm text-slate-600 font-bold bg-red-50 p-2 rounded">
-                                ⚠️ El Problema: TELNET envía ABSOLUTAMENTE TODO en texto plano (sin cifrar). Si escribes tu contraseña de administrador, viaja por el cable como texto legible. Cualquiera haciendo <em>sniffing</em> en la red puede robar tu acceso al instante. Hoy en día se considera obsoleto e inseguro.
-                            </p>
-                        </div>
-                        
-                        <div class="border-l-4 border-green-500 pl-4">
-                            <h4 class="font-bold text-green-700 mb-2">SSH (Puerto 22)</h4>
-                            <p class="text-sm text-slate-600 mb-2">
-                                SSH (Secure Shell) nació como el reemplazo seguro de TELNET. Cumple exactamente la misma función de acceso a consola remota, pero con seguridad integrada.
-                            </p>
-                            <p class="text-sm text-slate-600 font-bold bg-green-50 p-2 rounded">
-                                ✅ La Solución: SSH utiliza criptografía fuerte. Toda la comunicación, desde la autenticación (usuario/contraseña) hasta los comandos que ejecutas, viaja <strong>cifrada</strong>. Si un atacante intercepta el tráfico, solo verá caracteres incomprensibles.
-                            </p>
-                        </div>
+                    <div class="flex flex-col md:flex-row gap-1 text-sm text-center my-6">
+                        <div class="encapsulation-box bg-slate-500 md:flex-1">Data Link Header<span class="encapsulation-label">Dir. MAC (Trama)</span></div>
+                        <div class="encapsulation-box bg-blue-600 md:flex-1">IP Header<span class="encapsulation-label">Dir. IP (Paquete)</span></div>
+                        <div class="encapsulation-box bg-usm-gold md:flex-1">Transport Header<span class="encapsulation-label">Puerto TCP/UDP (Segmento)</span></div>
+                        <div class="encapsulation-box bg-usm-navy md:flex-[2]">Application Data<span class="encapsulation-label">Mensaje original (HTTP, SMTP, etc.)</span></div>
+                        <div class="encapsulation-box bg-slate-500 md:flex-1">Data Link Trailer<span class="encapsulation-label">Control de errores (CRC)</span></div>
                     </div>
+
+                    <p class="text-sm text-slate-700 bg-slate-50 p-4 rounded border-l-4 border-usm-navy">
+                        <strong>Del mensaje a los bits:</strong> la capa de enlace agrega un encabezado <em>y también un trailer</em> al final de la trama. Esa trama completa se transmite como un <strong>flujo de bits</strong>, que la capa física convierte en señales eléctricas, pulsos de luz o radiofrecuencias (Wi-Fi) según el medio.
+                    </p>
                 </div>
 
-                <!-- 4. Web, HTTP y Certificados -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
-                        <span class="text-usm-gold">4.</span> La Web, HTTP y Certificados X509
-                    </h3>
-                    
-                    <p class="text-slate-700 mb-6 text-sm">El protocolo <strong>HTTP (Puerto 80)</strong> rige la Web basándose en un modelo Cliente-Servidor. Es un protocolo <em>Stateless</em> (sin estado), lo que significa que el servidor no recuerda peticiones pasadas del mismo cliente por defecto (por eso se inventaron las cookies).</p>
+                <!-- 3. Puertos, IANA, IETF, NAT -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">3.</span> Puertos, IANA, IETF y Port Forwarding</h3>
 
-                    <div class="bg-usm-ink text-white p-6 rounded-xl shadow-inner relative overflow-hidden">
-                        <div class="absolute -right-4 -top-4 opacity-10">
-                            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        </div>
-                        <h4 class="font-bold text-usm-gold text-lg mb-3 relative z-10">HTTPS (Puerto 443) y Certificados X509</h4>
-                        <p class="text-slate-700 mb-4 text-sm">
-                            Igual que el problema de Telnet, HTTP envía los datos en texto plano. <strong>HTTPS</strong> añade seguridad cifrando la conexión. Pero, ¿cómo sabes que el servidor al que te conectas es realmente tu banco y no un impostor? Para eso está el <strong>Certificado X509</strong>.
-                        </p>
-                        <p class="text-slate-700 border-l-2 border-usm-burgundy pl-3">
-                            El servidor envía este certificado emitido por una <strong>CA (Autoridad de Certificación)</strong> confiable. El navegador verifica la firma de la CA; si no coincide, expiró o el dominio es distinto, el navegador te bloqueará con una alerta de seguridad (<em>"Connection is not secure"</em>).
-                        </p>
-                    </div>
-                </div>
+                    <p class="text-sm text-slate-700 mb-4">
+                        Un servidor puede ofrecer varios servicios a la vez. La <strong>dirección IP no basta</strong> para identificar la aplicación de destino, por eso se usa un <strong>número de puerto</strong> en el nivel del protocolo de transporte. Ejemplo: un cliente se conecta a <code>200.1.19.1:25</code> y el servidor entrega la conexión al servicio de correo (SMTP); el puerto 80 iría al servidor web y el 22 a SSH.
+                    </p>
 
-                <!-- 5. Escalabilidad -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
-                        <span class="text-usm-gold">5.</span> Escalabilidad: Balanceo de Cargas y P2P
-                    </h3>
-
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div>
-                            <h4 class="font-bold text-usm-burgundy mb-3 flex items-center gap-2">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                                Balanceo de Cargas
-                            </h4>
-                            <p class="text-sm text-slate-600 mb-4">Para evitar que un servidor colapse por demasiadas peticiones, se distribuye el tráfico:</p>
-                            <ul class="text-sm space-y-3 text-slate-700">
-                                <li><strong>Rotación DNS (Round Robin):</strong> El servidor DNS da una IP distinta a cada cliente para repartirlos entre varios servidores.</li>
-                                <li><strong>HTTP Redirect:</strong> El servidor principal responde al cliente con un código indicándole que vaya a otro servidor menos cargado.</li>
-                                <li><strong>HAProxy:</strong> Un software especializado (Proxy) que se pone delante y distribuye el tráfico inteligentemente a servidores internos ocultos.</li>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-burgundy mb-2">Rangos de puertos (IANA)</h4>
+                            <p class="text-sm text-slate-600 mb-3">El puerto es un entero entre <strong>0 y 65535</strong>. La <strong>IANA</strong> (Internet Assigned Numbers Authority) los asigna y clasifica así:</p>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li><span class="font-bold text-usm-navy font-mono">0 - 1023</span> &nbsp;Bien conocidos (well-known): servicios del sistema operativo o de gestión de Internet (22, 25, 80, 443). En Unix/Linux, abrir uno de estos puertos requiere permisos de root.</li>
+                                <li><span class="font-bold text-usm-navy font-mono">1024 - 49151</span> &nbsp;Registrados: protocolos aceptados y normalizados por el IETF.</li>
+                                <li><span class="font-bold text-usm-navy font-mono">49152 - 65535</span> &nbsp;Dinámicos o efímeros: los usan las conexiones TCP para liberar el puerto principal del servidor y los clientes como puerto de origen. Al cerrarse la conexión, el puerto queda disponible de nuevo.</li>
                             </ul>
                         </div>
 
-                        <div>
-                            <h4 class="font-bold text-usm-navy mb-3 flex items-center gap-2">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                                Modelo Peer-to-Peer (P2P)
-                            </h4>
-                            <p class="text-sm text-slate-600 mb-4">Redes descentralizadas. <strong>Todos los nodos actúan como clientes (descargan) y servidores (suben) simultáneamente</strong> (Ej: BitTorrent).</p>
-                            <div class="bg-slate-50 p-3 rounded text-sm border border-slate-200">
-                                <p class="text-green-700 font-bold">✓ Ventajas:</p>
-                                <p class="text-slate-600 mb-2">Escalabilidad natural: a más usuarios, más ancho de banda total. Alta tolerancia a fallas centrales.</p>
-                                <p class="text-red-700 font-bold">✗ Desventajas:</p>
-                                <p class="text-slate-600">Difícil controlar la distribución de malware, la piratería o asegurar que un archivo siempre esté disponible.</p>
-                            </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">Tabla de servicios del SO</h4>
+                            <p class="text-sm text-slate-600 mb-3">El sistema operativo mantiene una copia de la tabla nombre de servicio ↔ puerto. En Linux está en <code>/etc/services</code>:</p>
+                            <div class="terminal">ftp-data   20/tcp
+ftp        21/tcp
+ssh        22/tcp   <span class="m"># SSH Remote Login Protocol</span>
+telnet     23/tcp
+smtp       25/tcp
+http       80/tcp
+https     443/tcp</div>
                         </div>
+                    </div>
+
+                    <h4 class="font-bold text-usm-navy mb-3">¿Cómo se asigna un puerto? El proceso RFC</h4>
+                    <p class="text-sm text-slate-700 mb-3">Cualquier persona puede proponer un protocolo al <strong>IETF</strong> (Internet Engineering Task Force). El ciclo es:</p>
+                    <div class="grid sm:grid-cols-4 gap-3 text-sm mb-6">
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg"><p class="font-bold text-usm-navy">1. IETF</p><p class="text-slate-600">Acepta y normaliza el protocolo. Publica el RFC-XXX versión 1.</p></div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg"><p class="font-bold text-usm-navy">2. IETF</p><p class="text-slate-600">Revisa los comentarios (Request For Comments) y hace modificaciones.</p></div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg"><p class="font-bold text-usm-burgundy">3. IANA</p><p class="text-slate-600">Asigna uno o más números de puerto.</p></div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg"><p class="font-bold text-usm-navy">4. IETF</p><p class="text-slate-600">Publica la versión final: RFC-XXX definitiva.</p></div>
+                    </div>
+
+                    <h4 class="font-bold text-usm-navy mb-2">Servidores con IP privada: Port Forwarding</h4>
+                    <p class="text-sm text-slate-700 mb-3">
+                        Si el servidor está en una red privada (ej. <code>10.1.1.20</code>), no es alcanzable directamente desde Internet. Se configura <strong>Port Forwarding en el NAT</strong> del router: las peticiones que llegan a la IP pública en un puerto dado se traducen hacia la IP privada correspondiente.
+                    </p>
+                    <div class="terminal">Cliente  ──►  200.1.19.3:25  (IP pública del router)
+                     │  NAT / Port Forwarding
+                     ▼
+               10.1.1.20:25   (servidor de correo en la red privada)</div>
+                </div>
+
+                <!-- 4. Interfaz Socket -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">4.</span> La Interfaz Socket: UDP y TCP</h3>
+
+                    <p class="text-sm text-slate-700 mb-4">
+                        La <strong>interfaz socket</strong> (UNIX/Linux y Windows) es la API que permite a un programa intercambiar datos entre cliente y servidor. Al crear un socket con <code>socket()</code> se elige el tipo de transporte:
+                    </p>
+                    <ul class="text-sm space-y-2 text-slate-700 mb-6">
+                        <li><strong>SOCK_STREAM (TCP):</strong> canal abstracto <strong>con conexión</strong>, con control de pérdidas, de orden y de flujo.</li>
+                        <li><strong>SOCK_DGRAM (UDP):</strong> canal abstracto <strong>sin conexión</strong> y sin ningún control: cada mensaje viaja de forma independiente.</li>
+                    </ul>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-burgundy mb-3">UDP - Sin conexión</h4>
+                            <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead><tr><th>Cliente</th><th>Servidor</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>socket(AF_INET, SOCK_DGRAM)</code></td><td><code>socket(AF_INET, SOCK_DGRAM)</code></td></tr>
+                                    <tr><td></td><td><code>bind()</code> puerto e IP</td></tr>
+                                    <tr><td><code>sendto()</code></td><td><code>recvfrom()</code></td></tr>
+                                    <tr><td><code>recvfrom()</code></td><td><code>sendto()</code></td></tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-3">Cada <code>sendto()</code> lleva la dirección de destino, porque no existe una conexión establecida.</p>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-3">TCP - Con conexión</h4>
+                            <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead><tr><th>Cliente</th><th>Servidor</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>socket(AF_INET, SOCK_STREAM)</code></td><td><code>socket(AF_INET, SOCK_STREAM)</code></td></tr>
+                                    <tr><td></td><td><code>bind()</code> puerto e IP</td></tr>
+                                    <tr><td></td><td><code>listen()</code></td></tr>
+                                    <tr><td><code>connect()</code> IP y puerto</td><td><code>accept()</code> (en loop)</td></tr>
+                                    <tr><td><code>send()/write()</code></td><td><code>recv()/read()</code></td></tr>
+                                    <tr><td><code>recv()/read()</code></td><td><code>send()/write()</code></td></tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-3">Por cada conexión aceptada, el servidor crea un nuevo proceso o hilo (<code>fork()</code> / <code>pthread_create()</code>) que la atiende, y vuelve a <code>accept()</code> para recibir al siguiente cliente.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-4 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">El Puerto</h4>
+                            <p class="text-sm text-slate-700">Es solo un <em>identificador numérico</em> (como el número de departamento en un edificio). Le dice al sistema operativo a qué programa entregar el mensaje.</p>
+                        </div>
+                        <div class="p-4 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">El Socket</h4>
+                            <p class="text-sm text-slate-700">Es el <em>punto extremo lógico de comunicación</em> que el programa abre a través de la API del sistema operativo. Queda definido por <strong>IP + puerto + protocolo de transporte</strong>. Una conexión TCP se identifica por el par de sockets de ambos extremos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. TELNET vs SSH -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">5.</span> Terminal Remoto: TELNET vs SSH</h3>
+
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h4 class="font-bold text-red-700 mb-2">TELNET</h4>
+                            <p class="mb-3"><span class="tag tag-port">Puerto 23</span><span class="tag tag-rfc">RFC-15, RFC-854</span></p>
+                            <p class="text-sm text-slate-700 mb-2">Protocolo cliente-servidor sobre <strong>TCP</strong> para abrir una terminal virtual remota (u otro tipo de servidor). Sintaxis: <code>telnet servidor [puerto]</code>.</p>
+                            <ul class="list-disc pl-5 text-sm text-slate-700 space-y-1 mb-3">
+                                <li>Lo que tipea el usuario se transmite al servidor; en modo terminal (puerto 23) lo interpreta un shell (bash, ...).</li>
+                                <li>Incluye una negociación del tipo de terminal (secuencias de escape).</li>
+                                <li>El cliente recibe y muestra la respuesta.</li>
+                            </ul>
+                            <p class="text-sm text-red-800 bg-red-50 p-3 rounded">
+                                <strong>El problema:</strong> todas las comunicaciones pasan <strong>en claro</strong>, sin cifrado. Una contraseña viaja como texto legible y cualquiera que capture el tráfico (sniffing) o se interponga en la comunicación (<em>Man in the Middle</em>) puede leerla. Conclusión de la clase: usar SSH.
+                            </p>
+                        </div>
+
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-bold text-green-700 mb-2">SSH (Secure Shell)</h4>
+                            <p class="mb-3"><span class="tag tag-port">Puerto 22</span><span class="tag tag-rfc">RFC-4253</span></p>
+                            <p class="text-sm text-slate-700 mb-2">Protocolo cliente-servidor sobre TCP y <strong>cifrado</strong>. Sirve para terminal virtual y también para crear <strong>túneles cifrados</strong>. Sintaxis: <code>ssh user@machine.subdomain.domain</code>.</p>
+                            <p class="text-sm text-slate-700 mb-2">Usa <strong>dos tipos de algoritmos</strong>:</p>
+                            <ul class="list-disc pl-5 text-sm text-slate-700 space-y-1 mb-3">
+                                <li><strong>Asimétrico</strong> (RSA/DSA): para la identificación del usuario.</li>
+                                <li><strong>Simétrico</strong> (AES, 3DES, Blowfish): para el intercambio de datos, porque es mucho más rápido.</li>
+                            </ul>
+                            <p class="text-sm text-green-800 bg-green-50 p-3 rounded">
+                                <strong>La solución:</strong> desde la autenticación hasta cada comando viaja cifrado. Quien intercepte el tráfico solo verá datos ilegibles.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-3">SSH Handshake (Diffie-Hellman)</h4>
+                            <ol class="space-y-3 text-sm text-slate-700">
+                                <li class="flex gap-3"><span class="step-num">1</span><span>Cliente y servidor se ponen de acuerdo en un <strong>número primo público</strong> y en el algoritmo de cifrado simétrico (ej. AES).</span></li>
+                                <li class="flex gap-3"><span class="step-num">2</span><span>Cada uno genera un número <strong>secreto</strong> (a y b), que es su clave privada, y a partir de él calcula su <strong>clave pública</strong>.</span></li>
+                                <li class="flex gap-3"><span class="step-num">3</span><span>Se <strong>intercambian las claves públicas</strong> por la red.</span></li>
+                                <li class="flex gap-3"><span class="step-num">4</span><span>Cada lado combina su secreto con la clave pública del otro y ambos obtienen la <strong>misma clave secreta simétrica compartida</strong>, sin que esta haya viajado nunca por la red.</span></li>
+                                <li class="flex gap-3"><span class="step-num">5</span><span>Esa clave cifra el resto de la comunicación.</span></li>
+                            </ol>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-3">SSH: Identificación del usuario por clave</h4>
+                            <ol class="space-y-3 text-sm text-slate-700">
+                                <li class="flex gap-3"><span class="step-num">1</span><span>El cliente envía su ID y el número de su clave.</span></li>
+                                <li class="flex gap-3"><span class="step-num">2</span><span>El servidor busca la clave pública del cliente en sus <strong>claves autorizadas</strong> (authorized keys). Si no existe, termina.</span></li>
+                                <li class="flex gap-3"><span class="step-num">3</span><span>El servidor genera un <strong>número aleatorio</strong>, lo cifra con la clave pública del cliente y se lo envía (desafío).</span></li>
+                                <li class="flex gap-3"><span class="step-num">4</span><span>Solo el dueño de la <strong>clave privada</strong> puede descifrarlo. El cliente responde con un hash MD5 del número junto con la clave simétrica compartida.</span></li>
+                                <li class="flex gap-3"><span class="step-num">5</span><span>El servidor calcula el mismo MD5 y compara: si son iguales, el cliente queda identificado; si no, la conexión se rechaza.</span></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Correo electrónico -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">6.</span> Correo Electrónico: SMTP, MX y MIME</h3>
+
+                    <p class="mb-3"><span class="tag tag-port">Puertos 25, 465 (SSL/TLS)</span><span class="tag tag-rfc">RFC-821, RFC-5321</span></p>
+                    <p class="text-sm text-slate-700 mb-4">
+                        <strong>SMTP</strong> (Simple Mail Transfer Protocol) y su versión extendida <strong>ESMTP</strong> permiten transmitir correos entre usuarios de redes diferentes, sin saber dónde se encuentra físicamente el destinatario: basta con su dirección de correo. El email fue la primera <em>killer application</em> de Internet y tiene tres elementos básicos:
+                    </p>
+
+                    <div class="grid md:grid-cols-3 gap-4 mb-6 text-sm">
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="font-bold text-usm-navy mb-1">User Agent (UA)</p>
+                            <p class="text-slate-700">El programa del usuario para leer y escribir correos: mail, elm, mutt, Thunderbird, Outlook, Webmail.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="font-bold text-usm-navy mb-1">Mail Transfer Agent (MTA)</p>
+                            <p class="text-slate-700">El servidor de correo: la infraestructura misma. Transfiere los mails, maneja las colas de espera y los buzones locales. Ej: sendmail, postfix.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="font-bold text-usm-navy mb-1">El protocolo</p>
+                            <p class="text-slate-700">SMTP / ESMTP para enviar entre MTAs. Para que el usuario lea su buzón se usan IMAP o POP3.</p>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold text-usm-navy mb-2">¿Cómo se encuentra el servidor de destino? El registro MX</h4>
+                    <p class="text-sm text-slate-700 mb-3">
+                        Para un correo a <code>xavier.bonnaire@gmail.com</code>, el MTA local toma el dominio (<code>gmail.com</code>) y consulta al DNS por sus registros <strong>MX</strong> (Mail Exchanger). Cada MX tiene una prioridad: <strong>menor valor = mayor prioridad</strong>.
+                    </p>
+                    <div class="terminal mb-4"><span class="c">$ dig gmail.com mx</span>
+;; ANSWER SECTION:
+gmail.com.  309  IN  MX  <span class="s">20</span>  alt2.gmail-smtp-in.l.google.com.
+gmail.com.  309  IN  MX  <span class="s">40</span>  alt4.gmail-smtp-in.l.google.com.
+gmail.com.  309  IN  MX   <span class="s">5</span>  gmail-smtp-in.l.google.com.       <span class="m">&lt;- menor valor: se intenta primero</span>
+gmail.com.  309  IN  MX  <span class="s">10</span>  alt1.gmail-smtp-in.l.google.com.
+gmail.com.  309  IN  MX  <span class="s">30</span>  alt3.gmail-smtp-in.l.google.com.</div>
+                    <p class="text-sm text-slate-700 mb-4">El DNS no entrega los registros ordenados: el orden lo decide el número de prioridad, no la posición en la respuesta.</p>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <h4 class="font-bold text-usm-burgundy mb-3">Algoritmo de envío del MTA</h4>
+                            <ol class="space-y-2 text-slate-700">
+                                <li class="flex gap-3"><span class="step-num">1</span><span>Pregunta al DNS por el MX del dominio de destino.</span></li>
+                                <li class="flex gap-3"><span class="step-num">2</span><span>Pregunta al DNS la IP del MX elegido (ej. 64.233.190.26).</span></li>
+                                <li class="flex gap-3"><span class="step-num">3</span><span>Intenta entregar al MX de mayor prioridad. Si falla, intenta con el siguiente.</span></li>
+                                <li class="flex gap-3"><span class="step-num">4</span><span>Si ninguno responde, deja el correo en su <strong>cola local</strong>.</span></li>
+                            </ol>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <h4 class="font-bold text-usm-burgundy mb-3">Gestión de la cola</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-slate-700">
+                                <li>Cada intervalo &Delta;t, el MTA recorre su cola.</li>
+                                <li>Para cada correo, intenta enviarlo al MX de mayor prioridad (o a uno de mejor prioridad que él mismo, si el MTA es un MX de respaldo).</li>
+                                <li>Si tras <strong>N intentos</strong> no lo logra, abandona y envía un mensaje de error al remitente (el clásico <em>"From Mailer-Daemon..."</em>).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold text-usm-navy mb-2">Una sesión SMTP real (vía telnet)</h4>
+                    <p class="text-sm text-slate-700 mb-3">SMTP es un protocolo de texto: cada comando del cliente recibe un <strong>código numérico</strong> de respuesta del servidor (220 listo, 250 OK, 354 envía los datos, 221 cerrando).</p>
+                    <div class="terminal mb-6"><span class="m">$ telnet mx1.example.com smtp</span>
+<span class="s">S: 220 mx1.example.com ESMTP server ready</span>
+<span class="c">C: HELO client.example.com</span>
+<span class="s">S: 250 mx1.example.com</span>
+<span class="c">C: MAIL from: &lt;sender@example.com&gt;</span>
+<span class="s">S: 250 Sender &lt;sender@example.com&gt; Ok</span>
+<span class="c">C: RCPT to: &lt;recipient@example.com&gt;</span>
+<span class="s">S: 250 Recipient &lt;recipient@example.com&gt; Ok</span>
+<span class="c">C: DATA</span>
+<span class="s">S: 354 Ok Send data ending with &lt;CRLF&gt;.&lt;CRLF&gt;</span>
+<span class="c">C: Subject: Test message</span>
+<span class="c">C:</span>
+<span class="c">C: This is a test message.</span>
+<span class="c">C: .</span>                         <span class="m">&lt;- una línea con solo un punto termina el mensaje</span>
+<span class="s">S: 250 Message received</span>
+<span class="c">C: QUIT</span>
+<span class="s">S: 221 mx1.example.com ESMTP server closing connection</span></div>
+
+                    <h4 class="font-bold text-usm-navy mb-2">MIME (Multipurpose Internet Mail Extensions)</h4>
+                    <p class="mb-3"><span class="tag tag-rfc">RFC-2045, 2046, 2047, 2049, 4288, 4289</span></p>
+                    <p class="text-sm text-slate-700 mb-3">SMTP original solo transporta texto ASCII. MIME lo extiende para permitir:</p>
+                    <ul class="list-disc pl-5 text-sm text-slate-700 space-y-1 mb-3">
+                        <li>Texto en codificaciones distintas de ASCII (tildes, eñes, otros alfabetos).</li>
+                        <li>Adjuntar objetos que no son texto (imágenes, video, PDF...).</li>
+                        <li>Mensajes compuestos de varias partes.</li>
+                        <li>Encabezados que no están en ASCII.</li>
+                    </ul>
+                    <p class="text-sm text-slate-700">Cada contenido se etiqueta con un <strong>tipo MIME</strong>, por ejemplo <code>application/pdf</code> para .pdf o <code>application/x-shockwave-flash</code> para .swf. Los mismos tipos se usan en la Web (encabezado <code>Content-Type</code>).</p>
+                </div>
+
+                <!-- 7. Web y HTTP -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">7.</span> La Web y HTTP</h3>
+
+                    <p class="mb-3"><span class="tag tag-port">Puertos 80 (HTTP), 443 (HTTPS)</span><span class="tag tag-rfc">RFC-2068, RFC-2616</span></p>
+                    <p class="text-sm text-slate-700 mb-4">
+                        La World Wide Web nace a principios de los 90 en el <strong>CERN</strong>, al principio solo con enlaces de hipertexto. Se apoya en tres piezas: <strong>HTTP</strong> (HyperText Transfer Protocol), <strong>HTTPS</strong> (HTTP seguro sobre TLS/SSL) y <strong>HTML</strong> (HyperText Markup Language). HTTP sigue el modelo cliente-servidor y es <em>stateless</em> (sin estado): el servidor no recuerda peticiones anteriores del mismo cliente, por eso existen las cookies (encabezado <code>Set-Cookie</code>).
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <h4 class="font-bold text-usm-burgundy mb-3">¿Qué hace el navegador?</h4>
+                            <ol class="space-y-2 text-slate-700">
+                                <li class="flex gap-3"><span class="step-num">1</span><span>Resuelve el nombre del servidor con el DNS (<code>www.usm.cl</code> → <code>200.1.30.100</code>).</span></li>
+                                <li class="flex gap-3"><span class="step-num">2</span><span>Se conecta al servidor usando esa IP; el servidor atiende la conexión en un hilo.</span></li>
+                                <li class="flex gap-3"><span class="step-num">3</span><span>Pide la primera página: <code>GET /index.html</code> (o index.php...).</span></li>
+                                <li class="flex gap-3"><span class="step-num">4</span><span>Por cada enlace u objeto de la página (imágenes, CSS...) hace una nueva petición, al mismo servidor o a otro.</span></li>
+                            </ol>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <h4 class="font-bold text-usm-burgundy mb-3">Páginas estáticas vs dinámicas</h4>
+                            <p class="text-slate-700 mb-2"><strong>Estáticas:</strong> su contenido no cambia en el tiempo. El servidor lee el archivo (<code>ServerRoot/index.html</code>) y lo envía tal cual.</p>
+                            <p class="text-slate-700"><strong>Dinámicas:</strong> su contenido no está fijo. El servidor lee <code>index.php</code>, lo pasa a un <strong>intérprete</strong> (PHP) que genera el HTML en ese momento, y envía ese HTML generado al navegador.</p>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold text-usm-navy mb-2">HTTP a mano: también es un protocolo de texto</h4>
+                    <p class="text-sm text-slate-700 mb-3">Con telnet al puerto 80 se puede hablar HTTP directamente. La respuesta trae un <strong>código de estado</strong> (200 OK, 301 Moved Permanently, 302 Found, 404 Not Found...) y encabezados como <code>Content-Type</code> o <code>Set-Cookie</code>.</p>
+                    <div class="terminal"><span class="m">$ telnet www.inf.utfsm.cl 80</span>
+<span class="c">GET /index.html</span>
+<span class="s">&lt;title&gt;301 Moved Permanently&lt;/title&gt;</span>
+<span class="s">&lt;p&gt;The document has moved &lt;a href="https://www.inf.utfsm.cl/index.html"&gt;here&lt;/a&gt;.</span>
+<span class="m">Connection closed by foreign host.</span>
+
+<span class="m"># El servidor redirige al cliente hacia la versión HTTPS del sitio.</span></div>
+                </div>
+
+                <!-- 8. HTTPS y X509 -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">8.</span> HTTPS y Certificados X509</h3>
+
+                    <p class="text-sm text-slate-700 mb-4">
+                        Al igual que TELNET, en HTTP <strong>todo pasa en claro</strong>, lo que genera problemas de confidencialidad con contraseñas y formularios con datos privados. La solución es <strong>HTTPS = HTTP sobre SSL/TLS</strong>, que cifra la comunicación. Se usa criptografía asimétrica para autenticar al servidor y acordar una clave, y luego cifrado simétrico para los datos. Para esto <strong>el servidor necesita un certificado X509</strong> entregado por una Autoridad de Certificación.
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <h4 class="font-bold text-usm-burgundy mb-3">¿Cómo se obtiene un certificado?</h4>
+                            <ol class="space-y-2 text-slate-700">
+                                <li class="flex gap-3"><span class="step-num">1</span><span>La organización envía la información del servidor a la <strong>CA</strong>: nombre, dirección IP, responsable, organización, fecha de inicio y de vencimiento, y su clave pública.</span></li>
+                                <li class="flex gap-3"><span class="step-num">2</span><span>La CA genera el certificado y lo <strong>firma con su clave privada</strong>.</span></li>
+                                <li class="flex gap-3"><span class="step-num">3</span><span>La CA transmite el certificado a la organización, que lo instala en su servidor web.</span></li>
+                            </ol>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200 text-sm">
+                            <h4 class="font-bold text-usm-burgundy mb-3">Cadena de confianza</h4>
+                            <p class="text-slate-700 mb-2">Los certificados forman una jerarquía. Ejemplo real del certificado de la USM:</p>
+                            <div class="terminal mb-2">GeoTrust Global CA          <span class="m">(CA raíz)</span>
+ └─ RapidSSL SHA256 CA - G3  <span class="m">(CA intermedia)</span>
+     └─ *.usm.cl             <span class="m">(servidor)</span></div>
+                            <p class="text-slate-700">El navegador trae preinstaladas las claves públicas de las CA raíz de confianza (Verisign, Thawte, GeoTrust...) y con ellas verifica las firmas de la cadena.</p>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold text-usm-navy mb-2">Verificación y excepciones en el navegador</h4>
+                    <p class="text-sm text-slate-700 mb-3">Al conectarse por HTTPS, el servidor envía su certificado y el navegador revisa si es válido. Si lo es, la conexión HTTPS continúa. Si no, aparece la alerta <em>"Your connection is not secure"</em> y el usuario puede volver atrás o <strong>agregar una excepción</strong> (que agrega esa autoridad a la lista de confianza del navegador). Causas típicas de un certificado inválido:</p>
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead><tr><th>Problema</th><th>Significado</th></tr></thead>
+                            <tbody>
+                                <tr><td>Autofirmado (<code>SEC_ERROR_UNKNOWN_ISSUER</code>)</td><td>Lo firmó el propio servidor y no una CA de confianza.</td></tr>
+                                <tr><td>Expirado</td><td>La fecha actual es posterior a la fecha de vencimiento.</td></tr>
+                                <tr><td>Nombre incorrecto</td><td>El certificado fue emitido para otro dominio.</td></tr>
+                                <tr><td>Firma no válida</td><td>El certificado fue alterado o la cadena no llega a una CA de confianza.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 9. Balanceo de carga -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">9.</span> Balanceo de Carga</h3>
+                    <p class="text-sm text-slate-700 mb-4">
+                        Un servidor puede recibir más conexiones de las que puede atender. Soluciones: usar <strong>programación multi-hilo</strong> en procesadores multi-core, o usar <strong>varios servidores</strong>. En ese caso, hay que decidir cómo repartir la carga:
+                    </p>
+
+                    <div class="grid md:grid-cols-3 gap-4 mb-6 text-sm">
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="font-bold text-usm-navy mb-2">Rotación de DNS</p>
+                            <p class="text-slate-700 mb-2">El DNS tiene varias IPs para <code>www.domain.com</code> y entrega una distinta en cada resolución (round robin).</p>
+                            <p class="text-green-800"><strong>A favor:</strong> muy fácil de implementar.</p>
+                            <p class="text-red-800"><strong>En contra:</strong> la repartición es estática; no se sabe cuántos clientes irán a la misma IP (las respuestas quedan en caché) ni si ese servidor está cargado o caído.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="font-bold text-usm-navy mb-2">HTTP Redirect</p>
+                            <p class="text-slate-700 mb-2">Parte del protocolo HTTP. (1) El cliente se conecta al servidor principal, (2) este responde con una redirección hacia, por ejemplo, <code>www2.domain.com</code>, (3) el cliente se conecta allí y hace su <code>GET</code>.</p>
+                            <p class="text-green-800"><strong>A favor:</strong> mejor repartición; el primer servidor mantiene el estado de carga de los otros y decide (ej. round robin).</p>
+                            <p class="text-red-800"><strong>En contra:</strong> dos conexiones por cliente y el servidor principal es un cuello de botella.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="font-bold text-usm-navy mb-2">Proxy: HAProxy</p>
+                            <p class="text-slate-700 mb-2">Un proxy se ubica delante de los servidores y reenvía cada conexión a uno de ellos; el cliente nunca los ve directamente.</p>
+                            <ul class="list-disc pl-4 text-slate-700 space-y-1">
+                                <li>Balancea aplicaciones <strong>TCP y HTTP</strong>.</li>
+                                <li>Distribución muy rápida de peticiones.</li>
+                                <li>Soporta HTTPS y compresión de datos.</li>
+                                <li>Usado por Twitter, GitHub, Alibaba, Bitbucket...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-700 bg-slate-50 p-4 rounded border-l-4 border-usm-navy">
+                        <strong>Idea clave de la clase:</strong> la rotación de DNS y el HTTP Redirect <strong>dependen de la aplicación</strong> (están pensados para la Web). Un proxy como HAProxy, al trabajar a nivel TCP, sirve para cualquier aplicación TCP, además de HTTP.
+                    </p>
+                </div>
+
+                <!-- 10. P2P -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">10.</span> El Modelo Peer to Peer (P2P)</h3>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6 text-sm">
+                        <div>
+                            <p class="font-bold text-usm-navy mb-2">Características</p>
+                            <ul class="list-disc pl-5 text-slate-700 space-y-1">
+                                <li><strong>No hay roles predefinidos:</strong> un nodo puede ser cliente y servidor a la vez.</li>
+                                <li>Los datos son accesibles a través del conjunto de nodos que forman el sistema.</li>
+                                <li><strong>No hay administración central:</strong> los nodos se auto-organizan y el sistema se auto-mantiene.</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="font-bold text-green-800">Ventajas</p>
+                            <ul class="list-disc pl-5 text-slate-700 space-y-1 mb-3">
+                                <li>Mejor balanceo de carga: más nodos tienen copias, y la capacidad crece con cada usuario.</li>
+                                <li>Mejor tolerancia a fallas: los nodos están repartidos por todo Internet.</li>
+                            </ul>
+                            <p class="font-bold text-red-800">Desventajas</p>
+                            <ul class="list-disc pl-5 text-slate-700 space-y-1">
+                                <li>Control y seguridad mucho más difíciles (malware, contenido ilegal).</li>
+                                <li>Calidad e integridad de los datos no garantizadas; tampoco su disponibilidad si los nodos que los tienen se desconectan.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead><tr><th>Tipo</th><th>Ejemplo</th><th>Cómo se encuentra un archivo</th></tr></thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>No estructurada</strong></td>
+                                    <td>Gnutella (clientes tipo eMule)</td>
+                                    <td>Los nodos se conectan sin un orden fijo y las búsquedas se propagan de vecino en vecino.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>No estructurada con tracker</strong></td>
+                                    <td>BitTorrent (Transmission, qBittorrent)</td>
+                                    <td>El archivo <code>.torrent</code> indica el nombre del contenido y la lista de <strong>trackers</strong>. Los peers se registran en el tracker, que entrega la lista de otros peers. Luego los trozos del archivo se intercambian directamente entre peers.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Estructurada (DHT)</strong></td>
+                                    <td>Pastry, Chord, Tapestry, Symphony</td>
+                                    <td>Los nodos se ordenan en un anillo según una función hash (Distributed Hash Table). La búsqueda salta de nodo en nodo hacia el responsable de esa clave, y luego el documento se baja directamente desde el nodo que lo tiene.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Resumen de puertos -->
+                <div class="card">
+                    <h3 class="card-title"><span class="text-usm-gold">11.</span> Resumen: Puertos y RFC de la Unidad</h3>
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead><tr><th>Protocolo</th><th>Puerto</th><th>Transporte</th><th>RFC</th><th>Cifrado</th></tr></thead>
+                            <tbody>
+                                <tr><td>FTP</td><td>20 (datos), 21 (control)</td><td>TCP</td><td>-</td><td>No</td></tr>
+                                <tr><td>SSH / SCP</td><td>22</td><td>TCP</td><td>RFC-4253</td><td>Sí</td></tr>
+                                <tr><td>TELNET</td><td>23</td><td>TCP</td><td>RFC-15, RFC-854</td><td>No</td></tr>
+                                <tr><td>SMTP</td><td>25 / 465 (SSL/TLS)</td><td>TCP</td><td>RFC-821, RFC-5321</td><td>Solo en 465</td></tr>
+                                <tr><td>HTTP</td><td>80</td><td>TCP</td><td>RFC-2068, RFC-2616</td><td>No</td></tr>
+                                <tr><td>HTTPS</td><td>443</td><td>TCP</td><td>-</td><td>Sí (TLS/SSL)</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -343,82 +712,14 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- PARTE 2: PREGUNTAS DE AYUDANTÍA (ACORDEONES)-->
+        <!-- PARTE 2: PREGUNTAS CONCEPTUALES            -->
         <!-- ========================================== -->
         <section id="conceptos" class="mb-20">
-            <h3 class="section-title text-3xl font-bold mb-8 pb-4">Parte 2: Preguntas de Análisis Conceptuales</h3>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                <p class="text-slate-600 mb-6 text-sm">Estas preguntas provienen directamente de la <em>Ayudantía 3</em> de la asignatura. Haz clic en cada pregunta para revelar el análisis detallado.</p>
+            <h3 class="section-title text-3xl font-bold mb-8 pb-4">Parte 2: Preguntas de Análisis Conceptual</h3>
 
-                <div class="space-y-4">
-                    <!-- Q0 -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden transition-all duration-300 shadow-sm">
-                        <button onclick="toggleAccordion('q0', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-usm-navy flex justify-between items-center transition-colors">
-                            <span>1. ¿Por qué se afirma que un Socket NO es lo mismo que un Puerto?</span>
-                            <svg class="w-5 h-5 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-                        </button>
-                        <div id="q0" class="hidden px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
-                            <p>Porque el <strong>puerto</strong> es simplemente un número asignado (el identificador lógico del servicio, ej. el puerto 80 para HTTP). En cambio, el <strong>socket</strong> es el objeto de software completo (la interfaz de programación o API) instanciado por el Sistema Operativo que hace la conexión real a la red, y está formado por la dirección IP de la máquina, el número de puerto y el protocolo a usar (TCP o UDP).</p>
-                        </div>
-                    </div>
-
-                    <!-- Q1 -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden transition-all duration-300 shadow-sm">
-                        <button onclick="toggleAccordion('q1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-usm-navy flex justify-between items-center transition-colors">
-                            <span>2. ¿Por qué es importante usar HTTPS en lugar de HTTP?</span>
-                            <svg class="w-5 h-5 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-                        </button>
-                        <div id="q1" class="hidden px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
-                            <p>Porque HTTP transmite todos los datos (incluyendo contraseñas, correos y tarjetas de crédito) en <strong>texto plano</strong>. Cualquier atacante intermediario (ej. en un WiFi público) puede leer la información usando un software de captura de paquetes (Sniffer). <strong>HTTPS cifra la comunicación</strong> mediante SSL/TLS, haciendo que los datos interceptados sean ilegibles.</p>
-                        </div>
-                    </div>
-
-                    <!-- Q2 -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden transition-all duration-300 shadow-sm">
-                        <button onclick="toggleAccordion('q2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-usm-navy flex justify-between items-center transition-colors">
-                            <span>3. ¿Qué ventajas y desventajas tiene el modelo Peer-to-Peer (P2P)?</span>
-                            <svg class="w-5 h-5 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-                        </button>
-                        <div id="q2" class="hidden px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
-                            <p><strong>Ventajas:</strong> Altamente escalable, ya que la capacidad de distribución de la red crece orgánicamente con cada nuevo nodo que se une. No existe un punto único de falla (si se cae un usuario, el archivo sigue disponible en otros).<br><br>
-                            <strong>Desventajas:</strong> No hay un control central, lo que fomenta la distribución de malware o contenido ilegal. La disponibilidad de un recurso no está garantizada (si los usuarios que tienen un archivo se desconectan, el archivo se pierde).</p>
-                        </div>
-                    </div>
-
-                    <!-- Q3 -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden transition-all duration-300 shadow-sm">
-                        <button onclick="toggleAccordion('q3', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-usm-navy flex justify-between items-center transition-colors">
-                            <span>4. ¿Es buena idea usar protocolo UDP para una aplicación de mensajería (tipo WhatsApp)?</span>
-                            <svg class="w-5 h-5 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-                        </button>
-                        <div id="q3" class="hidden px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
-                            <p>Para enviar mensajes de texto, <strong>generalmente no</strong>. UDP no garantiza la entrega de paquetes ni el orden de estos, por lo que un mensaje importante podría simplemente perderse en la red y la aplicación nunca se enteraría. Para mensajes, textos y fotos se prefiere <strong>TCP</strong> (o protocolos que añaden fiabilidad). <em>Excepción:</em> Si hablamos de las <strong>llamadas de voz o video</strong> dentro de esa misma app, ahí SÍ se prefiere UDP, ya que importa más la velocidad en tiempo real que recuperar un fotograma perdido.</p>
-                        </div>
-                    </div>
-
-                    <!-- Q4 -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden transition-all duration-300 shadow-sm">
-                        <button onclick="toggleAccordion('q4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-usm-navy flex justify-between items-center transition-colors">
-                            <span>5. ¿Qué propósito cumplen los números de puerto en una conexión?</span>
-                            <svg class="w-5 h-5 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-                        </button>
-                        <div id="q4" class="hidden px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
-                            <p>Permiten <strong>multiplexar</strong> las comunicaciones. Mientras la dirección IP permite que un paquete llegue a la máquina correcta, el <strong>Puerto</strong> indica a qué programa o servicio específico dentro de esa máquina debe entregarse el mensaje (ej. Puerto 80 va al servidor web Apache, Puerto 22 va al servicio SSH).</p>
-                        </div>
-                    </div>
-
-                    <!-- Q5 -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden transition-all duration-300 shadow-sm">
-                        <button onclick="toggleAccordion('q5', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-usm-navy flex justify-between items-center transition-colors">
-                            <span>6. ¿Cómo se asegura HTTPS de que estamos hablando con el servidor correcto?</span>
-                            <svg class="w-5 h-5 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
-                        </button>
-                        <div id="q5" class="hidden px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
-                            <p>A través de un <strong>Certificado Digital (X509)</strong>. Cuando nos conectamos, el servidor envía este certificado que funciona como su "cédula de identidad". Este documento ha sido validado criptográficamente y firmado digitalmente por una entidad de confianza global llamada <strong>CA (Autoridad de Certificación)</strong>. El navegador del usuario revisa esta firma; si es válida, sabe que el dominio es genuino y no un impostor.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="card">
+                <p class="text-slate-600 mb-6 text-sm">Haz clic en cada pregunta para revelar el análisis.</p>
+                <div class="space-y-4" id="accordion-list"></div>
             </div>
         </section>
 
@@ -427,94 +728,102 @@
         <!-- ========================================== -->
         <section id="practica" class="mb-20">
             <h3 class="section-title text-3xl font-bold mb-8 pb-4">Parte 3: Ejercitación Práctica y Casos</h3>
-            <p class="text-slate-600 mb-8 max-w-3xl">Ponte a prueba resolviendo estos casos de diseño de redes. Haz clic en "Mostrar Resolución" para ver el análisis correcto.</p>
+            <p class="text-slate-600 mb-8 max-w-3xl">Ponte a prueba resolviendo estos casos. Haz clic en "Mostrar Resolución" para ver el análisis.</p>
 
             <div class="space-y-10">
-                
-                <!-- Caso Práctico 1 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+
+                <!-- Caso 1 -->
+                <div class="card">
                     <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 1: Elección de Socket</span>
                     <h3 class="text-xl font-bold text-slate-800 mb-3">Diseño de una Aplicación de Telemetría</h3>
-                    <p class="text-slate-700 text-sm mb-4">Estás diseñando el software para un dron autónomo. El dron envía sensores de su inclinación y temperatura cada 10 milisegundos hacia un servidor en tierra para dibujarlos en una gráfica en vivo. Además, ocasionalmente el servidor en tierra le envía al dron comandos críticos como "Aterrizaje de Emergencia".</p>
-                    
-                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: ¿Qué tipo de protocolo de transporte (TCP o UDP) usarías para enviar la telemetría, y cuál usarías para los comandos críticos? Justifica tu respuesta.</p>
-
+                    <p class="text-slate-700 text-sm mb-4">Estás diseñando el software de un dron autónomo. El dron envía lecturas de inclinación y temperatura cada 10 milisegundos a un servidor en tierra que las dibuja en una gráfica en vivo. Ocasionalmente, el servidor le envía comandos críticos como "Aterrizaje de Emergencia".</p>
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: ¿Qué protocolo de transporte (TCP o UDP) usarías para la telemetría y cuál para los comandos críticos? ¿Qué tipo de socket crearías en cada caso? Justifica.</p>
                     <div class="flex justify-end border-t border-slate-100 pt-4">
-                        <button onclick="toggleAnswer('prac1', this)" class="bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> 
-                            <span>Mostrar Resolución</span>
-                        </button>
+                        <button onclick="toggleAnswer('prac1', this)" class="answer-btn bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md"></button>
                     </div>
-
                     <div id="prac1" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
                         <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
                         <div class="space-y-4 text-sm text-slate-700">
                             <div>
-                                <p class="font-bold text-usm-gold">1. Para la Telemetría (Sensor de datos): Usar UDP.</p>
-                                <p><strong>Justificación:</strong> El dron manda datos 100 veces por segundo. Si se pierde un paquete con la temperatura de un milisegundo específico, no sirve de nada que el protocolo lo retransmita medio segundo después, porque ya tendríamos lecturas más nuevas y actualizadas. UDP es veloz, ligero y perfecto para flujos de datos en tiempo real donde la pérdida ocasional es tolerable.</p>
+                                <p class="font-bold text-usm-navy">1. Telemetría: UDP (socket SOCK_DGRAM).</p>
+                                <p>El dron envía 100 lecturas por segundo. Si se pierde una, no sirve retransmitirla después, porque ya llegaron lecturas más nuevas. UDP no establece conexión ni retransmite: es rápido y liviano, ideal para flujos en tiempo real donde una pérdida ocasional es tolerable.</p>
                             </div>
                             <div>
-                                <p class="font-bold text-usm-burgundy">2. Para los Comandos Críticos ("Aterrizaje"): Usar TCP.</p>
-                                <p><strong>Justificación:</strong> Si el servidor manda una orden de aterrizar y el paquete se pierde, el dron se estrellaría. Para este canal se necesita TCP (Transmisión Controlada), ya que garantiza que el mensaje llegará correctamente. Si TCP detecta que el paquete se perdió en el aire, lo volverá a retransmitir automáticamente.</p>
+                                <p class="font-bold text-usm-burgundy">2. Comandos críticos: TCP (socket SOCK_STREAM).</p>
+                                <p>Si la orden de aterrizar se pierde, el dron podría estrellarse. TCP (Transmission Control Protocol) garantiza la entrega y el orden: si detecta que un segmento se perdió, lo retransmite automáticamente.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Caso Práctico 2 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                <!-- Caso 2 -->
+                <div class="card">
                     <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 2: Balanceo de Carga</span>
                     <h3 class="text-xl font-bold text-slate-800 mb-3">La caída del Servidor de Matrículas</h3>
-                    <p class="text-slate-700 text-sm mb-4">La universidad ha implementado un sistema donde un servidor web principal tiene implementado un mecanismo de <strong>HTTP Redirect</strong>. Cuando un alumno entra, este servidor le responde enviando un código HTTP 302 que dice: <em>"Ve al servidor B (IP: 200.x.x.x)"</em>.</p>
-                    
-                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: El día de toma de ramos, entran 10.000 alumnos al mismo tiempo. Los servidores de apoyo B y C tienen capacidad de sobra, pero el sistema completo se cae. Basado en la arquitectura, ¿qué cuello de botella falló y cómo se solucionaría?</p>
-
+                    <p class="text-slate-700 text-sm mb-4">La universidad implementó un servidor web principal con <strong>HTTP Redirect</strong>. Cuando un alumno entra, este servidor le responde con un código HTTP 302 que dice: <em>"Ve al servidor B (IP: 200.x.x.x)"</em>.</p>
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: El día de toma de ramos entran 10.000 alumnos al mismo tiempo. Los servidores B y C tienen capacidad de sobra, pero el sistema completo se cae. ¿Qué cuello de botella falló y cómo se solucionaría?</p>
                     <div class="flex justify-end border-t border-slate-100 pt-4">
-                        <button onclick="toggleAnswer('prac2', this)" class="bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> 
-                            <span>Mostrar Resolución</span>
-                        </button>
+                        <button onclick="toggleAnswer('prac2', this)" class="answer-btn bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md"></button>
                     </div>
-
                     <div id="prac2" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
                         <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
-                        <p class="text-sm text-slate-700 mb-4">
-                            El cuello de botella fue el propio servidor principal de redirección. 
-                        </p>
-                        <p class="text-sm text-slate-700 mb-4">
-                            <strong>Análisis:</strong> El balanceo por <em>HTTP Redirect</em> tiene una gran debilidad: para que un cliente sea redirigido a un servidor desocupado, primero tiene que abrir una conexión TCP completa con el servidor principal, el cual debe procesar la solicitud a nivel de aplicación web y emitir una respuesta. Si 10.000 alumnos llegan de golpe, el servidor principal agota todos sus sockets disponibles y sus recursos de CPU solo tratando de redirigir, colapsando y dejando a los servidores B y C inalcanzables.
-                        </p>
-                        <p class="text-sm text-slate-700">
-                            <strong>Solución:</strong> Reemplazar la redirección HTTP en la capa de aplicación por una estrategia a nivel de red como <strong>HAProxy</strong> (que distribuye el tráfico velozmente antes de procesarlo a fondo) o utilizar <strong>Rotación DNS</strong> para que la repartición de IPs se haga antes de que los alumnos toquen siquiera los servidores de la universidad.
-                        </p>
+                        <p class="text-sm text-slate-700 mb-4">El cuello de botella fue <strong>el propio servidor principal de redirección</strong>.</p>
+                        <p class="text-sm text-slate-700 mb-4"><strong>Análisis:</strong> con HTTP Redirect, todo cliente debe primero abrir una conexión TCP completa con el servidor principal, que procesa la petición HTTP y responde con la redirección. Recién después el cliente abre una segunda conexión con B o C. Si 10.000 alumnos llegan de golpe, el servidor principal agota sus conexiones y su CPU solo redirigiendo; al caer, B y C quedan inalcanzables aunque estén libres. Es un punto único de falla.</p>
+                        <p class="text-sm text-slate-700"><strong>Solución:</strong> usar un proxy de balanceo como <strong>HAProxy</strong>, que reparte cada conexión TCP/HTTP muy rápido sin exigir una segunda conexión al cliente, o la <strong>rotación de DNS</strong>, que reparte las IPs antes de que el alumno toque los servidores (aunque de forma estática). En la práctica se combinan: varias instancias de proxy publicadas con rotación DNS.</p>
                     </div>
                 </div>
 
-                <!-- Caso Práctico 3 -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                <!-- Caso 3 -->
+                <div class="card">
                     <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 3: P2P y BitTorrent</span>
                     <h3 class="text-xl font-bold text-slate-800 mb-3">Roles en una Red Descentralizada</h3>
-                    <p class="text-slate-700 text-sm mb-4">En una arquitectura P2P usando BitTorrent, un usuario desea descargar el último sistema operativo Linux (archivo `.torrent`). Analizando las diapositivas de la asignatura:</p>
-                    
-                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: ¿Qué rol cumple el "Tracker" dentro de la red BitTorrent? ¿El tracker almacena el archivo Linux que el usuario quiere descargar?</p>
-                    
+                    <p class="text-slate-700 text-sm mb-4">Un usuario quiere descargar la última imagen ISO de una distribución Linux usando BitTorrent, a partir de un archivo <code>.torrent</code>.</p>
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: ¿Qué contiene el archivo .torrent? ¿Qué rol cumple el "Tracker"? ¿El tracker almacena el archivo que el usuario quiere descargar?</p>
                     <div class="flex justify-end border-t border-slate-100 pt-4">
-                        <button onclick="toggleAnswer('prac3', this)" class="bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> 
-                            <span>Mostrar Resolución</span>
-                        </button>
+                        <button onclick="toggleAnswer('prac3', this)" class="answer-btn bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md"></button>
                     </div>
-
                     <div id="prac3" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
                         <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
-                        <p class="text-sm text-slate-700 mb-4">
-                            <strong>1. ¿El tracker almacena el archivo?</strong><br>
-                            NO. El Tracker nunca almacena el archivo (el sistema Linux). La característica central del P2P es que el archivo lo tienen los propios usuarios (Nodos/Peers).
-                        </p>
-                        <p class="text-sm text-slate-700">
-                            <strong>2. ¿Qué rol cumple entonces?</strong><br>
-                            El Tracker actúa como un "director de tráfico" o una libreta de direcciones. Cuando abres el archivo <code>.torrent</code>, tu cliente contacta al Tracker. El Tracker le responde diciendo: <em>"No tengo el archivo, pero aquí tienes una lista de 500 IPs de otros usuarios en el mundo que sí lo están compartiendo en este instante"</em>. Tras obtener esa lista, tu computador se conecta directamente a esos usuarios (P2P) para empezar a intercambiar los trozos de archivo.
-                        </p>
+                        <p class="text-sm text-slate-700 mb-4"><strong>1. El .torrent</strong> no contiene el archivo: contiene su descripción (nombre, trozos) y la <strong>lista de trackers</strong> a los que hay que contactar.</p>
+                        <p class="text-sm text-slate-700 mb-4"><strong>2. ¿El tracker almacena el archivo?</strong> No. En P2P el archivo lo tienen los propios usuarios (peers).</p>
+                        <p class="text-sm text-slate-700"><strong>3. Rol del tracker:</strong> funciona como una libreta de direcciones. Los peers se registran en él; cuando tu cliente lo contacta, responde con una lista de IPs de otros peers que comparten ese archivo en ese momento. Con esa lista, tu computador se conecta directamente a ellos y empieza a intercambiar trozos, descargando y subiendo al mismo tiempo.</p>
+                    </div>
+                </div>
+
+                <!-- Caso 4 -->
+                <div class="card">
+                    <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 4: Correo y Registros MX</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Un correo que no llega</h3>
+                    <p class="text-slate-700 text-sm mb-4">El dominio <code>empresa.cl</code> tiene estos registros MX:</p>
+                    <div class="terminal mb-4">empresa.cl.  IN  MX  20  respaldo.empresa.cl.
+empresa.cl.  IN  MX  10  mail.empresa.cl.</div>
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: Un usuario de USM envía un correo a <code>ana@empresa.cl</code>. (a) ¿A qué servidor intenta entregar primero el MTA de la USM? (b) ¿Qué ocurre si <code>mail.empresa.cl</code> está caído? (c) ¿Y si ambos servidores están caídos durante varios días?</p>
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <button onclick="toggleAnswer('prac4', this)" class="answer-btn bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md"></button>
+                    </div>
+                    <div id="prac4" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
+                        <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
+                        <p class="text-sm text-slate-700 mb-3"><strong>(a)</strong> A <code>mail.empresa.cl</code>, porque tiene el valor MX más bajo (10) y, por lo tanto, la <strong>mayor prioridad</strong>. El orden en que el DNS lista los registros no importa.</p>
+                        <p class="text-sm text-slate-700 mb-3"><strong>(b)</strong> El MTA intenta con el siguiente: <code>respaldo.empresa.cl</code> (20). Ese servidor de respaldo guarda el correo en su cola e intenta reenviarlo al MX de mejor prioridad que él (el 10) cuando vuelva a estar disponible.</p>
+                        <p class="text-sm text-slate-700"><strong>(c)</strong> El MTA de la USM deja el correo en su <strong>cola local</strong> y reintenta cada &Delta;t. Si tras N intentos no logra entregarlo, abandona y le envía al remitente un mensaje de error del <em>Mailer-Daemon</em>.</p>
+                    </div>
+                </div>
+
+                <!-- Caso 5 -->
+                <div class="card">
+                    <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 5: Certificados X509</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">"Your connection is not secure"</h3>
+                    <p class="text-slate-700 text-sm mb-4">Al entrar a <code>hiperion.spa.inf.utfsm.cl</code>, Firefox muestra: <em>"The certificate is not trusted because it is self-signed"</em>, <em>"The certificate expired on 17/10/13"</em> y el código <code>SEC_ERROR_UNKNOWN_ISSUER</code>.</p>
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: Explica cada uno de los problemas. ¿Qué implica para la seguridad presionar "Add Exception"? ¿Cómo debería corregirlo el administrador?</p>
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <button onclick="toggleAnswer('prac5', this)" class="answer-btn bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md"></button>
+                    </div>
+                    <div id="prac5" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
+                        <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
+                        <p class="text-sm text-slate-700 mb-3"><strong>Autofirmado / emisor desconocido:</strong> el certificado no fue firmado por una CA de la lista de confianza del navegador sino por el propio servidor. El navegador no tiene cómo comprobar que ese servidor es quien dice ser.</p>
+                        <p class="text-sm text-slate-700 mb-3"><strong>Expirado:</strong> la fecha actual supera la fecha de vencimiento incluida (y firmada) en el certificado, así que ya no es válido aunque estuviera bien firmado.</p>
+                        <p class="text-sm text-slate-700 mb-3"><strong>Agregar una excepción:</strong> la comunicación seguirá cifrada, pero se pierde la garantía de <strong>autenticidad</strong>: si un atacante hiciera un Man in the Middle presentando su propio certificado autofirmado, el usuario no podría distinguirlo. Solo es razonable si se sabe con certeza que el servidor es el legítimo.</p>
+                        <p class="text-sm text-slate-700"><strong>Corrección:</strong> el administrador debe obtener un certificado nuevo, emitido y firmado por una CA de confianza, para el nombre de dominio correcto y con una fecha de vencimiento vigente.</p>
                     </div>
                 </div>
 
@@ -524,39 +833,119 @@
 
     <footer class="mt-10" style="background: linear-gradient(120deg, #0f1f33 0%, #002b5c 55%, #8c1d40 100%); color: #e2e8f0; border-top: 2px solid rgba(201,163,74,0.6);">
         <div class="container mx-auto px-6 py-8 text-center text-sm font-medium">
-            <p>&copy; 2026 Ayudantía USM - Redes de Computadores. Material de estudio Capa Aplicación.</p>
+            <p>&copy; 2026 Ayudantía USM - Redes de Computadores. Material de estudio Capa de Aplicación.</p>
         </div>
     </footer>
 
     <script>
-        // Lógica para botones de ejercicios (Práctica)
+        // Preguntas conceptuales
+        const preguntas = [
+            {
+                q: "¿Por qué se afirma que un Socket NO es lo mismo que un Puerto?",
+                a: "El <strong>puerto</strong> es solo un número que identifica al servicio dentro de una máquina (ej. 80 para HTTP). El <strong>socket</strong> es el punto extremo de comunicación que un programa crea mediante la API del sistema operativo, definido por la dirección IP, el número de puerto y el protocolo de transporte (TCP o UDP). Un mismo puerto de servidor (ej. 80) puede atender muchas conexiones TCP a la vez: cada una se distingue por el par de sockets (IP y puerto del cliente, IP y puerto del servidor)."
+            },
+            {
+                q: "¿Qué propósito cumplen los números de puerto en una conexión?",
+                a: "Permiten <strong>multiplexar</strong> las comunicaciones. La dirección IP hace llegar el paquete a la máquina correcta, y el <strong>puerto</strong> indica a qué programa o servicio dentro de esa máquina debe entregarse (ej. puerto 80 al servidor web, puerto 22 al servicio SSH, puerto 25 al servidor de correo)."
+            },
+            {
+                q: "¿Quién asigna los números de puerto y cuáles son sus rangos?",
+                a: "La <strong>IANA</strong>, una vez que el <strong>IETF</strong> acepta y normaliza el protocolo (publicándolo como RFC). Rangos: <strong>0-1023</strong> bien conocidos (servicios del SO o de gestión de Internet), <strong>1024-49151</strong> registrados (protocolos normalizados por el IETF) y <strong>49152-65535</strong> dinámicos o efímeros (usados temporalmente por las conexiones y liberados al cerrarse)."
+            },
+            {
+                q: "Un servidor de correo está en la red privada 10.1.1.20. ¿Cómo lo alcanza un cliente desde Internet?",
+                a: "Mediante <strong>Port Forwarding</strong> en el NAT del router. El cliente se conecta a la IP pública del router en el puerto 25 (ej. 200.1.19.3:25) y el NAT traduce esa petición hacia 10.1.1.20:25. Sin esa regla, el router no sabría a qué máquina interna enviar la conexión."
+            },
+            {
+                q: "¿Qué diferencia hay entre un socket SOCK_STREAM y uno SOCK_DGRAM a nivel de programación?",
+                a: "<strong>SOCK_STREAM (TCP)</strong> requiere establecer una conexión: el servidor hace <code>bind()</code>, <code>listen()</code> y <code>accept()</code>, el cliente hace <code>connect()</code>, y luego ambos usan <code>send()/recv()</code>. Hay control de pérdidas y de flujo. <strong>SOCK_DGRAM (UDP)</strong> no establece conexión: el servidor hace <code>bind()</code> y usa <code>recvfrom()</code>; el cliente envía directamente con <code>sendto()</code>, indicando el destino en cada mensaje. No hay ningún control."
+            },
+            {
+                q: "¿Por qué TELNET se considera inseguro y qué ofrece SSH a cambio?",
+                a: "TELNET envía todo <strong>en claro</strong>, incluidas las contraseñas, por lo que es vulnerable a sniffing y a ataques <em>Man in the Middle</em>. SSH cumple la misma función, pero cifra toda la comunicación: usa criptografía <strong>asimétrica</strong> (RSA/DSA) para identificar al usuario y, tras acordar una clave con Diffie-Hellman, criptografía <strong>simétrica</strong> (AES, 3DES, Blowfish) para los datos."
+            },
+            {
+                q: "¿Por qué SSH no cifra todos los datos con criptografía asimétrica?",
+                a: "Porque la criptografía asimétrica es mucho más lenta. Se usa solo donde aporta algo que la simétrica no puede dar: acordar una clave secreta sin enviarla por la red (Diffie-Hellman) y probar la identidad del usuario. Una vez que ambos lados comparten la misma clave simétrica, se usa esa clave, más rápida, para todo el tráfico."
+            },
+            {
+                q: "¿Qué es un registro MX y cómo se interpreta su prioridad?",
+                a: "Es el registro del DNS que indica qué servidores reciben el correo de un dominio. Cada MX tiene un número de prioridad: el <strong>menor valor es el de mayor prioridad</strong>. El MTA intenta primero con ese; si falla, prueba con el siguiente; y si todos fallan, deja el correo en su cola local para reintentar."
+            },
+            {
+                q: "¿Para qué sirve MIME si ya existe SMTP?",
+                a: "SMTP original solo transporta texto ASCII. <strong>MIME</strong> lo extiende para enviar texto en otras codificaciones, encabezados no ASCII, mensajes de varias partes y adjuntos binarios (imágenes, video, PDF), cada uno etiquetado con un tipo MIME como <code>application/pdf</code>."
+            },
+            {
+                q: "¿Qué diferencia hay entre una página web estática y una dinámica?",
+                a: "Una <strong>estática</strong> no cambia en el tiempo: el servidor lee el archivo (ej. index.html) y lo envía tal cual. Una <strong>dinámica</strong> se genera en cada petición: el servidor pasa el archivo (ej. index.php) a un intérprete, que produce el HTML final que recibe el navegador."
+            },
+            {
+                q: "¿Por qué es importante usar HTTPS en lugar de HTTP?",
+                a: "HTTP transmite todo en <strong>texto plano</strong> (contraseñas, formularios con datos privados). Un atacante en la misma red, por ejemplo en un Wi-Fi público, puede leerlo con un sniffer. <strong>HTTPS</strong> (HTTP sobre SSL/TLS) cifra la comunicación y, gracias al certificado X509, además permite comprobar que el servidor es el legítimo."
+            },
+            {
+                q: "¿Cómo se asegura HTTPS de que estamos hablando con el servidor correcto?",
+                a: "Mediante el <strong>certificado X509</strong>, que funciona como la cédula de identidad del servidor: contiene su nombre, organización, fechas de validez y clave pública, y está <strong>firmado con la clave privada de una CA</strong>. El navegador verifica esa firma con las claves públicas de las CA de confianza que trae instaladas, recorriendo la cadena (CA raíz, CA intermedia, servidor). Si la firma es válida, el certificado está vigente y el dominio coincide, el servidor es genuino."
+            },
+            {
+                q: "Compara la rotación de DNS, HTTP Redirect y HAProxy.",
+                a: "<strong>Rotación de DNS:</strong> muy simple, pero el reparto es estático y no considera la carga real. <strong>HTTP Redirect:</strong> mejor reparto, porque el servidor principal conoce la carga de los demás, pero exige dos conexiones por cliente y el servidor principal es un cuello de botella. Ambas dependen de la aplicación (Web). <strong>HAProxy:</strong> un proxy delante de los servidores que reparte conexiones TCP y HTTP muy rápido, soporta HTTPS y compresión."
+            },
+            {
+                q: "¿Es buena idea usar UDP para una aplicación de mensajería (tipo WhatsApp)?",
+                a: "Para mensajes de texto, <strong>generalmente no</strong>. UDP no garantiza la entrega ni el orden, así que un mensaje podría perderse sin que la aplicación se entere. Para textos y fotos se prefiere <strong>TCP</strong> (o protocolos que agregan fiabilidad). <em>Excepción:</em> en las <strong>llamadas de voz o video</strong> sí conviene UDP, porque importa más la latencia que recuperar un fragmento perdido."
+            },
+            {
+                q: "¿Qué ventajas y desventajas tiene el modelo Peer-to-Peer?",
+                a: "<strong>Ventajas:</strong> mejor balanceo de carga (más nodos tienen copias y la capacidad crece con cada usuario) y mejor tolerancia a fallas (los nodos están repartidos por Internet, sin punto central). <br><br><strong>Desventajas:</strong> el control y la seguridad son mucho más difíciles (malware, contenido ilegal) y no se garantiza la calidad, integridad ni disponibilidad de los datos."
+            },
+            {
+                q: "¿Qué diferencia hay entre una red P2P estructurada y una no estructurada?",
+                a: "En una <strong>no estructurada</strong> (Gnutella; BitTorrent con trackers) los nodos se conectan sin un orden fijo, y para encontrar algo se inunda la red de consultas o se pregunta a un tracker. En una <strong>estructurada</strong> (DHT: Chord, Pastry, Tapestry, Symphony) los nodos se organizan según una función hash, de modo que cada clave tiene un nodo responsable y la búsqueda sigue una ruta determinada hasta él."
+            }
+        ];
+
+        const chevron = '<svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>';
+        const list = document.getElementById('accordion-list');
+        preguntas.forEach((item, i) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'border border-slate-200 rounded-xl overflow-hidden shadow-sm';
+            wrap.innerHTML =
+                '<button onclick="toggleAccordion(\'q' + i + '\', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">' +
+                    '<span>' + (i + 1) + '. ' + item.q + '</span>' + chevron +
+                '</button>' +
+                '<div id="q' + i + '" class="hidden px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed"><p>' + item.a + '</p></div>';
+            list.appendChild(wrap);
+        });
+
+        // Botones de resolución (Práctica)
+        const iconShow = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+        const iconHide = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 2 20 20"></path><path d="M6.71 6.71A10.61 10.61 0 0 0 2 12a10.54 10.54 0 0 0 11.29 8.05"></path><path d="M11 17a5 5 0 0 1-5-5"></path><path d="M14 14a5 5 0 0 1-5-5"></path><path d="M17.3 17.3A10.56 10.56 0 0 0 22 12a10.58 10.58 0 0 0-11-7.05"></path></svg>';
+        document.querySelectorAll('.answer-btn').forEach(b => { b.innerHTML = iconShow + ' <span>Mostrar Resolución</span>'; });
+
         function toggleAnswer(id, btn) {
             const el = document.getElementById(id);
             const isHidden = el.classList.contains('hidden');
-            const iconShow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-            const iconHide = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 2 20 20"></path><path d="M6.71 6.71A10.61 10.61 0 0 0 2 12a10.54 10.54 0 0 0 11.29 8.05"></path><path d="M11 17a5 5 0 0 1-5-5"></path><path d="M14 14a5 5 0 0 1-5-5"></path><path d="M17.3 17.3A10.56 10.56 0 0 0 22 12a10.58 10.58 0 0 0-11-7.05"></path></svg>`;
-            
             if (isHidden) {
                 el.classList.remove('hidden');
-                btn.innerHTML = iconHide + ` <span>Ocultar Resolución</span>`;
+                btn.innerHTML = iconHide + ' <span>Ocultar Resolución</span>';
                 btn.classList.replace('bg-usm-navy', 'bg-slate-200');
                 btn.classList.replace('hover:bg-usm-navy-dark', 'hover:bg-slate-300');
                 btn.classList.replace('text-white', 'text-slate-700');
             } else {
                 el.classList.add('hidden');
-                btn.innerHTML = iconShow + ` <span>Mostrar Resolución</span>`;
+                btn.innerHTML = iconShow + ' <span>Mostrar Resolución</span>';
                 btn.classList.replace('bg-slate-200', 'bg-usm-navy');
                 btn.classList.replace('hover:bg-slate-300', 'hover:bg-usm-navy-dark');
                 btn.classList.replace('text-slate-700', 'text-white');
             }
         }
 
-        // Lógica exclusiva para Acordeones (Conceptuales)
         function toggleAccordion(id, btn) {
             const el = document.getElementById(id);
             const isHidden = el.classList.contains('hidden');
             const icon = btn.querySelector('svg.accordion-icon');
-            
             if (isHidden) {
                 el.classList.remove('hidden');
                 btn.classList.add('bg-slate-100');

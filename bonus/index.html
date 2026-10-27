@@ -1,812 +1,744 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Certamen tipo · Ruteo IP y Capa de Datos</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --navy: #062b52;
-      --burg: #7f1d3c;
-      --gold: #c89b3c;
-      --ink: #102033;
-      --paper: #f5f7fb;
-      --card-bg: rgba(255,255,255,0.92);
-      --border: rgba(6,43,82,0.10);
-      --teal: #0f766e;
-      --green: #166534;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--paper);
-      background-image:
-        radial-gradient(ellipse 60% 40% at 8% 8%, rgba(200,155,60,0.18) 0, transparent 60%),
-        radial-gradient(ellipse 48% 45% at 94% 82%, rgba(127,29,60,0.12) 0, transparent 55%),
-        radial-gradient(ellipse 72% 58% at 50% 50%, rgba(6,43,82,0.04) 0, transparent 70%);
-      min-height: 100vh;
-      color: #1e293b;
-    }
-    h1,h2,h3,h4,h5 { font-family: 'Fraunces', serif; }
-    .topbar {
-      background: linear-gradient(100deg, rgba(6,43,82,0.97) 0%, rgba(127,29,60,0.95) 100%);
-      border-bottom: 2px solid rgba(200,155,60,0.55);
-      box-shadow: 0 4px 24px rgba(15,31,51,0.28);
-      backdrop-filter: blur(12px);
-    }
-    .nav-link {
-      color: rgba(255,255,255,0.84);
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      transition: all .22s;
-      border: 1px solid transparent;
-      white-space: nowrap;
-    }
-    .nav-link:hover { color: white; background: rgba(255,255,255,0.13); border-color: rgba(200,155,60,0.5); }
-    .section-title { color: var(--ink); border-bottom: 3px solid rgba(6,43,82,0.2); padding-bottom: 1rem; }
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 1.25rem;
-      box-shadow: 0 8px 32px rgba(15,31,51,0.08), 0 1px 3px rgba(15,31,51,0.06);
-    }
-    .step-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--gold), #e8c870);
-      color: var(--ink); font-size: 1rem; font-weight: 800;
-    }
-    .seg-field { cursor: help; transition: filter .18s; position: relative; }
-    .seg-field:hover { filter: brightness(0.94) saturate(1.06); }
-    .seg-tooltip {
-      display: none; position: absolute; z-index: 9999;
-      bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
-      background: #0f1f33; color: #e2e8f0; font-size: 0.71rem; font-weight: 500;
-      line-height: 1.5; padding: 10px 14px; border-radius: 10px; width: 240px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.4); pointer-events: none;
-      white-space: normal; text-align: left; border: 1px solid rgba(255,255,255,0.08);
-    }
-    .seg-tooltip::after {
-      content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-      border: 7px solid transparent; border-top-color: #0f1f33;
-    }
-    .seg-tooltip strong { color: var(--gold); }
-    .seg-field:hover .seg-tooltip { display: block; }
-    .seg-field.tip-left .seg-tooltip { left: auto; right: 0; transform: none; }
-    .seg-field.tip-left .seg-tooltip::after { left: auto; right: 20px; transform: none; }
-    .seg-field.tip-first .seg-tooltip { left: 0; transform: none; }
-    .seg-field.tip-first .seg-tooltip::after { left: 20px; transform: none; }
-    .tbl-wrap { overflow-x: auto; overflow-y: visible; padding-top: 200px; margin-top: -200px; width: 100%; }
-    .code-block {
-      background: #0f1f33; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-      padding: 1rem 1.25rem; font-family: 'Courier New', monospace; font-size: 0.8rem;
-      color: #7ee8a2; line-height: 1.7; overflow-x: auto;
-    }
-    .accordion-icon { transition: transform .3s cubic-bezier(.4,0,.2,1); }
-    .animate-in { animation: fadeUp .4s ease-out both; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-    .text-navy { color: var(--navy); } .text-burg { color: var(--burg); } .text-gold { color: var(--gold); }
-    .bg-navy { background-color: var(--navy); } .bg-burg { background-color: var(--burg); }
-    .hover\:bg-navy-dk:hover { background-color: #041d39; }
-    .bit-mini { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
-    .route-chip { border-radius: 999px; padding: 0.28rem 0.7rem; font-size: 0.72rem; font-weight: 700; }
-    .exam-box { border: 1.5px solid rgba(6,43,82,0.35); border-radius: 0.9rem; background: #fff; }
-    .vf-table { border: 1px solid rgba(6,43,82,0.18); border-radius: 1rem; overflow: hidden; }
-    .vf-cell { border: 1px solid rgba(6,43,82,0.12); padding: 1rem 1.1rem; transition: background-color .25s; }
-    .vf-cell.vf-correct-cell { background: #f0fdf4; }
-    .vf-cell.vf-wrong-cell { background: #fef2f2; }
-    .vf-options { display: flex; gap: 10px; margin-top: 10px; }
-    .vf-btn {
-      padding: 7px 20px; border-radius: 999px; border: 2px solid #cbd5e1;
-      background: #fff; font-size: 0.8rem; font-weight: 700; color: #64748b;
-      cursor: pointer; transition: all .15s;
-    }
-    .vf-btn:hover { border-color: var(--navy); color: var(--navy); }
-    .vf-btn-active { border-color: var(--navy); background: #eaf1ff; color: var(--navy); }
-    .vf-btn-correct { border-color: #166534 !important; background: #dcfce7 !important; color: #166534 !important; }
-    .vf-btn-wrong { border-color: #b91c1c !important; background: #fee2e2 !important; color: #b91c1c !important; }
-    .vf-result-tag { font-size: 0.7rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; margin-left: 8px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayudantía Redes - Capa de Aplicación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --usm-navy: #002b5c;
+            --usm-burgundy: #8c1d40;
+            --usm-gold: #c9a34a;
+            --usm-ink: #0f1f33;
+            --usm-paper: #f6f7fb;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--usm-paper);
+            background-image:
+                radial-gradient(circle at 8% 12%, rgba(201, 163, 74, 0.22) 0%, transparent 28%),
+                radial-gradient(circle at 92% 84%, rgba(140, 29, 64, 0.15) 0%, transparent 32%),
+                linear-gradient(135deg, #f8fafc 0%, #edf2fb 55%, #f8fafc 100%);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Sora', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .topbar {
+            background: linear-gradient(90deg, rgba(0, 43, 92, 0.95), rgba(140, 29, 64, 0.92));
+            box-shadow: 0 10px 30px rgba(15, 31, 51, 0.25);
+            border-bottom: 2px solid rgba(201, 163, 74, 0.65);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-title {
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .nav-link {
+            color: #f1f5f9;
+            padding: 0.45rem 0.85rem;
+            border-radius: 9999px;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(201, 163, 74, 0.55);
+        }
+
+        .hero-title {
+            font-size: clamp(2.3rem, 6vw, 4.2rem);
+            background: linear-gradient(135deg, var(--usm-navy), var(--usm-burgundy));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .section-title {
+            border-bottom-width: 3px;
+            color: var(--usm-ink);
+            border-color: rgba(0, 43, 92, 0.28);
+        }
+
+        .bg-white.p-8.rounded-xl.shadow-lg, .card-hover {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 43, 92, 0.09);
+            box-shadow: 0 16px 30px rgba(15, 31, 51, 0.1);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .bg-white.p-8.rounded-xl.shadow-lg:hover, .card-hover:hover {
+            box-shadow: 0 22px 36px rgba(15, 31, 51, 0.16);
+        }
+
+        /* Evita que el header fijo tape los títulos al navegar */
+        section[id] { scroll-margin-top: 5rem; }
+
+        /* Acordeones nativos */
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] > summary { color: var(--usm-burgundy); background-color: #f1f5f9; }
+        details[open] > summary .accordion-icon { transform: rotate(180deg); }
+
+        .bg-usm-ink { background-color: var(--usm-ink); }
+
+        /* Permite que los bloques de código hagan scroll en vez de ensanchar la página en móvil */
+        .grid > * { min-width: 0; }
+        code { overflow-wrap: anywhere; }
+
+        /* Utilidades de Color USM */
+        .text-usm-navy { color: var(--usm-navy); }
+        .text-usm-burgundy { color: var(--usm-burgundy); }
+        .text-usm-gold { color: var(--usm-gold); }
+        
+        .bg-usm-navy { background-color: var(--usm-navy); }
+        .hover\:bg-usm-navy-dark:hover { background-color: #001a3b; }
+        
+        .bg-usm-burgundy { background-color: var(--usm-burgundy); }
+        .bg-usm-gold { background-color: var(--usm-gold); }
+
+        .border-usm-navy { border-color: var(--usm-navy); }
+        .border-usm-burgundy { border-color: var(--usm-burgundy); }
+        .border-usm-gold { border-color: var(--usm-gold); }
+
+        .ring-usm-navy { --tw-ring-color: var(--usm-navy); }
+
+        .animate-fadeIn { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .accordion-icon { transition: transform 0.3s ease; }
+
+        /* Estilos para el diagrama de encapsulación */
+        .encapsulation-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .encapsulation-label {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+            font-weight: normal;
+        }
+    </style>
 </head>
-<body>
+<body class="text-slate-800">
 
-  <!-- ── TOP NAV ── -->
-  <header class="topbar sticky top-0 z-50">
-    <nav class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center max-w-6xl gap-2">
-      <span class="text-white font-bold text-base sm:text-lg" style="font-family:'Fraunces',serif;">Certamen tipo · Redes</span>
-      <div class="flex flex-wrap gap-1 sm:gap-2">
-        <a href="#ruteo"      class="nav-link">Teoría Ruteo</a>
-        <a href="#datos"      class="nav-link">Capa de Datos</a>
-        <a href="#preg-red"   class="nav-link">Preg. Red</a>
-        <a href="#preg-datos" class="nav-link">Preg. Datos</a>
-        <a href="#vf"         class="nav-link">V/F</a>
-      </div>
-    </nav>
-  </header>
-
-  <main class="container mx-auto px-4 sm:px-6 py-10 max-w-6xl">
-
-    <!-- ══════════════════════════════════════════════
-         PARTE 1 · TEORÍA COMPLETA DEL RUTEO IP
-    ═══════════════════════════════════════════════ -->
-    <section id="ruteo" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 1 · Todo sobre el ruteo IP</h2>
-      <div class="space-y-10">
-
-        <!-- Card 1: Objetivo capa de red -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">1</span> Objetivo de la capa de red / ruteo IP
-          </h3>
-          <p class="text-slate-600 leading-relaxed text-sm mb-6">
-            La capa de red (Network Layer) tiene como objetivo <strong class="text-navy">entregar paquetes de extremo a extremo</strong> entre dos hosts que pueden estar en redes físicas completamente distintas, posiblemente separadas por muchos saltos. A diferencia de la capa de datos —que solo entrega frames dentro de un mismo segmento LAN— la capa de red sabe <em>rutear</em>: decidir, en cada router intermedio, por cuál interfaz debe salir un paquete para acercarse a su destino final.
-          </p>
-          <div class="grid md:grid-cols-3 gap-4">
-            <div class="rounded-xl border border-blue-200 bg-blue-50 p-5">
-              <h4 class="font-bold text-navy mb-2 text-sm">Direccionamiento jerárquico</h4>
-              <p class="text-xs text-slate-600">La IP se organiza en red + host (con máscara de subred), lo que permite agrupar millones de direcciones bajo una sola entrada de ruteo.</p>
+    <header class="topbar sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl brand-title">Ayudantía</h1>
+            <div class="space-x-2 sm:space-x-4">
+                <a href="#teoria" class="nav-link font-medium transition-colors text-xs sm:text-base">Teoría</a>
+                <a href="#conceptos" class="nav-link font-medium transition-colors text-xs sm:text-base">Conceptos</a>
+                <a href="#practica" class="nav-link font-medium transition-colors text-xs sm:text-base">Práctica</a>
             </div>
-            <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
-              <h4 class="font-bold text-burg mb-2 text-sm">Reenvío salto a salto</h4>
-              <p class="text-xs text-slate-600">Cada router solo decide el <em>siguiente</em> salto, no la ruta completa. El paquete avanza router por router hasta llegar al destino.</p>
-            </div>
-            <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
-              <h4 class="font-bold text-gold mb-2 text-sm">Servicio no confiable</h4>
-              <p class="text-xs text-slate-600">Igual que la capa de datos, IP es <em>best effort</em>: no garantiza entrega, orden ni ausencia de duplicados. Eso lo resuelve TCP en capa 4.</p>
-            </div>
-          </div>
-          <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-700">
-            <strong class="text-navy">Regla mental:</strong> la capa de datos resuelve "¿cómo llego al vecino directo?"; la capa de red resuelve "¿por dónde salgo para acercarme al destino final, que puede estar a 15 saltos de distancia?".
-          </div>
-        </div>
+        </nav>
+    </header>
 
-        <!-- Card 2: Tabla de ruteo -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">2</span> La tabla de ruteo — campo por campo
-          </h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Cada router mantiene una <strong class="text-navy">tabla de ruteo</strong> con una entrada por cada red que sabe alcanzar. Pasa el cursor sobre cada columna para ver su significado (formato estilo BSD/Linux <code>netstat -r</code>).</p>
-          <div class="tbl-wrap">
-            <div style="min-width:760px;">
-              <table class="w-full text-xs border border-slate-300 rounded-xl">
-                <thead>
-                  <tr class="bg-slate-100 text-slate-700 font-bold">
-                    <th class="seg-field border border-slate-300 p-2">Destination
-                      <div class="seg-tooltip"><strong>Destination</strong><br>Dirección de red destino (no de un host individual). 0.0.0.0 representa "cualquier red no listada explícitamente" = ruta por defecto.</div>
-                    </th>
-                    <th class="seg-field border border-slate-300 p-2">Gateway
-                      <div class="seg-tooltip"><strong>Gateway</strong><br>IP del siguiente salto al que hay que enviar el paquete. Si es 0.0.0.0, la red está directamente conectada (no se necesita pasar por otro router).</div>
-                    </th>
-                    <th class="seg-field border border-slate-300 p-2">Genmask
-                      <div class="seg-tooltip"><strong>Genmask</strong><br>Máscara de subred aplicada a Destination para saber si una IP destino pertenece a esa red.</div>
-                    </th>
-                    <th class="seg-field border border-slate-300 p-2">Flags
-                      <div class="seg-tooltip"><strong>Flags</strong><br>U = ruta activa (Up). G = se usa un Gateway distinto de la interfaz directa. S = ruta Estática (configurada a mano). D = ruta Dinámica (aprendida por un protocolo de ruteo).</div>
-                    </th>
-                    <th class="seg-field border border-slate-300 p-2">Metric
-                      <div class="seg-tooltip"><strong>Metric</strong><br>Costo asociado a la ruta. Cuando hay varias rutas posibles hacia el mismo destino, se prefiere la de menor métrica.</div>
-                    </th>
-                    <th class="seg-field tip-left border border-slate-300 p-2">Iface
-                      <div class="seg-tooltip tip-left"><strong>Iface</strong><br>Interfaz de red física por la cual el router debe enviar el paquete para llegar a esa ruta.</div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200 font-mono text-slate-700">
-                  <tr><td class="border border-slate-200 p-2">10.0.1.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">U</td><td class="border border-slate-200 p-2">0</td><td class="border border-slate-200 p-2">eth0</td></tr>
-                  <tr><td class="border border-slate-200 p-2">10.0.2.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">UD</td><td class="border border-slate-200 p-2">0</td><td class="border border-slate-200 p-2">eth1</td></tr>
-                  <tr><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">10.0.1.1</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">UGS</td><td class="border border-slate-200 p-2">0</td><td class="border border-slate-200 p-2">eth0</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="grid md:grid-cols-2 gap-4 mt-6">
-            <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
-              <strong class="text-navy block mb-1">Ruta directamente conectada</strong>
-              Gateway = 0.0.0.0 y solo flag U: el router está físicamente en esa red (ej. 10.0.1.0 vía eth0). No necesita reenviar a otro router.
-            </div>
-            <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
-              <strong class="text-gold block mb-1">Ruta por defecto</strong>
-              Destination = 0.0.0.0 y Genmask = 0.0.0.0: coincide con <em>cualquier</em> IP destino que no calzó con ninguna otra entrada más específica de la tabla.
-            </div>
-          </div>
-        </div>
+    <main class="container mx-auto px-6 py-12 max-w-5xl">
+        
+        <section id="intro" class="text-center mb-16">
+            <h2 class="hero-title font-bold mb-4">Redes de Computadores</h2>
+            <p class="text-lg hero-subtitle max-w-3xl mx-auto flex items-center justify-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-usm-burgundy"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                La Capa de Aplicación
+            </p>
+        </section>
 
-      </div>
-    </section>
+        <!-- ========================================== -->
+        <!-- PARTE 1: TEORÍA DETALLADA                  -->
+        <!-- ========================================== -->
+        <section id="teoria" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 pb-4">Parte 1: Conceptos Fundamentales</h3>
 
-    <!-- Card 3, 4, 5 viven en la misma Parte 1, sección aparte para mantener layout -->
-    <section class="mb-24">
-      <div class="space-y-10">
+            <div class="space-y-10">
+                
+                <!-- 1. Protocolos y Encapsulación -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
+                        <span class="text-usm-gold">1.</span> Protocolos de Aplicación y Encapsulación
+                    </h3>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-bold text-usm-navy mb-2">¿Qué es un Protocolo de Aplicación?</h4>
+                        <p class="text-slate-700 leading-relaxed text-sm">
+                            Un <strong>Protocolo de Aplicación</strong> es un conjunto estructurado de reglas que determinan cómo las aplicaciones en diferentes computadores se comunican entre sí. Define:
+                        </p>
+                        <ul class="list-disc pl-5 mt-2 space-y-1 text-sm text-slate-600">
+                            <li><strong>El tipo de mensajes</strong> que se intercambian (ej. Peticiones/Requests y Respuestas/Responses).</li>
+                            <li><strong>La sintaxis</strong> de esos mensajes (qué campos tienen y cómo están organizados).</li>
+                            <li><strong>La semántica</strong> (el significado de la información en esos campos).</li>
+                            <li><strong>Las reglas</strong> para saber cuándo y cómo enviar los mensajes.</li>
+                        </ul>
+                    </div>
 
-        <!-- Card 3: Estática / Dinámica / Default -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">3</span> Rutas estáticas, dinámicas y ruta por defecto
-          </h3>
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="rounded-2xl border-2 border-slate-200 bg-white p-6">
-              <h4 class="font-bold text-navy mb-3 text-base">Ruta estática</h4>
-              <p class="text-xs bit-mini text-slate-400 mb-3">Flag S</p>
-              <p class="text-xs text-slate-600">Configurada manualmente por el administrador. No cambia a menos que alguien la edite. Útil para enlaces pequeños o rutas de respaldo, pero no escala a redes grandes.</p>
-            </div>
-            <div class="rounded-2xl border-2 border-blue-300 bg-blue-50 p-6">
-              <h4 class="font-bold text-navy mb-3 text-base">Ruta dinámica</h4>
-              <p class="text-xs bit-mini text-blue-600 mb-3">Flag D</p>
-              <p class="text-xs text-slate-600">Aprendida automáticamente por un protocolo de ruteo (Vector-Distancia, Link-State, BGP). Se actualiza sola si la topología cambia.</p>
-            </div>
-            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6">
-              <h4 class="font-bold text-navy mb-3 text-base">Ruta por defecto</h4>
-              <p class="text-xs bit-mini text-amber-600 mb-3">Destination = 0.0.0.0/0.0.0.0</p>
-              <p class="text-xs text-slate-600">La "ruta de último recurso": se usa cuando ningún otro destino de la tabla coincide. Normalmente apunta hacia el router que da salida a Internet.</p>
-            </div>
-          </div>
-          <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
-            <strong class="text-navy">Punto de certamen:</strong> que una ruta tenga Gateway = 0.0.0.0 NO significa que sea estática ni dinámica por sí solo; eso lo indica el flag S o D. Gateway 0.0.0.0 solo indica que la red está directamente conectada a una interfaz del router.
-          </div>
-        </div>
+                    <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                        <h4 class="font-bold text-usm-navy mb-4">El Flujo de Bits en la Encapsulación</h4>
+                        <p class="text-sm text-slate-600 mb-4">
+                            Cuando envías un mensaje (ej. un email), este no viaja mágicamente por el cable. Tiene que descender por las capas de red, sufriendo un proceso llamado <strong>encapsulación</strong>, donde cada capa envuelve al mensaje con un encabezado (Header) nuevo.
+                        </p>
+                        
+                        <!-- Diagrama visual de encapsulación -->
+                        <div class="flex flex-col md:flex-row gap-1 text-sm text-center my-6">
+                            <div class="encapsulation-box bg-slate-500 w-full md:w-1/5" title="Capa de Enlace">
+                                Data Link Header
+                                <span class="encapsulation-label">Añade dir. MAC (Trama)</span>
+                            </div>
+                            <div class="encapsulation-box bg-blue-600 w-full md:w-1/5" title="Capa de Red">
+                                IP Header
+                                <span class="encapsulation-label">Añade dir. IP (Paquete)</span>
+                            </div>
+                            <div class="encapsulation-box bg-usm-gold w-full md:w-1/5" title="Capa de Transporte">
+                                Transport Header
+                                <span class="encapsulation-label">Añade Puerto TCP/UDP (Segmento)</span>
+                            </div>
+                            <div class="encapsulation-box bg-usm-navy w-full md:w-2/5" title="Capa de Aplicación">
+                                Application Data
+                                <span class="encapsulation-label">El mensaje original (HTTP, SMTP, etc.)</span>
+                            </div>
+                        </div>
 
-        <!-- Card 4: Algoritmos de ruteo dinámico -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">4</span> Algoritmos de ruteo dinámico
-          </h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">Los protocolos de ruteo permiten que los routers descubran rutas automáticamente, sin intervención manual. Existen dos familias principales para el interior de una red (IGP) y una para conectar redes distintas en Internet (EGP).</p>
-
-          <div class="space-y-6">
-            <div class="rounded-2xl border-2 border-slate-200 p-6">
-              <h4 class="font-bold text-navy mb-2 text-base">Vector-Distancia (Distance Vector) — ej. RIP</h4>
-              <p class="text-sm text-slate-600 mb-3">Cada router solo conoce la <strong>distancia</strong> (típicamente en saltos) hacia cada red, y comparte periódicamente su tabla completa con sus <strong>vecinos directos</strong>. No conoce la topología completa, solo "rumores" de distancia.</p>
-              <div class="grid md:grid-cols-2 gap-3 text-xs">
-                <div class="rounded-xl bg-red-50 border border-red-200 p-3 text-red-700">
-                  <strong>Por qué no escala:</strong> el algoritmo de Bellman-Ford converge lentamente en redes grandes (cada cambio tarda varios intercambios en propagarse), es vulnerable a loops de ruteo y al problema de "cuenta hasta el infinito", y limita el diámetro de la red (ej. RIP solo permite 15 saltos).
+                        <p class="text-sm text-slate-700 bg-white p-4 rounded border-l-4 border-usm-navy">
+                            <strong>Ojo con los nombres:</strong> Aplicación + header de transporte = <strong>segmento</strong> (TCP) o <strong>datagrama</strong> (UDP); + header IP = <strong>paquete</strong>; + header (y trailer FCS) de enlace = <strong>trama</strong>. Las diapositivas lo describen como "muñecas rusas": cada capa envuelve completa a la anterior.<br><br>
+                            <strong>Del mensaje a los bits:</strong> Una vez que el mensaje original tiene todos estos encabezados (MAC + IP + Puerto + Datos), la tarjeta de red (Capa Física) toma esta <strong>trama</strong> de ceros y unos y la convierte en <strong>señales eléctricas, pulsos de luz o radiofrecuencias (Wi-Fi)</strong> para enviarlo por el medio físico. Al llegar al destino, ocurre el proceso inverso (Desencapsulación).
+                        </p>
+                    </div>
                 </div>
-                <div class="rounded-xl bg-blue-50 border border-blue-200 p-3 text-blue-700">
-                  <strong>Ventaja:</strong> muy simple de implementar y de bajo costo computacional; suficiente para redes pequeñas o planas.
+
+                <!-- 2. Sockets, Puertos e IANA -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
+                        <span class="text-usm-gold">2.</span> Puertos, Sockets y la IANA
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-burgundy mb-2">¿Qué es la IANA?</h4>
+                            <p class="text-sm text-slate-600 mb-3">
+                                La <strong>IANA (Internet Assigned Numbers Authority)</strong> es la entidad global encargada de coordinar los identificadores únicos en Internet, como las direcciones IP y, muy importante, los <strong>números de puerto</strong> (enteros de 0 a 65535). Los clasifica así:
+                            </p>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li><span class="font-bold font-mono text-usm-navy">0 - 1023:</span> <strong>Bien conocidos</strong> (well-known). Servicios del sistema operativo o de gestión de Internet. Ej: 22, 25, 80, 443.</li>
+                                <li><span class="font-bold font-mono text-usm-navy">1024 - 49151:</span> <strong>Registrados</strong>. Protocolos aceptados y normalizados por el IETF.</li>
+                                <li><span class="font-bold font-mono text-usm-navy">49152 - 65535:</span> <strong>Dinámicos / efímeros</strong>. Los usan las conexiones TCP para liberar el puerto principal; al cerrarse la conexión, el puerto queda disponible de nuevo.</li>
+                            </ul>
+                            <p class="text-xs text-slate-500 mt-3"><em>Dato aparte:</em> que en Linux haga falta ser root para abrir un puerto &lt; 1024 es una convención de Unix, no una regla de la IANA.</p>
+                            <p class="text-sm text-slate-600 mt-3"><strong>¿Cómo se asigna un puerto?</strong> Alguien propone un protocolo al <strong>IETF</strong> → el IETF lo acepta y normaliza → la <strong>IANA</strong> le asigna uno o más puertos → el IETF publica el <strong>RFC</strong> (versión 1, revisión de comentarios, versión definitiva).</p>
+                        </div>
+
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">Socket vs Puerto</h4>
+                            <p class="text-sm text-slate-600 mb-3">Es común confundirlos, pero son cosas distintas:</p>
+                            <ul class="text-sm space-y-3 text-slate-700">
+                                <li><strong>El Puerto:</strong> Es solo un <em>identificador lógico</em> numérico (como el número de un departamento en un edificio). Sirve para que el Sistema Operativo sepa a qué programa entregar el mensaje.</li>
+                                <li><strong>El Socket:</strong> Es la <em>interfaz de software (API del sistema operativo)</em> que un programa usa para intercambiar datos por la red. Es un objeto <strong>lógico</strong>, no físico. Un socket local queda asociado a <strong>[Dirección IP + Puerto + Protocolo (TCP/UDP)]</strong>.</li>
+                                <li><strong>La conexión TCP</strong> se identifica por la tupla completa <strong>[IP origen, Puerto origen, IP destino, Puerto destino, Protocolo]</strong>. Por eso un servidor puede atender miles de clientes a la vez en el mismo puerto 80: cada conexión difiere en la IP o el puerto del cliente.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">Dos tipos de socket</h4>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li><strong>Con conexión (TCP, <code>SOCK_STREAM</code>):</strong> canal confiable con control de pérdidas, orden y flujo. Requiere establecer la conexión antes de enviar.</li>
+                                <li><strong>Sin conexión (UDP, <code>SOCK_DGRAM</code>):</strong> se envían datagramas sueltos, sin ningún control. Más liviano y rápido.</li>
+                            </ul>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-burgundy mb-2">Servidores con IP privada: NAT y Port Forwarding</h4>
+                            <p class="text-sm text-slate-700">Si el servidor está detrás de un router con NAT (IP privada), se configura <strong>port forwarding</strong>: el NAT recibe la petición en su IP pública y un puerto dado, y la reenvía a la IP privada correspondiente. La tabla nombre↔puerto vive en el SO, en Linux en <code>/etc/services</code> (ej. <code>ssh 22/tcp</code>).</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="rounded-2xl border-2 border-slate-200 p-6">
-              <h4 class="font-bold text-navy mb-2 text-base">Link State Routing — ej. OSPF</h4>
-              <p class="text-sm text-slate-600 mb-3">Cada router construye y difunde (<em>flooding</em>) un mensaje llamado <strong>LSA (Link State Advertisement)</strong> que describe únicamente sus enlaces directos y su costo. Este LSA se propaga a <strong>todos</strong> los routers del área, no solo a los vecinos.</p>
-              <div class="rounded-xl bg-green-50 border border-green-200 p-4 text-xs text-green-700">
-                <strong>Cómo calcula sus rutas:</strong> al recibir los LSA de todos los demás routers, cada nodo reconstruye un <strong>mapa completo de la topología</strong> de la red (todos los routers y sus enlaces). Con ese mapa completo, ejecuta localmente el <strong>algoritmo de Dijkstra</strong> para calcular el camino más corto desde sí mismo hacia cada una de las demás subredes, y arma su tabla de ruteo con esos resultados.
-              </div>
-              <p class="text-xs text-slate-500 mt-3">Converge mucho más rápido que Vector-Distancia y evita loops, a costa de más memoria y CPU (debe guardar el mapa completo y recalcular Dijkstra).</p>
-            </div>
+                <!-- 3. Protocolos de Conexión Remota -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
+                        <span class="text-usm-gold">3.</span> Conexiones Remotas: TELNET vs SSH
+                    </h3>
+                    
+                    <p class="text-slate-700 mb-6 text-sm">
+                        En la capa de aplicación existen protocolos específicos para administrar computadores y servidores de forma remota a través de una terminal o consola de comandos.
+                    </p>
 
-            <div class="rounded-2xl border-2 border-slate-200 p-6">
-              <h4 class="font-bold text-navy mb-2 text-base">BGP (Border Gateway Protocol) — entre Sistemas Autónomos</h4>
-              <p class="text-sm text-slate-600 mb-3">BGP es un protocolo de <em>vector de camino</em> (path-vector) que rutea entre <strong>Sistemas Autónomos (AS)</strong> distintos —empresas, ISPs, organizaciones— en lugar de routers individuales. En vez de compartir una distancia, cada router BGP anuncia la <strong>secuencia completa de AS</strong> que debe atravesarse para llegar a un destino.</p>
-              <div class="grid md:grid-cols-2 gap-3 text-xs">
-                <div class="rounded-xl bg-red-50 border border-red-200 p-3 text-red-700">
-                  <strong>¿Por qué BGP no asegura la conectividad?</strong> BGP es un protocolo basado en <em>políticas</em>, no en el camino más corto: cada AS decide, por razones comerciales o contractuales, a quién le anuncia sus rutas y cuáles rutas acepta de sus vecinos. Dos AS pueden estar físicamente conectados pero un AS puede decidir no anunciar (o no aceptar) cierta ruta, dejando ese destino inalcanzable aunque exista conectividad física. La alcanzabilidad depende de acuerdos de negocio, no de la topología real.
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h4 class="font-bold text-red-700 mb-2">TELNET (Puerto 23)</h4>
+                            <p class="text-sm text-slate-600 mb-2">
+                                Uno de los protocolos más antiguos de Internet (RFC-854). Es Cliente-Servidor sobre <strong>TCP</strong> y crea una terminal virtual: lo que tipeas se envía al servidor, que lo interpreta con un shell (bash) y te devuelve la respuesta.
+                            </p>
+                            <p class="text-sm text-slate-600 mb-2">
+                                Truco útil: <code>telnet servidor [puerto]</code> también sirve para hablar "a mano" con otros servicios de texto, como HTTP (80) o SMTP (25).
+                            </p>
+                            <p class="text-sm text-slate-600 font-bold bg-red-50 p-2 rounded">
+                                ⚠️ El Problema: TELNET envía ABSOLUTAMENTE TODO en texto plano (sin cifrar), incluida tu contraseña. Un atacante puede leerla haciendo <em>sniffing</em> o, peor, ponerse en medio de la comunicación (<em>Man in the Middle</em>) y leer o modificar lo que pasa. Hoy se considera obsoleto e inseguro.
+                            </p>
+                        </div>
+                        
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-bold text-green-700 mb-2">SSH (Puerto 22)</h4>
+                            <p class="text-sm text-slate-600 mb-2">
+                                SSH (Secure Shell) nació como el reemplazo seguro de TELNET. Cumple exactamente la misma función de acceso a consola remota, pero con seguridad integrada.
+                            </p>
+                            <p class="text-sm text-slate-600 font-bold bg-green-50 p-2 rounded">
+                                ✅ La Solución: SSH (sobre TCP, RFC-4253) cifra toda la comunicación, desde la autenticación hasta los comandos que ejecutas. Si un atacante intercepta el tráfico, solo verá caracteres incomprensibles. Además permite crear <em>túneles</em> cifrados.
+                            </p>
+                            <div class="text-sm text-slate-700 mt-3 bg-slate-50 border border-slate-200 p-3 rounded">
+                                <p class="font-bold text-usm-navy mb-1">SSH usa dos algoritmos:</p>
+                                <ul class="list-disc pl-5 space-y-1">
+                                    <li><strong>Asimétrico</strong> (RSA/DSA): para la identificación (handshake y autenticación del usuario).</li>
+                                    <li><strong>Simétrico</strong> (AES, 3DES, Blowfish): para el intercambio de datos, porque es mucho más rápido.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rounded-xl bg-amber-50 border border-amber-200 p-3 text-amber-700">
-                  <strong>MULTI_EXIT_DISC (MED):</strong> atributo opcional que un AS incluye en su anuncio cuando tiene <em>varios</em> puntos de conexión hacia el mismo AS vecino. Le indica a ese vecino cuál de los puntos de entrada prefiere que use para llegar a él: un valor de MED más bajo es preferido. Sirve para influir en la elección del punto de entrada cuando hay múltiples enlaces entre los mismos dos AS.
+
+                <!-- 4. Web, HTTP y Certificados -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
+                        <span class="text-usm-gold">4.</span> La Web, HTTP y Certificados X509
+                    </h3>
+                    
+                    <p class="text-slate-700 mb-4 text-sm">La Web nace a principios de los 90 en el CERN y se apoya en tres piezas: <strong>HTTP</strong> (puerto 80), <strong>HTTPS</strong> (puerto 443) y el lenguaje <strong>HTML</strong>. HTTP es Cliente-Servidor y <em>stateless</em> (sin estado): el servidor no recuerda peticiones pasadas del mismo cliente (por eso se inventaron las cookies).</p>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">¿Qué hace el navegador?</h4>
+                            <ol class="list-decimal pl-5 text-sm space-y-1 text-slate-700">
+                                <li>Resuelve el nombre del servidor con el <strong>DNS</strong>.</li>
+                                <li>Se conecta al servidor usando la dirección IP (TCP, puerto 80/443).</li>
+                                <li>Pide y recupera la primera página (<code>index.html</code>, <code>index.php</code>...).</li>
+                                <li>Por <strong>cada objeto enlazado</strong> en la página (imágenes, CSS, scripts), se conecta al mismo servidor o a otro para descargarlo.</li>
+                            </ol>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">Páginas estáticas vs dinámicas</h4>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li><strong>Estáticas:</strong> su contenido no cambia en el tiempo; el servidor entrega el mismo archivo a todos.</li>
+                                <li><strong>Dinámicas:</strong> el contenido no está fijo; se genera en el servidor en el momento (ej. PHP consultando una base de datos) y evoluciona con el tiempo.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-usm-ink text-white p-6 rounded-xl shadow-inner relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-10">
+                            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-usm-gold text-lg mb-3 relative z-10">HTTPS (Puerto 443) y Certificados X509</h4>
+                        <p class="text-slate-200 mb-4 text-sm relative z-10">
+                            Igual que Telnet, HTTP envía todo en texto plano: contraseñas, formularios con datos privados... <strong class="text-white">HTTPS</strong> es <strong class="text-white">HTTP sobre SSL/TLS</strong>: cifra la conexión. Igual que SSH, usa un algoritmo <strong class="text-white">asimétrico</strong> para autenticar e intercambiar una clave, y luego uno <strong class="text-white">simétrico</strong> para los datos. Pero, ¿cómo sabes que el servidor es realmente tu banco y no un impostor? Para eso está el <strong class="text-white">Certificado X509</strong>.
+                        </p>
+                        <p class="text-slate-200 text-sm border-l-2 border-usm-gold pl-3 relative z-10">
+                            El servidor envía su certificado, firmado por una <strong class="text-white">CA (Autoridad de Certificación)</strong> confiable. El navegador verifica la firma de la CA; si no es válida, el certificado expiró o el dominio no coincide, el navegador muestra una alerta de seguridad (<em>"Your connection is not private"</em>) y el usuario tendría que aceptar una excepción para seguir.
+                        </p>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white mt-6">
-            <table class="min-w-full text-xs">
-              <thead class="bg-slate-50 text-slate-700">
-                <tr><th class="px-4 py-3 text-left">Protocolo</th><th class="px-4 py-3 text-left">Tipo</th><th class="px-4 py-3 text-left">Conoce</th><th class="px-4 py-3 text-left">Ámbito</th></tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-600">
-                <tr><td class="px-4 py-3 font-bold text-navy">RIP</td><td class="px-4 py-3">Vector-Distancia</td><td class="px-4 py-3">Solo la distancia a cada red, vía vecinos</td><td class="px-4 py-3">Intra-AS (IGP)</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">OSPF</td><td class="px-4 py-3">Link-State</td><td class="px-4 py-3">Mapa completo de la topología (Dijkstra)</td><td class="px-4 py-3">Intra-AS (IGP)</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">BGP</td><td class="px-4 py-3">Path-Vector</td><td class="px-4 py-3">Secuencia de AS hacia cada destino + políticas</td><td class="px-4 py-3">Inter-AS (EGP)</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+                <!-- 5. Correo Electrónico -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
+                        <span class="text-usm-gold">5.</span> Correo Electrónico: SMTP, MX y MIME
+                    </h3>
 
-        <!-- Card 5: TTL y MTU -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">5</span> TTL y MTU en el paquete IP
-          </h3>
-          <div class="grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 class="font-bold text-navy mb-3 text-sm">TTL — Time To Live</h4>
-              <p class="text-sm text-slate-600 mb-3">Campo de 8 bits en la cabecera IP. El emisor lo fija en un valor inicial (ej. 64), y <strong class="text-navy">cada router que reenvía el paquete lo decrementa en 1</strong>. Si un router recibe un paquete con TTL = 0, lo descarta y normalmente responde con un mensaje ICMP "Time Exceeded".</p>
-              <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
-                <strong class="text-gold">¿Para qué sirve?</strong> Evita que un paquete circule indefinidamente si existe un loop de ruteo (por ejemplo, por una tabla mal configurada o no convergida). Sin TTL, un paquete atrapado en un ciclo consumiría ancho de banda para siempre.
-              </div>
-            </div>
-            <div>
-              <h4 class="font-bold text-navy mb-3 text-sm">MTU — Maximum Transmission Unit</h4>
-              <p class="text-sm text-slate-600 mb-3">Es el <strong class="text-navy">tamaño máximo de payload que una interfaz de red puede transmitir en un solo frame</strong> (ej. 1500 bytes en Ethernet). Cada interfaz de un router puede tener su propio MTU.</p>
-              <div class="rounded-xl border border-blue-200 bg-blue-50 p-4 text-xs text-slate-700">
-                <strong class="text-navy">¿A qué corresponde en un router?</strong> Si un paquete IP es más grande que el MTU de la interfaz de salida, el router debe <em>fragmentarlo</em> en varios paquetes IP más pequeños (o descartarlo y avisar con ICMP si el bit "No fragmentar" está activo, como en Path MTU Discovery).
-              </div>
-            </div>
-          </div>
-        </div>
+                    <p class="text-slate-700 mb-6 text-sm">El email fue la primera <em>killer application</em> de Internet. <strong>SMTP / ESMTP</strong> (Simple Mail Transfer Protocol, puerto <strong>25</strong>; <strong>465</strong> con SSL/TLS; RFC-821, RFC-5321) permite enviar correo entre usuarios de redes distintas sin saber dónde está físicamente el destinatario: basta su dirección de correo.</p>
 
-      </div>
-    </section>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-navy mb-2">Los 3 elementos básicos</h4>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li><strong>User Agent (UA):</strong> el programa del usuario para leer/escribir correo (Thunderbird, Outlook, Webmail, mutt).</li>
+                                <li><strong>Mail Transfer Agent (MTA):</strong> el servidor de correo (sendmail, postfix). Transfiere los mails, maneja las colas de espera y las casillas locales.</li>
+                                <li><strong>El protocolo:</strong> SMTP / ESMTP.</li>
+                            </ul>
+                            <p class="text-xs text-slate-500 mt-3">SMTP es para <em>enviar</em>. Para <em>leer</em> el correo desde el servidor se usan IMAP o POP3.</p>
+                        </div>
+                        <div class="p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-usm-burgundy mb-2">¿A qué servidor se envía? El registro MX</h4>
+                            <p class="text-sm text-slate-700 mb-2">Para <code>alguien@gmail.com</code>, el MTA consulta en el DNS los registros <strong>MX</strong> del dominio <code>gmail.com</code>:</p>
+                            <pre class="text-xs bg-white border border-slate-200 rounded p-2 overflow-x-auto">gmail.com. MX  5 gmail-smtp-in.l.google.com.
+gmail.com. MX 10 alt1.gmail-smtp-in.l.google.com.
+gmail.com. MX 20 alt2.gmail-smtp-in.l.google.com.</pre>
+                            <p class="text-sm text-slate-700 mt-2"><strong>Menor valor = mayor prioridad.</strong> Se prueba primero el 5, si falla el 10, y así.</p>
+                        </div>
+                    </div>
 
-    <!-- ══════════════════════════════════════════════
-         PARTE 2 · CAPA DE DATOS
-    ═══════════════════════════════════════════════ -->
-    <section id="datos" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 2 · Capa de Datos</h2>
-      <div class="space-y-10">
+                    <div class="p-5 bg-slate-50 rounded-lg border border-slate-200 mb-6">
+                        <h4 class="font-bold text-usm-navy mb-2">Algoritmo del MTA</h4>
+                        <ol class="list-decimal pl-5 text-sm space-y-1 text-slate-700">
+                            <li>Intenta entregar al MX de mayor prioridad (menor número). Si no funciona, intenta con el siguiente.</li>
+                            <li>Si ninguno responde, deja el mail en su <strong>cola local</strong>.</li>
+                            <li>Cada intervalo Δt procesa la cola y reintenta cada mail.</li>
+                            <li>Si tras <strong>N intentos</strong> no logra enviarlo, abandona y le manda un mensaje de error al remitente (<em>From: Mailer-Daemon</em>).</li>
+                        </ol>
+                    </div>
 
-        <!-- Card 6: MAC -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">6</span> Dirección MAC
-          </h3>
-          <p class="text-slate-600 mb-5 text-sm leading-relaxed">Cada interfaz de red tiene una dirección física única de <strong class="text-navy">6 bytes (48 bits)</strong>: los primeros 3 bytes son el OUI (identifican al fabricante, asignado por IEEE) y los últimos 3 son el número de serie de la NIC. El bit menos significativo del primer byte distingue unicast (0) de multicast/broadcast (1); el broadcast es <code class="text-navy font-bold">FF:FF:FF:FF:FF:FF</code>.</p>
-          <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
-            <strong class="text-gold">MAC vs IP:</strong> la MAC identifica el hardware dentro de un segmento LAN (es plana, sin jerarquía). La IP identifica al host de forma lógica en la red global y es jerárquica (red+host), lo que permite que sea ruteable.
-          </div>
-        </div>
-
-        <!-- Card 7: Frame Ethernet -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">7</span> Estructura del frame Ethernet
-          </h3>
-          <p class="text-slate-600 mb-6 text-sm leading-relaxed">El frame es la unidad básica de transmisión de la capa de datos. Pasa el cursor sobre cada campo. Tamaño total: entre <strong class="text-navy">64 y 1518 bytes</strong>.</p>
-          <div class="tbl-wrap">
-            <div style="min-width:680px;" class="font-mono border-2 border-slate-300 rounded-xl shadow-inner bg-white">
-              <div class="flex border-b border-slate-300 text-xs font-bold text-center">
-                <div class="seg-field tip-first border-r border-slate-300 bg-slate-100 p-3" style="width:14%">Preámbulo<br><span class="text-slate-400 font-normal">7 B</span>
-                  <div class="seg-tooltip tip-first"><strong>Preámbulo</strong><br>7 bytes (0x55) que permiten sincronizar el reloj del receptor con el del emisor antes de leer datos reales.</div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-usm-navy mb-2">Diálogo SMTP</h4>
+                            <pre class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto leading-relaxed"><span class="text-yellow-300">S: 220 mx1.example.com ESMTP ready</span>
+C: HELO client.example.com
+<span class="text-yellow-300">S: 250 mx1.example.com</span>
+C: MAIL FROM: &lt;sender@example.com&gt;
+<span class="text-yellow-300">S: 250 Sender Ok</span>
+C: RCPT TO: &lt;recipient@example.com&gt;
+<span class="text-yellow-300">S: 250 Recipient Ok</span>
+C: DATA
+<span class="text-yellow-300">S: 354 End data with &lt;CRLF&gt;.&lt;CRLF&gt;</span>
+C: Subject: Test message
+C:
+C: This is a test message.
+C: .
+<span class="text-yellow-300">S: 250 Message received</span>
+C: QUIT
+<span class="text-yellow-300">S: 221 closing connection</span></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-usm-burgundy mb-2">MIME</h4>
+                            <p class="text-sm text-slate-700 mb-2">SMTP nació para texto ASCII. <strong>MIME</strong> (Multipurpose Internet Mail Extensions) lo extiende para permitir:</p>
+                            <ul class="list-disc pl-5 text-sm space-y-1 text-slate-700">
+                                <li>Texto en codificaciones distintas de ASCII (tildes, ñ).</li>
+                                <li>Adjuntar objetos que no son texto (imágenes, video, PDF).</li>
+                                <li>Mensajes con varias partes.</li>
+                                <li>Encabezados que no están en ASCII.</li>
+                            </ul>
+                            <p class="text-sm text-slate-700 mt-2">Cada contenido lleva un tipo MIME, ej. <code>application/pdf</code>, <code>image/png</code>. La Web también usa estos tipos (<code>Content-Type</code>).</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="seg-field border-r border-slate-300 bg-slate-100 p-3" style="width:10%">SFD<br><span class="text-slate-400 font-normal">1 B</span>
-                  <div class="seg-tooltip"><strong>SFD</strong><br>Start Frame Delimiter, valor fijo 0xD5. Marca el inicio de la dirección MAC destino.</div>
+
+                <!-- 6. Escalabilidad -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <h3 class="text-2xl font-bold text-usm-navy mb-6 flex items-center gap-2 border-b-2 border-slate-100 pb-2">
+                        <span class="text-usm-gold">6.</span> Escalabilidad: Balanceo de Cargas y P2P
+                    </h3>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold text-usm-burgundy mb-3 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                Balanceo de Cargas
+                            </h4>
+                            <p class="text-sm text-slate-600 mb-4">Si un servidor no da abasto, se puede usar programación multi-thread en procesadores multi-core, o usar <strong>varios servidores</strong>. ¿Cómo repartir la carga entre ellos?</p>
+                            <ul class="text-sm space-y-3 text-slate-700">
+                                <li><strong>Rotación DNS (Round Robin):</strong> el DNS entrega una IP distinta en cada resolución del nombre.<br><span class="text-green-700">+ Muy fácil de implementar.</span> <span class="text-red-700">− Reparto estático: no sabe cuántos clientes terminan en la misma IP ni la carga real.</span></li>
+                                <li><strong>HTTP Redirect:</strong> un primer servidor conoce la carga de los demás y responde con una redirección (ej. 302) al menos cargado.<br><span class="text-green-700">+ Mejor reparto, según la carga real.</span> <span class="text-red-700">− El primer servidor recibe todas las conexiones.</span></li>
+                                <li class="text-xs text-slate-500">Ambas dependen de la aplicación (Web).</li>
+                                <li><strong>HAProxy:</strong> un proxy de balanceo para aplicaciones <strong>TCP y HTTP</strong> (capas 4 y 7) que se pone delante y reparte muy rápido las peticiones entre servidores internos. Soporta HTTPS y compresión de datos. Lo usan Twitter, GitHub, Alibaba, etc.</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-usm-navy mb-3 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                                Modelo Peer-to-Peer (P2P)
+                            </h4>
+                            <p class="text-sm text-slate-600 mb-4">No hay roles predefinidos: <strong>un nodo puede ser cliente y servidor a la vez</strong>. No hay administración central; los nodos se auto-organizan y el sistema se auto-mantiene.</p>
+                            <div class="bg-slate-50 p-3 rounded text-sm border border-slate-200 mb-4">
+                                <p class="text-green-700 font-bold">✓ Ventajas:</p>
+                                <p class="text-slate-600 mb-2">Mejor balanceo de carga (más nodos tienen copias), mejor tolerancia a fallas, nodos repartidos por todo Internet.</p>
+                                <p class="text-red-700 font-bold">✗ Desventajas:</p>
+                                <p class="text-slate-600">Control y seguridad mucho más difíciles (ej. malware). Difícil garantizar la calidad e integridad de los datos.</p>
+                            </div>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li><strong>Redes no estructuradas:</strong> los nodos se conectan sin una topología fija. Ej: <strong>Gnutella</strong> (búsqueda por inundación entre vecinos) y <strong>BitTorrent</strong> (un <em>tracker</em> indica qué peers tienen el archivo; clientes Transmission, qBittorrent).</li>
+                                <li><strong>Redes estructuradas (DHT, Distributed Hash Tables):</strong> cada dato se ubica en un nodo determinado por el hash de su clave, por lo que se encuentra en pocos saltos. Ej: Chord, Pastry, Tapestry.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="seg-field border-r border-slate-300 bg-blue-200 p-3" style="width:18%">MAC Destino<br><span class="text-slate-500 font-normal">6 B</span>
-                  <div class="seg-tooltip"><strong>MAC Destino</strong><br>La NIC compara esta dirección con la propia y con la de broadcast. Si no coincide, descarta el frame.</div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PARTE 2: PREGUNTAS DE AYUDANTÍA (ACORDEONES)-->
+        <!-- ========================================== -->
+        <section id="conceptos" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 pb-4">Parte 2: Preguntas de Análisis Conceptual</h3>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                <p class="text-slate-600 mb-6 text-sm">Estas preguntas no se responden copiando la teoría: hay que aplicarla. Intenta responder antes de abrir cada una.</p>
+
+                <div class="space-y-4">
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>1. Un servidor web atiende 1.000 navegadores al mismo tiempo, todos conectados a su puerto 80. Si el puerto identifica al programa, ¿cómo sabe el SO a qué conexión pertenece cada segmento que llega?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <p>Porque una conexión TCP no se identifica solo por el puerto del servidor, sino por la tupla completa <strong>[IP origen, puerto origen, IP destino, puerto destino, protocolo]</strong>. Los 1.000 clientes comparten IP y puerto de destino (servidor:80), pero cada uno tiene una IP distinta o, si comparten IP (ej. detrás de un NAT), un <strong>puerto efímero</strong> distinto (49152–65535). El SO crea un socket por cada conexión y usa la tupla para entregar cada segmento al socket correcto.</p><p class='mt-2'>Esto muestra la diferencia entre <strong>puerto</strong> (un número que identifica un servicio) y <strong>socket</strong> (la interfaz de software, una por conexión).</p>
+                        </div>
+                    </details>
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>2. Un alumno usa Telnet para administrar un servidor desde el WiFi de la biblioteca y argumenta: "igual pongo contraseña, así que es seguro". ¿Qué le responderías? ¿Qué cambia si usa SSH?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <p>La contraseña <strong>no protege la comunicación</strong>, solo el acceso. Telnet envía todo en texto plano, contraseña incluida, así que cualquiera en la misma red puede capturarla con un sniffer o hacer un ataque <em>Man in the Middle</em>.</p><p class='mt-2'>Con <strong>SSH</strong> primero se hace un handshake con criptografía <strong>asimétrica</strong> (RSA/DSA) para identificar al servidor y al usuario y acordar una clave; luego todo el tráfico va cifrado con un algoritmo <strong>simétrico</strong> (AES, 3DES), mucho más rápido. Quien capture los paquetes solo verá datos ilegibles.</p>
+                        </div>
+                    </details>
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>3. Si HTTPS usa criptografía asimétrica, ¿por qué no cifra todos los datos de la página con ella? ¿Para qué se usa entonces?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <p>Porque la criptografía asimétrica es <strong>muy lenta</strong> comparada con la simétrica. Se usa solo al inicio: para verificar la identidad del servidor (su certificado X509 firmado por una CA) y para intercambiar de forma segura una <strong>clave de sesión</strong>. Desde ahí, los datos van cifrados con un algoritmo <strong>simétrico</strong> usando esa clave. Es exactamente el mismo esquema que usa SSH.</p>
+                        </div>
+                    </details>
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>4. Envías un correo a alguien@gmail.com y el servidor MX de prioridad 5 de Gmail está caído. Describe paso a paso qué hace tu MTA. ¿Cuándo recibirías un mensaje de Mailer-Daemon?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <ol class='list-decimal pl-5 space-y-1'><li>El MTA consulta el DNS por los registros <strong>MX</strong> de <code>gmail.com</code> y los ordena por prioridad (menor valor primero).</li><li>Intenta con el de prioridad 5: falla.</li><li>Intenta con el siguiente (10, luego 20, ...). Lo normal es que alguno responda y el mail se entregue sin que notes nada.</li><li>Si <strong>ninguno</strong> responde, deja el mail en su <strong>cola local</strong> y reintenta cada Δt.</li><li>Solo si después de <strong>N intentos</strong> sigue sin poder entregarlo, abandona y te envía un error <em>From: Mailer-Daemon</em>.</li></ol><p class='mt-2'>Los múltiples MX con prioridades existen para dar <strong>tolerancia a fallas</strong>.</p>
+                        </div>
+                    </details>
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>5. SMTP fue diseñado para texto ASCII de 7 bits. Entonces, ¿cómo es posible enviar un PDF adjunto o escribir "Ñuñoa" en el asunto?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <p>Gracias a <strong>MIME</strong> (Multipurpose Internet Mail Extensions), una extensión que permite texto en codificaciones distintas de ASCII, adjuntar objetos que no son texto, mensajes con varias partes y encabezados no ASCII. El contenido binario se codifica (ej. Base64) para que viaje como texto, y cada parte lleva un tipo como <code>application/pdf</code>, que le dice al receptor cómo interpretarla.</p>
+                        </div>
+                    </details>
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>6. ¿Es buena idea usar UDP para una aplicación de mensajería tipo WhatsApp?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <p>Para los <strong>mensajes de texto y fotos, generalmente no</strong>. UDP no garantiza la entrega ni el orden, así que un mensaje podría perderse sin que la aplicación se entere. Se prefiere <strong>TCP</strong> (o un protocolo que agregue fiabilidad sobre UDP).</p><p class='mt-2'><em>Excepción:</em> en las <strong>llamadas de voz o video</strong> sí conviene UDP: importa más la latencia que recuperar un fragmento de audio que ya pasó.</p>
+                        </div>
+                    </details>
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>7. Una empresa usa Rotación DNS con 3 servidores. Casi todos sus clientes están detrás del mismo proveedor de Internet, cuyo resolvedor DNS guarda en caché la respuesta. ¿Qué problema aparece?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <p>El reparto se vuelve <strong>muy desbalanceado</strong>. La rotación DNS es <strong>estática</strong>: entrega una IP distinta por cada resolución, pero no sabe cuántos clientes van a usar cada respuesta. Si el resolvedor del ISP cachea una IP, miles de clientes terminan en el mismo servidor mientras los otros dos quedan casi libres. Además, si un servidor se cae, el DNS lo sigue entregando.</p><p class='mt-2'>Un balanceador como <strong>HAProxy</strong>, que ve cada conexión y la carga real de los servidores, no tiene este problema.</p>
+                        </div>
+                    </details>
+                    <details class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <summary class="bg-slate-50 hover:bg-slate-100 px-6 py-4 font-bold text-usm-navy flex justify-between items-center gap-4 transition-colors">
+                            <span>8. En una red P2P, ¿por qué mejora el servicio cuando aumentan los usuarios, al revés que en un servidor central? ¿Qué precio se paga por eso?</span>
+                            <svg class="w-5 h-5 shrink-0 text-slate-400 accordion-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+                        </summary>
+                        <div class="px-6 py-5 bg-white border-t border-slate-200 text-slate-700 text-sm leading-relaxed">
+                            <p>Porque cada nodo es a la vez cliente y servidor: cada usuario nuevo que descarga también <strong>aporta copias y capacidad de subida</strong>, y la carga se reparte entre más nodos. En un modelo cliente-servidor, cada usuario nuevo solo agrega carga al servidor.</p><p class='mt-2'><strong>El precio:</strong> sin administración central, el <strong>control y la seguridad</strong> son mucho más difíciles (malware, nodos maliciosos) y cuesta garantizar la <strong>calidad e integridad</strong> de los datos y su disponibilidad.</p>
+                        </div>
+                    </details>
                 </div>
-                <div class="seg-field border-r border-slate-300 bg-blue-100 p-3" style="width:18%">MAC Fuente<br><span class="text-slate-500 font-normal">6 B</span>
-                  <div class="seg-tooltip"><strong>MAC Fuente</strong><br>El switch la usa para aprender automáticamente la tabla MAC→Puerto.</div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PARTE 3: EJERCITACIÓN PRÁCTICA             -->
+        <!-- ========================================== -->
+        <section id="practica" class="mb-20">
+            <h3 class="section-title text-3xl font-bold mb-8 pb-4">Parte 3: Ejercitación Práctica y Casos</h3>
+            <p class="text-slate-600 mb-8 max-w-3xl">Ponte a prueba resolviendo estos casos de diseño de redes. Haz clic en "Mostrar Resolución" para ver el análisis correcto.</p>
+
+            <div class="space-y-10">
+                
+                <!-- Caso Práctico 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 1: Elección de Socket</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Diseño de una Aplicación de Telemetría</h3>
+                    <p class="text-slate-700 text-sm mb-4">Estás diseñando el software para un dron autónomo. El dron envía sensores de su inclinación y temperatura cada 10 milisegundos hacia un servidor en tierra para dibujarlos en una gráfica en vivo. Además, ocasionalmente el servidor en tierra le envía al dron comandos críticos como "Aterrizaje de Emergencia".</p>
+                    
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: ¿Qué tipo de protocolo de transporte (TCP o UDP) usarías para enviar la telemetría, y cuál usarías para los comandos críticos? Justifica tu respuesta.</p>
+
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <button onclick="toggleAnswer('prac1', this)" class="bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> 
+                            <span>Mostrar Resolución</span>
+                        </button>
+                    </div>
+
+                    <div id="prac1" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
+                        <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
+                        <div class="space-y-4 text-sm text-slate-700">
+                            <div>
+                                <p class="font-bold text-usm-gold">1. Para la Telemetría (Sensor de datos): Usar UDP.</p>
+                                <p><strong>Justificación:</strong> El dron manda datos 100 veces por segundo. Si se pierde un paquete con la temperatura de un milisegundo específico, no sirve de nada que el protocolo lo retransmita medio segundo después, porque ya tendríamos lecturas más nuevas y actualizadas. UDP es veloz, ligero y perfecto para flujos de datos en tiempo real donde la pérdida ocasional es tolerable.</p>
+                            </div>
+                            <div>
+                                <p class="font-bold text-usm-burgundy">2. Para los Comandos Críticos ("Aterrizaje"): Usar TCP.</p>
+                                <p><strong>Justificación:</strong> Si el servidor manda una orden de aterrizar y el paquete se pierde, el dron se estrellaría. Para este canal se necesita TCP (<em>Transmission Control Protocol</em>), ya que garantiza que el mensaje llegará correctamente y en orden. Si TCP detecta que el segmento se perdió, lo retransmite automáticamente.</p>
+                            </div>
+                            <p class="text-xs text-slate-500">En código: la telemetría usaría un socket <code>SOCK_DGRAM</code> (sin conexión) y los comandos un socket <code>SOCK_STREAM</code> (con conexión). Son dos sockets distintos, en puertos distintos.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="seg-field border-r border-slate-300 bg-yellow-100 p-3" style="width:12%">EtherType<br><span class="text-slate-500 font-normal">2 B</span>
-                  <div class="seg-tooltip"><strong>EtherType / Length</strong><br>≤1500: largo del payload. &gt;1500: protocolo encapsulado (0x0800 = IPv4, 0x86DD = IPv6).</div>
+
+                <!-- Caso Práctico 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 2: Balanceo de Carga</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">La caída del Servidor de Matrículas</h3>
+                    <p class="text-slate-700 text-sm mb-4">La universidad ha implementado un sistema donde un servidor web principal tiene implementado un mecanismo de <strong>HTTP Redirect</strong>. Cuando un alumno entra, este servidor le responde enviando un código HTTP 302 que dice: <em>"Ve al servidor B (IP: 200.x.x.x)"</em>.</p>
+                    
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: El día de toma de ramos, entran 10.000 alumnos al mismo tiempo. Los servidores de apoyo B y C tienen capacidad de sobra, pero el sistema completo se cae. Basado en la arquitectura, ¿qué cuello de botella falló y cómo se solucionaría?</p>
+
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <button onclick="toggleAnswer('prac2', this)" class="bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> 
+                            <span>Mostrar Resolución</span>
+                        </button>
+                    </div>
+
+                    <div id="prac2" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
+                        <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
+                        <p class="text-sm text-slate-700 mb-4">
+                            El cuello de botella fue el propio servidor principal de redirección. 
+                        </p>
+                        <p class="text-sm text-slate-700 mb-4">
+                            <strong>Análisis:</strong> El balanceo por <em>HTTP Redirect</em> tiene una gran debilidad: para que un cliente sea redirigido a un servidor desocupado, primero tiene que abrir una conexión TCP completa con el servidor principal, el cual debe procesar la solicitud a nivel de aplicación web y emitir una respuesta. Si 10.000 alumnos llegan de golpe, el servidor principal agota todos sus sockets disponibles y sus recursos de CPU solo tratando de redirigir, colapsando y dejando a los servidores B y C inalcanzables.
+                        </p>
+                        <p class="text-sm text-slate-700">
+                            <strong>Soluciones posibles:</strong>
+                        </p>
+                        <ul class="list-disc pl-5 text-sm text-slate-700 space-y-2 mt-2">
+                            <li><strong>HAProxy:</strong> un proxy especializado en balanceo TCP/HTTP (capas 4 y 7), mucho más liviano que un servidor web completo, que reparte cada conexión entre B y C según su carga. Ojo: también es un punto único de falla, así que en producción se instalan dos en modo redundante.</li>
+                            <li><strong>Rotación DNS:</strong> reparte a los alumnos entre las IPs de B y C ya al resolver el nombre, así que ningún servidor recibe a todos. Es muy simple, pero el reparto es estático: no conoce la carga real y, si un servidor se cae, el DNS lo sigue entregando.</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="seg-field border-r border-slate-300 bg-green-100 p-3" style="width:18%">Payload<br><span class="text-slate-500 font-normal">46–1500 B</span>
-                  <div class="seg-tooltip"><strong>Payload</strong><br>Datos transportados (normalmente un paquete IP). MTU = 1500 B. Mínimo 46 B; si faltan, se rellena con padding de ceros.</div>
+
+                <!-- Caso Práctico 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 3: P2P y BitTorrent</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Roles en una Red Descentralizada</h3>
+                    <p class="text-slate-700 text-sm mb-4">En una arquitectura P2P usando BitTorrent, un usuario desea descargar el último sistema operativo Linux (archivo <code>.torrent</code>). Analizando las diapositivas de la asignatura:</p>
+                    
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Pregunta: ¿Qué rol cumple el "Tracker" dentro de la red BitTorrent? ¿El tracker almacena el archivo Linux que el usuario quiere descargar?</p>
+                    
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <button onclick="toggleAnswer('prac3', this)" class="bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> 
+                            <span>Mostrar Resolución</span>
+                        </button>
+                    </div>
+
+                    <div id="prac3" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
+                        <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
+                        <p class="text-sm text-slate-700 mb-4">
+                            <strong>1. ¿El tracker almacena el archivo?</strong><br>
+                            NO. El Tracker nunca almacena el archivo (el sistema Linux). La característica central del P2P es que el archivo lo tienen los propios usuarios (Nodos/Peers).
+                        </p>
+                        <p class="text-sm text-slate-700">
+                            <strong>2. ¿Qué rol cumple entonces?</strong><br>
+                            El Tracker actúa como un "director de tráfico" o una libreta de direcciones. Cuando abres el archivo <code>.torrent</code>, tu cliente contacta al Tracker. El Tracker le responde diciendo: <em>"No tengo el archivo, pero aquí tienes una lista de 500 IPs de otros usuarios en el mundo que sí lo están compartiendo en este instante"</em>. Tras obtener esa lista, tu computador se conecta directamente a esos usuarios (P2P) para empezar a intercambiar los trozos de archivo.
+                        </p>
+                        <p class="text-sm text-slate-700 mt-4">
+                            <strong>Para pensar:</strong> si el tracker se cae, los peers que ya están conectados siguen intercambiando trozos, pero los nuevos no encuentran a nadie. Por eso los clientes modernos también usan una <strong>DHT</strong> (red estructurada) para encontrar peers sin tracker.
+                        </p>
+                    </div>
                 </div>
-                <div class="seg-field tip-left bg-red-100 p-3" style="width:10%">CRC-32<br><span class="text-slate-500 font-normal">4 B</span>
-                  <div class="seg-tooltip tip-left"><strong>CRC-32</strong><br>Frame Check Sequence. El receptor recalcula y compara: si difiere, el frame se descarta silenciosamente.</div>
+
+                <!-- Caso Práctico 4 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                    <span class="inline-block bg-slate-100 text-usm-navy border border-usm-navy text-xs font-bold px-3 py-1 rounded-full mb-4">Caso Práctico 4: Protocolos "a mano"</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Hablando SMTP con Telnet</h3>
+                    <p class="text-slate-700 text-sm mb-4">Un administrador se conecta al servidor de correo de su empresa con <code>telnet mx1.empresa.cl 25</code> y escribe la siguiente sesión:</p>
+                    <pre class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto leading-relaxed mb-4"><span class="text-yellow-300">220 mx1.empresa.cl ESMTP ready</span>
+HELO pc-admin.empresa.cl
+<span class="text-yellow-300">250 mx1.empresa.cl</span>
+MAIL FROM: &lt;rector@usm.cl&gt;
+<span class="text-yellow-300">250 Sender Ok</span>
+RCPT TO: &lt;alumno@empresa.cl&gt;
+<span class="text-yellow-300">250 Recipient Ok</span>
+DATA
+<span class="text-yellow-300">354 End data with &lt;CRLF&gt;.&lt;CRLF&gt;</span>
+Subject: Suspensión de clases
+...</pre>
+
+                    <p class="text-slate-800 text-sm font-semibold border-l-4 border-usm-navy pl-3 py-1 mb-6">Preguntas: (a) ¿Qué demuestra que esto funcione con Telnet sobre el tipo de protocolo que es SMTP? (b) ¿Qué problema de seguridad revela el comando <code>MAIL FROM</code>? (c) ¿Por qué hacer esto desde un WiFi público sería doblemente riesgoso?</p>
+
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <button onclick="toggleAnswer('prac4', this)" class="bg-usm-navy hover:bg-usm-navy-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-md">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            <span>Mostrar Resolución</span>
+                        </button>
+                    </div>
+
+                    <div id="prac4" class="hidden mt-6 p-6 md:p-8 bg-slate-50 border border-slate-200 rounded-lg animate-fadeIn">
+                        <h4 class="font-bold text-usm-navy mb-4 border-b border-slate-200 pb-2">Resolución del Caso</h4>
+                        <div class="space-y-4 text-sm text-slate-700">
+                            <p><strong>(a)</strong> SMTP es un protocolo <strong>de texto</strong> sobre <strong>TCP</strong>: comandos legibles (HELO, MAIL FROM, RCPT TO, DATA, QUIT) y respuestas con códigos numéricos (220, 250, 354, 221). Telnet solo abre una conexión TCP a un puerto y envía lo que tipeas, así que sirve para hablar con cualquier protocolo de texto. Lo mismo se puede hacer con HTTP: <code>telnet servidor 80</code> y luego <code>GET /index.html</code>.</p>
+                            <p><strong>(b)</strong> SMTP básico <strong>no verifica el remitente</strong>: <code>MAIL FROM</code> acepta lo que el cliente escriba. Así se falsifican correos (<em>spoofing</em>). Por eso hoy los servidores exigen autenticación y usan mecanismos como SPF, DKIM y DMARC.</p>
+                            <p><strong>(c)</strong> Primero, Telnet y SMTP en el puerto 25 viajan <strong>en texto plano</strong>: todo el contenido del correo, y cualquier credencial que se envíe, se puede capturar con un sniffer. Segundo, alguien en la misma red podría hacer <em>Man in the Middle</em> y modificar el mensaje. La alternativa es SMTP sobre SSL/TLS (puerto 465).</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
             </div>
-          </div>
-          <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs text-slate-700">
-            <strong class="text-burg">Servicio:</strong> Ethernet es <em>sin conexión y no confiable</em> (tipo datagram). No hay handshake ni ACK; los frames con error simplemente se descartan. La fiabilidad se construye en capas superiores (TCP).
-          </div>
+        </section>
+    </main>
+
+    <footer class="mt-10" style="background: linear-gradient(120deg, #0f1f33 0%, #002b5c 55%, #8c1d40 100%); color: #e2e8f0; border-top: 2px solid rgba(201,163,74,0.6);">
+        <div class="container mx-auto px-6 py-8 text-center text-sm font-medium">
+            <p>&copy; 2026 Ayudantía USM - Redes de Computadores. Material de estudio Capa Aplicación.</p>
         </div>
+    </footer>
 
-        <!-- Card 8: Codificación y tecnologías -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">8</span> Codificación de bits y tecnologías Ethernet
-          </h3>
-          <p class="text-slate-600 mb-5 text-sm leading-relaxed">Ethernet transmite en banda base: los bits se codifican directamente en la señal. El reto es la sincronización de reloj; cada velocidad usa una codificación distinta.</p>
-          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white mb-6">
-            <table class="min-w-full text-xs">
-              <thead class="bg-slate-50 text-slate-700">
-                <tr><th class="px-4 py-3 text-left">Código</th><th class="px-4 py-3 text-left">Velocidad</th><th class="px-4 py-3 text-left">Idea</th></tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-600">
-                <tr><td class="px-4 py-3 font-bold text-navy">Manchester</td><td class="px-4 py-3">10 Mbits/s</td><td class="px-4 py-3">XOR entre el flujo NZR y el reloj: transición obligatoria al centro de cada bit. Requiere el doble de ancho de banda.</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">4B/5B</td><td class="px-4 py-3">100 Mbits/s</td><td class="px-4 py-3">Cada grupo de 4 bits se reemplaza por un símbolo de 5 bits, garantizando transiciones frecuentes con solo 25% de overhead.</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">8B/10B</td><td class="px-4 py-3">1 Gbits/s</td><td class="px-4 py-3">Un byte se divide en 3+5 bits, cada parte codificada por separado (3B/4B y 5B/6B) y se transmiten juntas.</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">64B/66B</td><td class="px-4 py-3">10/40/100 Gbits/s</td><td class="px-4 py-3">64 bits de datos viajan en 66 bits (header de 2 bits de sincronización). Eficiencia ≈97%.</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="text-slate-600 mb-3 text-sm leading-relaxed">A lo largo del tiempo, Ethernet cambió de topología (bus → estrella) y de medio (coaxial → UTP → fibra) sin perder su estructura de frame ni su direccionamiento MAC.</p>
-          <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-            <table class="min-w-full text-xs">
-              <thead class="bg-slate-50 text-slate-700">
-                <tr><th class="px-4 py-3 text-left">Tecnología</th><th class="px-4 py-3 text-left">Velocidad</th><th class="px-4 py-3 text-left">Topología / Medio</th><th class="px-4 py-3 text-left">Distancia</th></tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-600">
-                <tr><td class="px-4 py-3 font-bold text-navy">10Base5 / 10Base2</td><td class="px-4 py-3">10 Mbits/s</td><td class="px-4 py-3">Bus, coaxial (BNC)</td><td class="px-4 py-3">2500 m (4 repetidores)</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">10BaseT / 100BaseTX</td><td class="px-4 py-3">10 / 100 Mbits/s</td><td class="px-4 py-3">Estrella, UTP-3/5, RJ45</td><td class="px-4 py-3">100 m</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">1000BaseT</td><td class="px-4 py-3">1 Gbits/s</td><td class="px-4 py-3">Estrella, UTP-5 (4 pares) o fibra</td><td class="px-4 py-3">100 m (cobre) / 5 km (fibra)</td></tr>
-                <tr><td class="px-4 py-3 font-bold text-navy">10G/40G/100GBaseT</td><td class="px-4 py-3">10–100 Gbits/s</td><td class="px-4 py-3">Solo Switch, Full-Duplex, UTP Cat.6e+ o fibra</td><td class="px-4 py-3">100 m (cobre) / 40 km (fibra)</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <script>
+        // Lógica para botones de ejercicios (Práctica)
+        function toggleAnswer(id, btn) {
+            const el = document.getElementById(id);
+            const isHidden = el.classList.contains('hidden');
+            const iconShow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            const iconHide = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 2 20 20"></path><path d="M6.71 6.71A10.61 10.61 0 0 0 2 12a10.54 10.54 0 0 0 11.29 8.05"></path><path d="M11 17a5 5 0 0 1-5-5"></path><path d="M14 14a5 5 0 0 1-5-5"></path><path d="M17.3 17.3A10.56 10.56 0 0 0 22 12a10.58 10.58 0 0 0-11-7.05"></path></svg>`;
+            
+            if (isHidden) {
+                el.classList.remove('hidden');
+                btn.innerHTML = iconHide + ` <span>Ocultar Resolución</span>`;
+                btn.classList.replace('bg-usm-navy', 'bg-slate-200');
+                btn.classList.replace('hover:bg-usm-navy-dark', 'hover:bg-slate-300');
+                btn.classList.replace('text-white', 'text-slate-700');
+            } else {
+                el.classList.add('hidden');
+                btn.innerHTML = iconShow + ` <span>Mostrar Resolución</span>`;
+                btn.classList.replace('bg-slate-200', 'bg-usm-navy');
+                btn.classList.replace('hover:bg-slate-300', 'hover:bg-usm-navy-dark');
+                btn.classList.replace('text-slate-700', 'text-white');
+            }
+        }
 
-        <!-- Card 9: Hardware -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">9</span> Hardware: HUB, Bridge y Switch
-          </h3>
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="rounded-2xl border-2 border-slate-200 bg-white p-6 text-center">
-              <h4 class="font-bold text-navy mb-3 text-base">HUB</h4>
-              <p class="text-xs bit-mini text-slate-400 mb-3">Capa 1 — Repetidor</p>
-              <ul class="space-y-2 text-xs text-slate-600 text-left">
-                <li>• Reenvía todo a todos los puertos.</li>
-                <li>• Half-Duplex; ancho de banda compartido.</li>
-                <li>• 100 Mbits/s + 10 hosts ≈ 10 Mbits/s c/u.</li>
-              </ul>
-            </div>
-            <div class="rounded-2xl border-2 border-blue-300 bg-blue-50 p-6 text-center">
-              <h4 class="font-bold text-navy mb-3 text-base">Bridge</h4>
-              <p class="text-xs bit-mini text-blue-600 mb-3">Capa 2 — Switching</p>
-              <ul class="space-y-2 text-xs text-slate-600 text-left">
-                <li>• Reenvía según MAC destino.</li>
-                <li>• Mantiene tabla MAC → Puerto.</li>
-                <li>• Pocos puertos, interconecta tecnologías distintas.</li>
-              </ul>
-            </div>
-            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6 text-center">
-              <h4 class="font-bold text-navy mb-3 text-base">Switch</h4>
-              <p class="text-xs bit-mini text-amber-600 mb-3">Capa 2/3 — Alta performance</p>
-              <ul class="space-y-2 text-xs text-slate-600 text-left">
-                <li>• Ancho de banda dedicado por puerto.</li>
-                <li>• Full-Duplex; aprende la tabla MAC automáticamente.</li>
-                <li>• Store-and-Forward: verifica CRC antes de reenviar.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 10: Paridad y CRC -->
-        <div class="card p-8">
-          <h3 class="text-2xl font-bold text-navy mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
-            <span class="step-num">10</span> Gestión de errores: Paridad y CRC
-          </h3>
-          <div class="grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 class="font-bold text-navy mb-3 text-sm">Paridad</h4>
-              <p class="text-sm text-slate-600 mb-3">Se agrega 1 bit para que el total de unos sea par o impar. La paridad 1D solo detecta errores de cantidad <em>impar</em> de bits (probabilidad ≈0.5). La paridad 2D (matriz con paridad por fila y columna) detecta <strong class="text-navy">y corrige</strong> un error simple, localizándolo en la intersección fila/columna incorrecta.</p>
-            </div>
-            <div>
-              <h4 class="font-bold text-navy mb-3 text-sm">CRC — Cyclic Redundancy Check</h4>
-              <p class="text-sm text-slate-600 mb-3">Los bits del mensaje son los coeficientes de un polinomio M(x). Se agregan k ceros (grado del generador G(x)) y se divide el resultado por G(x) en GF(2) (XOR). El resto es el checksum. Ethernet usa <strong class="text-navy">CRC-32</strong>.</p>
-              <div class="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-slate-700">El CRC <strong>detecta</strong> errores con muy alta probabilidad, pero <strong>no los corrige</strong>: el frame con error simplemente se descarta.</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         PARTE 3 · PREGUNTAS — CAPA DE RED / RUTEO IP
-    ═══════════════════════════════════════════════ -->
-    <section id="preg-red" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 3 · Preguntas tipo certamen — Capa de Red</h2>
-      <div class="card p-8">
-        <p class="text-slate-500 mb-8 text-sm">Haz clic para revelar la respuesta. Preguntas 2.1 a 2.7 (conceptuales) y 2.8 (Verdadero/Falso sobre una tabla de ruteo).</p>
-        <div class="space-y-3">
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('r1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 2.1 — ¿Cuál es el objetivo de la capa de ruteo IP?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="r1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Entregar paquetes de extremo a extremo entre dos hosts que pueden estar en redes físicas distintas y separadas por múltiples routers. Para esto usa direccionamiento jerárquico (IP) y, en cada router, decide solo el siguiente salto según su tabla de ruteo, sin garantizar la entrega (servicio best-effort).
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('r2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 2.2 — ¿Para qué sirve el campo TTL en un paquete IP?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="r2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Limita el número de saltos que puede dar un paquete. Cada router que lo reenvía decrementa el TTL en 1; si llega a 0, el paquete se descarta y se informa con ICMP "Time Exceeded". Evita que un paquete circule indefinidamente si hay un loop de ruteo.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('r3', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 2.3 — ¿A qué corresponde el valor MTU en un router?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="r3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Es el tamaño máximo de payload que una interfaz del router puede transmitir en un solo frame (ej. 1500 B en Ethernet). Si un paquete IP supera el MTU de la interfaz de salida, el router debe fragmentarlo, o descartarlo y avisar por ICMP si el bit "no fragmentar" está activo.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('r4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 2.4 — ¿Por qué el algoritmo de ruteo Vector/Distancia no escala a una red grande?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="r4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Porque cada router solo conoce distancias (no la topología completa) y propaga su tabla completa periódicamente solo a sus vecinos directos. En redes grandes esto converge muy lentamente, es propenso a loops y al problema de "cuenta hasta el infinito", y suele limitar artificialmente el diámetro de la red (ej. máximo 15 saltos en RIP).
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('r5', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 2.5 — Explicar por qué el algoritmo de ruteo BGP no asegura la conectividad.</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="r5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              BGP rutea según <em>políticas comerciales</em> entre Sistemas Autónomos, no según el camino físicamente más corto o la conectividad real. Un AS puede decidir, por acuerdos contractuales, no anunciar una ruta a un vecino o no aceptar la ruta que ese vecino le ofrece. Como resultado, dos redes pueden estar físicamente conectadas (existe un cable o enlace) pero no haber un camino BGP anunciado entre ellas, dejándolas sin conectividad a nivel de Internet aunque la conectividad física exista.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('r6', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 2.6 — En BGP, ¿cuál es el propósito de la opción MULTI_EXIT_DISC en un anuncio?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="r6" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Cuando dos Sistemas Autónomos están conectados por <em>varios</em> enlaces, MULTI_EXIT_DISC (MED) le permite al AS que anuncia una ruta indicarle al AS vecino cuál de esos puntos de entrada prefiere que use. El vecino, al recibir varios anuncios con distinto MED, prefiere el de valor más bajo. Así se influye en la elección del punto de entrada óptimo entre dos AS con múltiples conexiones.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('r7', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 2.7 — En el algoritmo Link State Routing, ¿cómo calcula cada router sus rutas a las otras sub-redes?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="r7" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Cada router difunde (flooding) un LSA describiendo solo sus enlaces directos y el costo de cada uno. Al recibir los LSA de todos los demás routers del área, cada router reconstruye un mapa completo de la topología. Sobre ese mapa, ejecuta localmente el algoritmo de <strong class="text-navy">Dijkstra</strong> para calcular el camino de menor costo desde sí mismo hacia cada subred, y con esos resultados construye su tabla de ruteo.
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         PARTE 3.1 · EJERCICIO V/F TABLA DE RUTEO
-    ═══════════════════════════════════════════════ -->
-    <section id="vf" class="mb-24">
-      <div class="card p-8">
-        <span class="inline-flex items-center gap-1.5 bg-blue-50 text-navy border border-blue-200 text-xs font-bold px-3 py-1.5 rounded-full mb-5">Pregunta 2.8 · Verdadero / Falso</span>
-        <h3 class="text-xl font-bold text-slate-800 mb-4">Tabla de ruteo del Router A, cuya dirección IP es 192.168.4.5</h3>
-        <div class="tbl-wrap mb-6">
-          <div style="min-width:680px;">
-            <table class="w-full text-xs border border-slate-300 rounded-xl overflow-hidden">
-              <thead>
-                <tr class="bg-slate-100 text-slate-700 font-bold">
-                  <th class="border border-slate-300 p-2">Ruta</th><th class="border border-slate-300 p-2">Destination</th><th class="border border-slate-300 p-2">Gateway</th><th class="border border-slate-300 p-2">Genmask</th><th class="border border-slate-300 p-2">Flags</th><th class="border border-slate-300 p-2">Iface</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200 font-mono text-slate-700">
-                <tr><td class="border border-slate-200 p-2">1</td><td class="border border-slate-200 p-2">192.168.4.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">U</td><td class="border border-slate-200 p-2">eth0</td></tr>
-                <tr><td class="border border-slate-200 p-2">2</td><td class="border border-slate-200 p-2">192.168.5.0</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">UD</td><td class="border border-slate-200 p-2">eth1</td></tr>
-                <tr><td class="border border-slate-200 p-2">3</td><td class="border border-slate-200 p-2">192.168.6.0</td><td class="border border-slate-200 p-2">192.168.7.1</td><td class="border border-slate-200 p-2">255.255.255.0</td><td class="border border-slate-200 p-2">UGS</td><td class="border border-slate-200 p-2">eth2</td></tr>
-                <tr><td class="border border-slate-200 p-2">4</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">192.168.7.1</td><td class="border border-slate-200 p-2">0.0.0.0</td><td class="border border-slate-200 p-2">UGS</td><td class="border border-slate-200 p-2">eth2</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="vf-table grid md:grid-cols-2" id="vf-net">
-          <div class="vf-cell" data-ans="F">
-            <p class="font-semibold text-slate-700 mb-2">A. La Ruta 1 fue configurada manualmente por el administrador.</p>
-            <div class="vf-options">
-              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
-              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
-            </div>
-            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Falso — no tiene flag S; se crea automáticamente al configurar la IP de la interfaz eth0.</p>
-          </div>
-          <div class="vf-cell" data-ans="F">
-            <p class="font-semibold text-slate-700 mb-2">B. La Ruta 2 corresponde a la red local del Router A.</p>
-            <div class="vf-options">
-              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
-              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
-            </div>
-            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Falso — la red local es 192.168.4.0 (Ruta 1), que coincide con la IP 192.168.4.5 del router.</p>
-          </div>
-          <div class="vf-cell" data-ans="V">
-            <p class="font-semibold text-slate-700 mb-2">C. La Ruta 3 es una ruta estática.</p>
-            <div class="vf-options">
-              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
-              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
-            </div>
-            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Verdadero — tiene flag S (UGS), fue configurada manualmente con un gateway explícito.</p>
-          </div>
-          <div class="vf-cell" data-ans="V">
-            <p class="font-semibold text-slate-700 mb-2">D. La Ruta 4 es la ruta por defecto.</p>
-            <div class="vf-options">
-              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
-              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
-            </div>
-            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Verdadero — Destination y Genmask son 0.0.0.0, coincide con cualquier IP no listada en otra ruta.</p>
-          </div>
-          <div class="vf-cell" data-ans="V">
-            <p class="font-semibold text-slate-700 mb-2">E. La Ruta 2 fue aprendida mediante un protocolo de ruteo.</p>
-            <div class="vf-options">
-              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
-              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
-            </div>
-            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Verdadero — flag D indica que fue instalada dinámicamente por un protocolo de ruteo.</p>
-          </div>
-          <div class="vf-cell" data-ans="F">
-            <p class="font-semibold text-slate-700 mb-2">F. Todas las rutas de esta tabla usan un gateway distinto de 0.0.0.0.</p>
-            <div class="vf-options">
-              <button class="vf-btn" data-val="V" onclick="selectVF(this)">Verdadero</button>
-              <button class="vf-btn" data-val="F" onclick="selectVF(this)">Falso</button>
-            </div>
-            <p class="vf-explain hidden text-xs mt-2 text-slate-500">Falso — las Rutas 1 y 2 son directamente conectadas, con Gateway = 0.0.0.0.</p>
-          </div>
-        </div>
-        <p id="vf-net-score" class="text-sm font-bold mt-4 min-h-[1.2em]"></p>
-        <div class="flex justify-end gap-3 mt-5">
-          <button onclick="resetVF('vf-net')" class="flex items-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold transition">
-            <span>Reiniciar</span>
-          </button>
-          <button onclick="reviewVF('vf-net')" class="flex items-center gap-2 bg-navy hover:bg-navy-dk text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-            <span>Revisar respuestas</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         PARTE 4 · PREGUNTAS — CAPA DE DATOS
-    ═══════════════════════════════════════════════ -->
-    <section id="preg-datos" class="mb-24">
-      <h2 class="section-title text-3xl font-bold mb-10">Parte 4 · Preguntas tipo certamen — Capa de Datos</h2>
-      <div class="card p-8">
-        <p class="text-slate-500 mb-8 text-sm">Excluye CSMA/CD, ARP y VLAN. Haz clic para revelar cada respuesta.</p>
-        <div class="space-y-3">
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('d1', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 3.1 — ¿Cuál es la diferencia entre una dirección MAC y una dirección IP?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="d1" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              La MAC es una dirección física de 6 bytes grabada en el hardware, plana (sin jerarquía), y solo se usa dentro de un segmento LAN. La IP es una dirección lógica, jerárquica (red+host), asignada por software y usada para enrutar entre redes distintas a través de múltiples routers.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('d2', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 3.2 — Una señal tiene 4 niveles y 1500 Bauds. ¿Cuál es su velocidad en Bits/s?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="d2" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Con 4 niveles, cada símbolo codifica log₂(4) = 2 bits. <code class="bg-slate-100 px-2 py-1 rounded">Bits/s = log₂(N) × Bauds = 2 × 1500 = 3000 Bits/s</code>. Bauds y Bits/s solo coinciden cuando la señal tiene exactamente 2 niveles.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('d3', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 3.3 — ¿Por qué un Switch permite mayor desempeño que un HUB?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="d3" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              El HUB es un repetidor de capa 1: replica todo lo que recibe en todos sus puertos, compartiendo el ancho de banda total entre todos los hosts y operando en Half-Duplex. El Switch es un dispositivo de capa 2 que aprende la tabla MAC→Puerto y reenvía cada frame solo por el puerto correcto, dando a cada puerto ancho de banda dedicado y permitiendo Full-Duplex (emitir y recibir simultáneamente).
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('d4', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 3.4 — ¿Puede el CRC-32 corregir los errores que detecta? Justifica.</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="d4" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              No. El CRC solo informa que ocurrió un error en algún lugar del frame, pero no en qué bit exacto. Por eso, ante un CRC inválido, el frame simplemente se descarta; corregir requeriría códigos con más redundancia (como Hamming o FEC), que no se usan en Ethernet estándar.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('d5', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 3.5 — ¿Por qué Manchester no se usa para velocidades de 100 Mbits/s en adelante?</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="d5" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Manchester exige una transición en el centro de cada bit, lo que duplica el ancho de banda necesario respecto a la velocidad de datos. A 100 Mbits/s requeriría 200 MHz, fuera del límite del UTP-5 (100 MHz). Por eso Fast Ethernet usa 4B/5B (solo 25% de overhead, 125 MHz) en su lugar.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('d6', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 3.6 — ¿Verdadero o falso? "La paridad simple detecta siempre que se corrompe más de un bit." Justifica.</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="d6" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              Falso. Si se corrompe un número par de bits (2, 4, ...), el total de unos vuelve a tener la misma paridad original y el error pasa inadvertido. La paridad simple solo detecta con certeza errores de cantidad impar de bits.
-            </div>
-          </div>
-
-          <div class="border border-slate-200 rounded-xl overflow-hidden">
-            <button onclick="toggleAccordion('d7', this)" class="w-full bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 font-bold text-navy flex justify-between items-center transition-colors text-sm">
-              <span>Pregunta 3.7 — Describe qué hace una NIC al recibir un frame, paso a paso.</span>
-              <svg class="w-5 h-5 text-slate-400 accordion-icon flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="d7" class="hidden px-6 py-5 bg-white border-t border-slate-100 text-slate-600 text-sm leading-relaxed animate-in">
-              1) Detecta el preámbulo y sincroniza su reloj con el del emisor. 2) Lee el SFD para ubicar el inicio de la MAC destino. 3) Compara la MAC destino con la propia (o con la de broadcast); si no coincide, descarta el frame. 4) Lee el resto de los campos y recalcula el CRC-32 sobre lo recibido. 5) Si el CRC coincide con el recibido, entrega el payload a la capa superior (IP); si no coincide, descarta el frame silenciosamente.
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer style="background:linear-gradient(120deg,#0f1f33,#062b52 55%,#7f1d3c); border-top:2px solid rgba(200,155,60,0.55);">
-    <div class="container mx-auto px-6 py-8 text-center">
-      <p class="text-slate-300 text-sm font-medium">2026 · Material de estudio · Redes de Computadores · Capa de Red (ruteo IP) y Capa de Datos</p>
-    </div>
-  </footer>
-
-  <script>
-    function toggleAccordion(id, btn) {
-      const el = document.getElementById(id);
-      const icon = btn.querySelector('.accordion-icon');
-      const hidden = el.classList.contains('hidden');
-      el.classList.toggle('hidden', !hidden);
-      if (icon) icon.style.transform = hidden ? 'rotate(180deg)' : 'rotate(0deg)';
-      btn.classList.toggle('bg-slate-100', hidden);
-    }
-
-    function selectVF(btn) {
-      const cell = btn.closest('.vf-cell');
-      cell.dataset.selected = btn.dataset.val;
-      cell.querySelectorAll('.vf-btn').forEach(b => {
-        b.classList.remove('vf-btn-active', 'vf-btn-correct', 'vf-btn-wrong');
-      });
-      btn.classList.add('vf-btn-active');
-      cell.classList.remove('vf-correct-cell', 'vf-wrong-cell');
-      cell.querySelector('.vf-explain').classList.add('hidden');
-    }
-
-    function reviewVF(containerId) {
-      const container = document.getElementById(containerId);
-      const cells = container.querySelectorAll('.vf-cell');
-      let correct = 0, answered = 0;
-      cells.forEach(cell => {
-        const ans = cell.dataset.ans;
-        const sel = cell.dataset.selected;
-        if (sel) answered++;
-        const isCorrect = sel === ans;
-        if (isCorrect) correct++;
-        cell.classList.remove('vf-correct-cell', 'vf-wrong-cell');
-        if (sel) cell.classList.add(isCorrect ? 'vf-correct-cell' : 'vf-wrong-cell');
-        cell.querySelectorAll('.vf-btn').forEach(b => {
-          b.classList.remove('vf-btn-correct', 'vf-btn-wrong');
-          if (b.dataset.val === ans) b.classList.add('vf-btn-correct');
-          else if (b.dataset.val === sel) b.classList.add('vf-btn-wrong');
-        });
-        cell.querySelector('.vf-explain').classList.remove('hidden');
-      });
-      const scoreEl = document.getElementById(containerId + '-score');
-      if (!scoreEl) return;
-      if (answered < cells.length) {
-        scoreEl.textContent = `Respondiste ${answered} de ${cells.length}. Responde todas para ver tu puntaje.`;
-        scoreEl.className = 'text-sm font-bold mt-4 min-h-[1.2em] text-amber-700';
-      } else {
-        scoreEl.textContent = `Resultado: ${correct} de ${cells.length} correctas.`;
-        scoreEl.className = 'text-sm font-bold mt-4 min-h-[1.2em] ' + (correct === cells.length ? 'text-green-700' : 'text-navy');
-      }
-    }
-
-    function resetVF(containerId) {
-      const container = document.getElementById(containerId);
-      container.querySelectorAll('.vf-cell').forEach(cell => {
-        delete cell.dataset.selected;
-        cell.classList.remove('vf-correct-cell', 'vf-wrong-cell');
-        cell.querySelectorAll('.vf-btn').forEach(b => b.classList.remove('vf-btn-active', 'vf-btn-correct', 'vf-btn-wrong'));
-        cell.querySelector('.vf-explain').classList.add('hidden');
-      });
-      const scoreEl = document.getElementById(containerId + '-score');
-      if (scoreEl) scoreEl.textContent = '';
-    }
-  </script>
+    </script>
 </body>
 </html>
