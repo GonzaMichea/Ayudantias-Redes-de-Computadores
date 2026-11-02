@@ -22,6 +22,8 @@ Para una mejor experiencia, puedes interactuar con los diagramas de capas, gener
 | :---: | :--- | :--- | :---: |
 | **01** | **Fundamentos y Criptografía** | Tipos de redes (LAN/WAN), modelo OSI vs TCP/IP, hashes SHA-256 y firmas digitales. | [Ver Guía 1](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-01) |
 | **02** | **Direccionamiento IP y Subneteo** | Direcciones MAC vs IP, cálculo de dirección de red (AND) y broadcast, clases A-E, direcciones privadas y NAT, subneteo paso a paso. | [Ver Guía 2](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-02) |
+| **03** | **Capa de Aplicación** | Arquitecturas cliente-servidor y P2P, HTTP (métodos, códigos de estado, conexiones persistentes vs no persistentes, cookies), DNS (jerarquía, consultas iterativas/recursivas, registros), correo (SMTP, POP3, IMAP) y cálculo de tiempos de respuesta (RTT). | [Ver Guía 3](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-03) |
+| **04** | **Capa de Transporte** | Puertos y multiplexación, UDP vs TCP, checksum, transferencia confiable (Stop-and-Wait, Go-Back-N, Selective Repeat), handshake de 3 vías y cierre de conexión, control de flujo y de congestión (slow start, AIMD, ventana). | [Ver Guía 4](https://GonzaMichea.github.io/Ayudantias-Redes-de-Computadores/ayudantia-04) |
 
 
 ---
